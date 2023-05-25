@@ -33,6 +33,7 @@ import 'package:flutter_grocery/theme/dark_theme.dart';
 import 'package:flutter_grocery/theme/light_theme.dart';
 import 'package:flutter_grocery/utill/app_constants.dart';
 import 'package:flutter_grocery/view/base/third_party_chat_widget.dart';
+import 'package:flutter_grocery/view/screens/menu/menu_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -59,14 +60,16 @@ Future<void> main() async {
     await Firebase.initializeApp();
   } else {
     await Firebase.initializeApp(
-        options: FirebaseOptions(
-            apiKey: "AIzaSyDuBlqmsh9xw17osLOuEn7iqHtDlpkulcM",
-            authDomain: "grofresh-3986f.firebaseapp.com",
-            projectId: "grofresh-3986f",
-            storageBucket: "grofresh-3986f.appspot.com",
-            messagingSenderId: "250728969979",
-            appId: "1:250728969979:web:b79642a7b2d2400b75a25e",
-            measurementId: "G-X1HCG4K8HJ"));
+      options: FirebaseOptions(
+        apiKey: "AIzaSyAdS-mKt4XAd8KqJNRWX-OHKGh7lfl9uNI",
+        authDomain: "gofresh-c944c.firebaseapp.com",
+        projectId: "gofresh-c944c",
+        storageBucket: "gofresh-c944c.appspot.com",
+        messagingSenderId: "371788735721",
+        appId: "1:371788735721:web:35fca5c2e1dd1140c27c78",
+        measurementId: "G-9H7CRSMDP2",
+      ),
+    );
 
     await FacebookAuth.instance.webAndDesktopInitialize(
       appId: "YOUR_FACEBOOK_APP_ID",
@@ -180,16 +183,16 @@ class _MyAppState extends State<MyApp> {
                 title: splashProvider.configModel != null
                     ? splashProvider.configModel!.ecommerceName ?? ''
                     : AppConstants.APP_NAME,
-                initialRoute: ResponsiveHelper.isMobilePhone()
-                    ? widget.orderID == null
-                        ? RouteHelper.splash
-                        : RouteHelper.getOrderDetailsRoute(widget.orderID)
-                    : Provider.of<SplashProvider>(context, listen: false)
-                            .configModel!
-                            .maintenanceMode!
-                        ? RouteHelper.getMaintenanceRoute()
-                        : RouteHelper.menu,
-                onGenerateRoute: RouteHelper.router.generator,
+                // initialRoute: ResponsiveHelper.isMobilePhone()
+                //     ? widget.orderID == null
+                //         ? RouteHelper.splash
+                //         : RouteHelper.getOrderDetailsRoute(widget.orderID)
+                //     : Provider.of<SplashProvider>(context, listen: false)
+                //             .configModel!
+                //             .maintenanceMode!
+                //         ? RouteHelper.getMaintenanceRoute()
+                //         : RouteHelper.menu,
+                // onGenerateRoute: RouteHelper.router.generator,
                 debugShowCheckedModeBanner: false,
                 navigatorKey: navigatorKey,
                 theme: Provider.of<ThemeProvider>(context).darkTheme
@@ -209,6 +212,7 @@ class _MyAppState extends State<MyApp> {
                   PointerDeviceKind.stylus,
                   PointerDeviceKind.unknown
                 }),
+                home: MenuScreen(),
                 builder: (context, widget) => Material(
                     child: Stack(children: [
                   widget!,
