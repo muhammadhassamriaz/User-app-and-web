@@ -11,7 +11,7 @@ class OrderCancelDialog extends StatelessWidget {
   final String orderID;
   final Function callback;
   final bool fromOrder;
-  OrderCancelDialog({@required this.orderID, @required this.callback, @required this.fromOrder});
+  OrderCancelDialog({required this.orderID, required this.callback, required this.fromOrder});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class OrderCancelDialog extends StatelessWidget {
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: 50),
-              child: Text(getTranslated('are_you_sure_to_cancel', context), style: poppinsRegular, textAlign: TextAlign.center),
+              child: Text(getTranslated('are_you_sure_to_cancel', context)!, style: poppinsRegular, textAlign: TextAlign.center),
             ),
 
             Divider(height: 0, color: ColorResources.getHintColor(context)),
@@ -40,7 +40,7 @@ class OrderCancelDialog extends StatelessWidget {
                   padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))),
-                  child: Text(getTranslated('yes', context), style: poppinsRegular.copyWith(color: Theme.of(context).primaryColor)),
+                  child: Text(getTranslated('yes', context)!, style: poppinsRegular.copyWith(color: Theme.of(context).primaryColor)),
                 ),
               )),
 
@@ -50,7 +50,7 @@ class OrderCancelDialog extends StatelessWidget {
                   padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                   alignment: Alignment.center,
                   decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.only(bottomRight: Radius.circular(10))),
-                  child: Text(getTranslated('no', context), style: poppinsRegular.copyWith(color: Colors.white)),
+                  child: Text(getTranslated('no', context)!, style: poppinsRegular.copyWith(color: Colors.white)),
                 ),
               )),
 

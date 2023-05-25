@@ -1,8 +1,8 @@
 class ChatModel {
-  int totalSize;
-  int limit;
-  int offset;
-  List<Messages> messages;
+  int? totalSize;
+  int? limit;
+  int? offset;
+  List<Messages>? messages;
 
   ChatModel({this.totalSize, this.limit, this.offset, this.messages});
 
@@ -13,7 +13,7 @@ class ChatModel {
     if (json['messages'] != null) {
       messages = <Messages>[];
       json['messages'].forEach((v) {
-        messages.add(new Messages.fromJson(v));
+        messages!.add(new Messages.fromJson(v));
       });
     }
   }
@@ -24,24 +24,24 @@ class ChatModel {
     data['limit'] = this.limit;
     data['offset'] = this.offset;
     if (this.messages != null) {
-      data['messages'] = this.messages.map((v) => v.toJson()).toList();
+      data['messages'] = this.messages!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Messages {
-  int id;
-  int conversationId;
-  CustomerId customerId;
-  DeliverymanId deliverymanId;
-  String message;
-  String reply;
-  List<String> attachment;
-  List<String> image;
-  bool isReply;
-  String createdAt;
-  String updatedAt;
+  int? id;
+  int? conversationId;
+  CustomerId? customerId;
+  DeliverymanId? deliverymanId;
+  String? message;
+  String? reply;
+  List<String>? attachment;
+  List<String>? image;
+  bool? isReply;
+  String? createdAt;
+  String? updatedAt;
 
   Messages(
       {this.id,
@@ -93,10 +93,10 @@ class Messages {
     data['id'] = this.id;
     data['conversation_id'] = this.conversationId;
     if (this.customerId != null) {
-      data['customer_id'] = this.customerId.toJson();
+      data['customer_id'] = this.customerId!.toJson();
     }
     if (this.deliverymanId != null) {
-      data['deliveryman_id'] = this.deliverymanId.toJson();
+      data['deliveryman_id'] = this.deliverymanId!.toJson();
     }
     data['message'] = this.message;
     data['reply'] = this.reply;
@@ -111,8 +111,8 @@ class Messages {
 }
 
 class CustomerId {
-  String name;
-  String image;
+  String? name;
+  String? image;
 
   CustomerId({this.name, this.image});
 
@@ -129,8 +129,8 @@ class CustomerId {
   }
 }
 class DeliverymanId {
-  String name;
-  String image;
+  String? name;
+  String? image;
 
   DeliverymanId({this.name, this.image});
 

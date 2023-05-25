@@ -10,13 +10,13 @@ import 'package:flutter_grocery/utill/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchRepo {
-  final DioClient dioClient;
-  final SharedPreferences sharedPreferences;
-  SearchRepo({@required this.dioClient, @required this.sharedPreferences});
+  final DioClient? dioClient;
+  final SharedPreferences? sharedPreferences;
+  SearchRepo({required this.dioClient, required this.sharedPreferences});
 
   Future<ApiResponse> getSearchProductList(String query, String languageCode) async {
     try {
-      final response = await dioClient.get(
+      final response = await dioClient!.get(
         '${AppConstants.SEARCH_URI + query}&limit=50&&offset=1',
         options: Options(headers: {'X-localization': languageCode}),
       );
@@ -26,35 +26,35 @@ class SearchRepo {
     }
   }
 
-  List<String> getAllSortByList(){
-    List<String> _sortByList=[
-      getTranslated('low_to_high', Get.context),
-      getTranslated('high_to_low', Get.context),
-      getTranslated('ascending', Get.context),
-      getTranslated('descending', Get.context),
+  List<String?> getAllSortByList(){
+    List<String?> _sortByList=[
+      getTranslated('low_to_high', Get.context!),
+      getTranslated('high_to_low', Get.context!),
+      getTranslated('ascending', Get.context!),
+      getTranslated('descending', Get.context!),
     ];
     return _sortByList;
   }
 
   // for save home address
-  Future<void> saveSearchAddress(String searchAddress) async {
+  Future<void> saveSearchAddress(String? searchAddress) async {
     try {
-      List<String> searchKeywordList = sharedPreferences.getStringList(AppConstants.SEARCH_ADDRESS) ?? [];
+      List<String> searchKeywordList = sharedPreferences!.getStringList(AppConstants.SEARCH_ADDRESS) ?? [];
       if (!searchKeywordList.contains(searchAddress)) {
-        searchKeywordList.add(searchAddress);
+        searchKeywordList.add(searchAddress!);
         print(searchAddress);
       }
-      await sharedPreferences.setStringList(AppConstants.SEARCH_ADDRESS, searchKeywordList);
+      await sharedPreferences!.setStringList(AppConstants.SEARCH_ADDRESS, searchKeywordList);
     } catch (e) {
       throw e;
     }
   }
 
   List<String> getSearchAddress() {
-    return sharedPreferences.getStringList(AppConstants.SEARCH_ADDRESS) ?? [];
+    return sharedPreferences!.getStringList(AppConstants.SEARCH_ADDRESS) ?? [];
   }
 
   Future<bool> clearSearchAddress() async {
-    return sharedPreferences.setStringList(AppConstants.SEARCH_ADDRESS, []);
+    return sharedPreferences!.setStringList(AppConstants.SEARCH_ADDRESS, []);
   }
 }

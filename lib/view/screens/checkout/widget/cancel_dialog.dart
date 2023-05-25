@@ -6,8 +6,8 @@ import 'package:flutter_grocery/utill/styles.dart';
 import 'package:flutter_grocery/view/base/custom_button.dart';
 
 class CancelDialog extends StatelessWidget {
-  final int orderID;
-  CancelDialog({@required this.orderID});
+  final int? orderID;
+  CancelDialog({required this.orderID});
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +46,14 @@ class CancelDialog extends StatelessWidget {
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Icon(Icons.info, color: Theme.of(context).primaryColor),
             Text(
-              getTranslated('payment_failed', context),
+              getTranslated('payment_failed', context)!,
               style: poppinsMedium.copyWith(color: Theme.of(context).primaryColor),
             ),
           ]),
           SizedBox(height: 10),
 
           Text(
-            getTranslated('payment_process_is_interrupted', context),
+            getTranslated('payment_process_is_interrupted', context)!,
             style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
             textAlign: TextAlign.center,
           ),
@@ -69,7 +69,7 @@ class CancelDialog extends StatelessWidget {
                 style: TextButton.styleFrom(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(width: 2, color: Theme.of(context).primaryColor)),
                 ),
-                child: Text(getTranslated('maybe_later', context), style: poppinsMedium.copyWith(color: Theme.of(context).primaryColor)),
+                child: Text(getTranslated('maybe_later', context)!, style: poppinsMedium.copyWith(color: Theme.of(context).primaryColor)),
               ),
             )),
             SizedBox(width: 10),

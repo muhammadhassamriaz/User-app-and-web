@@ -18,9 +18,9 @@ import '../../../../helper/responsive_helper.dart';
 import '../../../base/footer_view.dart';
 
 class DeliveryManReviewWidget extends StatefulWidget {
-  final DeliveryMan deliveryMan;
+  final DeliveryMan? deliveryMan;
   final String orderID;
-  DeliveryManReviewWidget({@required this.deliveryMan, @required this.orderID});
+  DeliveryManReviewWidget({required this.deliveryMan, required this.orderID});
 
   @override
   _DeliveryManReviewWidgetState createState() => _DeliveryManReviewWidgetState();
@@ -55,13 +55,13 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [BoxShadow(
-                            color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 300],
+                            color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 300]!,
                             blurRadius: 5, spreadRadius: 1,
                           )],
                         ),
                         child: Column(children: [
                           Text(
-                            getTranslated('rate_his_service', context),
+                            getTranslated('rate_his_service', context)!,
                             style: poppinsMedium.copyWith(color: ColorResources.getTextColor(context)), overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -90,7 +90,7 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                           SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                           Text(
-                            getTranslated('share_your_opinion', context),
+                            getTranslated('share_your_opinion', context)!,
                             style: poppinsMedium.copyWith(color: ColorResources.getTextColor(context)), overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
@@ -112,26 +112,26 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                                   buttonText: getTranslated('submit', context),
                                   onPressed: () {
                                     if (orderProvider.deliveryManRating == 0) {
-                                      showCustomSnackBar(getTranslated('give_a_rating', context), context);
+                                      showCustomSnackBar(getTranslated('give_a_rating', context)!, context);
                                     } else if (_controller.text.isEmpty) {
-                                      showCustomSnackBar(getTranslated('write_a_review', context), context);
+                                      showCustomSnackBar(getTranslated('write_a_review', context)!, context);
                                     } else {
                                       FocusScopeNode currentFocus = FocusScope.of(context);
                                       if (!currentFocus.hasPrimaryFocus) {
                                         currentFocus.unfocus();
                                       }
                                       ReviewBody reviewBody = ReviewBody(
-                                        deliveryManId: widget.deliveryMan.id.toString(),
+                                        deliveryManId: widget.deliveryMan!.id.toString(),
                                         rating: orderProvider.deliveryManRating.toString(),
                                         comment: _controller.text,
                                         orderId: widget.orderID,
                                       );
                                       orderProvider.submitDeliveryManReview(reviewBody).then((value) {
                                         if (value.isSuccess) {
-                                          showCustomSnackBar(value.message, context, isError: false);
+                                          showCustomSnackBar(value.message!, context, isError: false);
                                           _controller.text = '';
                                         } else {
-                                          showCustomSnackBar(value.message, context);
+                                          showCustomSnackBar(value.message!, context);
                                         }
                                       });
                                     }

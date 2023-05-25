@@ -25,17 +25,17 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
-  final OrderModel orderModel;
+  final OrderModel? orderModel;
   final bool isAppBar;
-  const ChatScreen({Key key,@required this.orderModel, this.isAppBar = false}) : super(key: key);
+  const ChatScreen({Key? key,required this.orderModel, this.isAppBar = false}) : super(key: key);
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _inputMessageController = TextEditingController();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  bool _isLoggedIn;
+  FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
+  late bool _isLoggedIn;
   bool _isFirst = true;
 
   var androidInitialize = const AndroidInitializationSettings('notification_icon');
@@ -48,7 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     var initializationsSettings = InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(initializationsSettings);
+    flutterLocalNotificationsPlugin!.initialize(initializationsSettings);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if(!kIsWeb){
@@ -80,7 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
-    flutterLocalNotificationsPlugin.cancelAll();
+    flutterLocalNotificationsPlugin!.cancelAll();
 
     super.dispose();
   }
@@ -92,8 +92,8 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
           ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120))
-          : ResponsiveHelper.isMobilePhone() && _isAdmin && !widget.isAppBar ? null : AppBar(title: _isAdmin ? Text('${Provider.of<SplashProvider>(context,listen: false).configModel.ecommerceName}')
-          : Text(widget.orderModel.deliveryMan.fName+' '+widget.orderModel.deliveryMan.lName),backgroundColor: Theme.of(context).primaryColor,
+          : ResponsiveHelper.isMobilePhone() && _isAdmin && !widget.isAppBar ? null : AppBar(title: _isAdmin ? Text('${Provider.of<SplashProvider>(context,listen: false).configModel!.ecommerceName}')
+          : Text(widget.orderModel!.deliveryMan!.fName!+' '+widget.orderModel!.deliveryMan!.lName!),backgroundColor: Theme.of(context).primaryColor,
           actions: <Widget>[
             Padding(
             padding: const EdgeInsets.all(8.0),
@@ -107,7 +107,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: FadeInImage.assetNetwork(
                   fit: BoxFit.cover,
                   placeholder: _isAdmin ? Images.app_logo : Images.profile_placeholder,
-                  image: _isAdmin ? '' : '${Provider.of<SplashProvider>(context, listen: false).baseUrls.deliveryManImageUrl}/${widget.orderModel.deliveryMan.image}',
+                  image: _isAdmin ? '' : '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${widget.orderModel!.deliveryMan!.image}',
                   imageErrorBuilder: (c,t,o) => Image.asset(_isAdmin ? Images.app_logo : Images.profile_placeholder,fit: BoxFit.cover,),
                 ),
               ),
@@ -141,14 +141,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   children: [
                     Consumer<ChatProvider>(
                         builder: (context, chatProvider,_) {
-                          return chatProvider.chatImage.length>0?
+                          return chatProvider.chatImage!.length>0?
                           Container(height: 100,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              itemCount: chatProvider.chatImage.length,
+                              itemCount: chatProvider.chatImage!.length,
                               itemBuilder: (BuildContext context, index){
-                                return  chatProvider.chatImage.length > 0?
+                                return  chatProvider.chatImage!.length > 0?
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Stack(
@@ -156,9 +156,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                       Container(width: 100, height: 100,
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.all(Radius.circular(Dimensions.PADDING_SIZE_DEFAULT)),
-                                          child: ResponsiveHelper.isWeb()? Image.network(chatProvider.chatImage[index].path, width: 100, height: 100,
+                                          child: ResponsiveHelper.isWeb()? Image.network(chatProvider.chatImage![index].path, width: 100, height: 100,
                                             fit: BoxFit.cover,
-                                          ):Image.file(File(chatProvider.chatImage[index].path), width: 100, height: 100,
+                                          ):Image.file(File(chatProvider.chatImage![index].path), width: 100, height: 100,
                                             fit: BoxFit.cover,
                                           ),
                                         ) ,

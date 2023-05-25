@@ -10,13 +10,13 @@ class AccountDeleteDialog extends StatelessWidget {
   final bool isFailed;
   final double rotateAngle;
   final IconData icon;
-  final String title;
-  final String description;
+  final String? title;
+  final String? description;
   final Function onTapTrue;
-  final String onTapTrueText;
+  final String? onTapTrueText;
   final Function onTapFalse;
-  final String onTapFalseText;
-  AccountDeleteDialog({this.isFailed = false, this.rotateAngle = 0, @required this.icon, @required this.title, @required this.description,@required this.onTapFalse,@required this.onTapTrue, this.onTapTrueText, this.onTapFalseText});
+  final String? onTapFalseText;
+  AccountDeleteDialog({this.isFailed = false, this.rotateAngle = 0, required this.icon, required this.title, required this.description,required this.onTapFalse,required this.onTapTrue, this.onTapTrueText, this.onTapFalseText});
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +43,9 @@ class AccountDeleteDialog extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: 40),
                 child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  Text(title, style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
+                  Text(title!, style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
                   SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                  Text(description, textAlign: TextAlign.center, style: poppinsRegular),
+                  Text(description!, textAlign: TextAlign.center, style: poppinsRegular),
                   SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 0),

@@ -3,7 +3,7 @@ import 'dart:math' as math show sin, pi;
 
 class CustomLoader extends StatefulWidget {
   const CustomLoader({
-    Key key,
+    Key? key,
     this.color,
     this.size = 50.0,
     this.itemBuilder,
@@ -14,11 +14,11 @@ class CustomLoader extends StatefulWidget {
   'You should specify either a itemBuilder or a color'),
         super(key: key);
 
-  final Color color;
+  final Color? color;
   final double size;
-  final IndexedWidgetBuilder itemBuilder;
+  final IndexedWidgetBuilder? itemBuilder;
   final Duration duration;
-  final AnimationController controller;
+  final AnimationController? controller;
 
   @override
   _CustomLoaderState createState() => _CustomLoaderState();
@@ -26,7 +26,7 @@ class CustomLoader extends StatefulWidget {
 
 class _CustomLoaderState extends State<CustomLoader> with SingleTickerProviderStateMixin {
   final List<double> delays = [.0, -1.1, -1.0, -0.9, -0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1];
-   AnimationController _controller;
+   late AnimationController _controller;
 
   @override
   void initState() {
@@ -71,12 +71,12 @@ class _CustomLoaderState extends State<CustomLoader> with SingleTickerProviderSt
   }
 
   Widget _itemBuilder(int index) => widget.itemBuilder != null
-      ? widget.itemBuilder(context, index)
+      ? widget.itemBuilder!(context, index)
       : DecoratedBox(decoration: BoxDecoration(color: widget.color, shape: BoxShape.circle));
 }
 
 class DelayTween extends Tween<double> {
-  DelayTween({double begin, double end, @required this.delay}) : super(begin: begin, end: end);
+  DelayTween({double? begin, double? end, required this.delay}) : super(begin: begin, end: end);
 
   final double delay;
 

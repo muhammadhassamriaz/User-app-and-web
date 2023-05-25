@@ -25,7 +25,7 @@ class ProductWidget extends StatelessWidget {
   final Product product;
   final String productType;
   final bool isGrid;
-  ProductWidget({@required this.product, this.productType = ProductType.DAILY_ITEM, this.isGrid = false});
+  ProductWidget({required this.product, this.productType = ProductType.DAILY_ITEM, this.isGrid = false});
 
 
   final oneSideShadow = Padding(
@@ -48,12 +48,12 @@ class ProductWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    double priceWithDiscount = 0;
-    double categoryDiscountAmount;
+    double? priceWithDiscount = 0;
+    double? categoryDiscountAmount;
     if(product.categoryDiscount != null) {
       categoryDiscountAmount = PriceConverter.convertWithDiscount(
-        product.price, product.categoryDiscount.discountAmount, product.categoryDiscount.discountType,
-        maxDiscount: product.categoryDiscount.maximumAmount,
+        product.price, product.categoryDiscount!.discountAmount, product.categoryDiscount!.discountType,
+        maxDiscount: product.categoryDiscount!.maximumAmount,
       );
     }
 
@@ -61,29 +61,29 @@ class ProductWidget extends StatelessWidget {
 
 
     if(categoryDiscountAmount != null && categoryDiscountAmount > 0
-        && categoryDiscountAmount  < priceWithDiscount) {
+        && categoryDiscountAmount  < priceWithDiscount!) {
       priceWithDiscount = categoryDiscountAmount;
 
     }
 
     return Consumer<CartProvider>(
       builder: (context, cartProvider, child) {
-        double _price = 0;
-        int _stock = 0;
+        double? _price = 0;
+        int? _stock = 0;
         bool isExistInCart = false;
-        int cardIndex;
-        CartModel _cartModel;
+        int? cardIndex;
+        CartModel? _cartModel;
         if(cartProvider.cartList != null) {
-          if(product.variations.length > 0) {
-            for(int index=0; index<product.variations.length; index++) {
-              _price = product.variations.length > 0 ? product.variations[index].price : product.price;
-              _stock = product.variations.length > 0 ? product.variations[index].stock : product.totalStock;
-              _cartModel = CartModel(product.id, product.image.isNotEmpty ? product.image[0] : '', product.name, _price,
+          if(product.variations!.length > 0) {
+            for(int index=0; index<product.variations!.length; index++) {
+              _price = product.variations!.length > 0 ? product.variations![index].price : product.price;
+              _stock = product.variations!.length > 0 ? product.variations![index].stock : product.totalStock;
+              _cartModel = CartModel(product.id, product.image!.isNotEmpty ? product.image![0] : '', product.name, _price,
                   PriceConverter.convertWithDiscount(_price, product.discount, product.discountType),
                   1,
-                  product.variations.length > 0 ? product.variations[index] : null,
-                  (_price - PriceConverter.convertWithDiscount(_price, product.discount, product.discountType)),
-                  (_price - PriceConverter.convertWithDiscount(_price, product.tax, product.taxType)),
+                  product.variations!.length > 0 ? product.variations![index] : null,
+                  (_price! - PriceConverter.convertWithDiscount(_price, product.discount, product.discountType)!),
+                  (_price - PriceConverter.convertWithDiscount(_price, product.tax, product.taxType)!),
                   product.capacity,
                   product.unit,
                   _stock,product
@@ -95,14 +95,14 @@ class ProductWidget extends StatelessWidget {
               }
             }
           }else {
-            _price = product.variations.length > 0 ? product.variations[0].price : product.price;
-            _stock = product.variations.length > 0 ? product.variations[0].stock : product.totalStock;
-            _cartModel = CartModel(product.id, product.image.isNotEmpty ?  product.image[0] : '', product.name, _price,
+            _price = product.variations!.length > 0 ? product.variations![0].price! : product.price!;
+            _stock = product.variations!.length > 0 ? product.variations![0].stock! : product.totalStock!;
+            _cartModel = CartModel(product.id, product.image!.isNotEmpty ?  product.image![0] : '', product.name, _price,
                 PriceConverter.convertWithDiscount(_price, product.discount, product.discountType),
                 1,
-                product.variations.length > 0 ? product.variations[0] : null,
-                (_price - PriceConverter.convertWithDiscount(_price, product.discount, product.discountType)),
-                (_price - PriceConverter.convertWithDiscount(_price, product.tax, product.taxType)),
+                product.variations!.length > 0 ? product.variations![0] : null,
+                (_price - PriceConverter.convertWithDiscount(_price, product.discount, product.discountType)!),
+                (_price - PriceConverter.convertWithDiscount(_price, product.tax, product.taxType)!),
                 product.capacity,
                 product.unit,
                 _stock,product
@@ -114,8 +114,8 @@ class ProductWidget extends StatelessWidget {
 
         return ResponsiveHelper.isDesktop(context) ? OnHover(
           isItem: true,
-          child: _productGridView(context, isExistInCart, _stock, _cartModel, cardIndex, priceWithDiscount),
-        ) : isGrid ? _productGridView(context, isExistInCart, _stock, _cartModel, cardIndex, priceWithDiscount) :
+          child: _productGridView(context, isExistInCart, _stock, _cartModel, cardIndex, priceWithDiscount!),
+        ) : isGrid ? _productGridView(context, isExistInCart, _stock, _cartModel, cardIndex, priceWithDiscount!) :
         Padding(
           padding: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
           child: InkWell(
@@ -144,8 +144,8 @@ class ProductWidget extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: CachedNetworkImage(
-                      imageUrl: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${
-                          product.image.isNotEmpty ? product.image[0] : ''}',
+                      imageUrl: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${
+                          product.image!.isNotEmpty ? product.image![0] : ''}',
                       placeholder: (context, url) => Image.asset(Images.placeholder(context)),
                       errorWidget: (context, url, error) => Image.asset(Images.placeholder(context)),
                     ),
@@ -161,7 +161,7 @@ class ProductWidget extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 3),
-                            child: Text(product.name,
+                            child: Text(product.name!,
                               style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -171,7 +171,7 @@ class ProductWidget extends StatelessWidget {
 
                           product.rating != null ? Padding(
                             padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: RatingBar(rating: product.rating.length > 0 ? double.parse(product.rating[0].average) : 0.0, size: 10),
+                            child: RatingBar(rating: product.rating!.length > 0 ? double.parse(product.rating![0].average!) : 0.0, size: 10),
                           ) : SizedBox(),
 
                           Text('${product.capacity} ${product.unit}',
@@ -181,14 +181,14 @@ class ProductWidget extends StatelessWidget {
 
                           Flexible(
                             child: Row(children: [
-                              product.price > priceWithDiscount ? Text(
+                              product.price! > priceWithDiscount! ? Text(
                                 PriceConverter.convertPrice(context, product.price),
                                 style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, decoration: TextDecoration.lineThrough),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ) : SizedBox(),
 
-                              product.price > priceWithDiscount ? SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL) : SizedBox(),
+                              product.price! > priceWithDiscount ? SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL) : SizedBox(),
 
                               Text(
                                 PriceConverter.convertPrice(context, priceWithDiscount),
@@ -212,14 +212,14 @@ class ProductWidget extends StatelessWidget {
                       !isExistInCart
                           ? InkWell(
                           onTap: () {
-                            if(product.variations == null || product.variations.length == 0) {
+                            if(product.variations == null || product.variations!.length == 0) {
                               if (isExistInCart) {
-                                showCustomSnackBar(getTranslated('already_added', context), context);
-                              } else if (_stock < 1) {
-                                showCustomSnackBar(getTranslated('out_of_stock', context), context);
+                                showCustomSnackBar(getTranslated('already_added', context)!, context);
+                              } else if (_stock! < 1) {
+                                showCustomSnackBar(getTranslated('out_of_stock', context)!, context);
                               } else {
-                                Provider.of<CartProvider>(context, listen: false).addToCart(_cartModel);
-                                showCustomSnackBar(getTranslated('added_to_cart', context), context, isError: false);
+                                Provider.of<CartProvider>(context, listen: false).addToCart(_cartModel!);
+                                showCustomSnackBar(getTranslated('added_to_cart', context)!, context, isError: false);
                               }
                             }else {
                               Navigator.of(context).pushNamed(
@@ -244,7 +244,7 @@ class ProductWidget extends StatelessWidget {
                           Row(children: [
                             InkWell(
                               onTap: () {
-                                if (cart.cartList[cardIndex].quantity > 1) {
+                                if (cart.cartList[cardIndex!].quantity! > 1) {
                                   Provider.of<CartProvider>(context, listen: false).setQuantity(false, cardIndex, context: context, showMessage: true);
                                 } else {
                                   Provider.of<CartProvider>(context, listen: false).removeFromCart(cardIndex, context);
@@ -258,17 +258,17 @@ class ProductWidget extends StatelessWidget {
                               ),
                             ),
                             Text(
-                                cart.cartList[cardIndex].quantity.toString(),
+                                cart.cartList[cardIndex!].quantity.toString(),
                                 style: poppinsSemiBold.copyWith(
                                     fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE,
                                     color: Theme.of(context).primaryColor)),
                             InkWell(
                               onTap: () {
-                                if (cart.cartList[cardIndex].quantity <
-                                    cart.cartList[cardIndex].stock) {
+                                if (cart.cartList[cardIndex!].quantity! <
+                                    cart.cartList[cardIndex].stock!) {
                                   Provider.of<CartProvider>(context, listen: false).setQuantity(true, cardIndex, context: context, showMessage: true);
                                 } else {
-                                  showCustomSnackBar(getTranslated('out_of_stock', context), context);
+                                  showCustomSnackBar(getTranslated('out_of_stock', context)!, context);
                                 }
                               },
                               child: Padding(
@@ -289,7 +289,7 @@ class ProductWidget extends StatelessWidget {
     );
   }
 
-  InkWell _productGridView(BuildContext context, bool isExistInCart, int _stock, CartModel _cartModel, int cardIndex, double priceWithDiscount) {
+  InkWell _productGridView(BuildContext context, bool isExistInCart, int? _stock, CartModel? _cartModel, int? cardIndex, double priceWithDiscount) {
 
     return InkWell(
           borderRadius:  BorderRadius.circular(Dimensions.RADIUS_SIZE_TEN),
@@ -334,8 +334,8 @@ class ProductWidget extends StatelessWidget {
                           placeholder: Images.placeholder(context),
                           height: 155,
                           fit: BoxFit.cover,
-                          image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${
-                              product.image.isNotEmpty ? product.image[0] : ''}',
+                          image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${
+                              product.image!.isNotEmpty ? product.image![0] : ''}',
                           imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder(context), width: 80, height: 155, fit: BoxFit.cover),
                         ),
                       ),
@@ -354,7 +354,7 @@ class ProductWidget extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 3),
                         child: Text(
-                          product.name,
+                          product.name!,
                           style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -364,7 +364,7 @@ class ProductWidget extends StatelessWidget {
 
                       product.rating != null ? Padding(
                         padding: const EdgeInsets.symmetric(vertical: 3),
-                        child: RatingBar(rating: product.rating.length > 0 ? double.parse(product.rating[0].average) : 0.0, size: 10),
+                        child: RatingBar(rating: product.rating!.length > 0 ? double.parse(product.rating![0].average!) : 0.0, size: 10),
                       ) : SizedBox(),
 
                       Text(
@@ -379,7 +379,7 @@ class ProductWidget extends StatelessWidget {
                         style: poppinsBold.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE),
                       ),
 
-                      product.price > priceWithDiscount  ?
+                      product.price! > priceWithDiscount  ?
                       Text('${PriceConverter.convertPrice(context, product.price)}', style: poppinsRegular.copyWith(
                         fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
                         color: ColorResources.RED_COLOR,
@@ -389,14 +389,14 @@ class ProductWidget extends StatelessWidget {
                       if(productType == ProductType.LATEST_PRODUCT) Column(children: [
                         !isExistInCart ? InkWell(
                           onTap: () {
-                            if(product.variations == null || product.variations.length == 0) {
+                            if(product.variations == null || product.variations!.length == 0) {
                               if (isExistInCart) {
-                                showCustomSnackBar(getTranslated('already_added', context), context);
-                              } else if (_stock < 1) {
-                                showCustomSnackBar(getTranslated('out_of_stock', context), context);
+                                showCustomSnackBar(getTranslated('already_added', context)!, context);
+                              } else if (_stock! < 1) {
+                                showCustomSnackBar(getTranslated('out_of_stock', context)!, context);
                               } else {
-                                Provider.of<CartProvider>(context, listen: false).addToCart(_cartModel);
-                                showCustomSnackBar(getTranslated('added_to_cart', context), context, isError: false);
+                                Provider.of<CartProvider>(context, listen: false).addToCart(_cartModel!);
+                                showCustomSnackBar(getTranslated('added_to_cart', context)!, context, isError: false);
                               }
                             }else {
                               Navigator.of(context).pushNamed(
@@ -411,7 +411,7 @@ class ProductWidget extends StatelessWidget {
                             MainAxisAlignment.center,
                             children: [
                               Text(
-                                getTranslated('add_to_cart', context),
+                                getTranslated('add_to_cart', context)!,
                                 style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT, color: Theme.of(context).primaryColor),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -432,7 +432,7 @@ class ProductWidget extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: () {
-                                    if (cart.cartList[cardIndex].quantity > 1) {
+                                    if (cart.cartList[cardIndex!].quantity! > 1) {
                                       Provider.of<CartProvider>(context, listen: false).setQuantity(false, cardIndex);
                                     } else {
                                       Provider.of<CartProvider>(context, listen: false).removeFromCart(cardIndex, context);
@@ -448,17 +448,17 @@ class ProductWidget extends StatelessWidget {
                                 ),
 
                                 Text(
-                                  cart.cartList[cardIndex].quantity.toString(), style: poppinsSemiBold.copyWith(
+                                  cart.cartList[cardIndex!].quantity.toString(), style: poppinsSemiBold.copyWith(
                                   fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE,
                                   color: Theme.of(context).primaryColor,
                                 ),),
 
                                 InkWell(
                                   onTap: () {
-                                    if (cart.cartList[cardIndex].quantity < cart.cartList[cardIndex].stock) {
+                                    if (cart.cartList[cardIndex].quantity! < cart.cartList[cardIndex].stock!) {
                                       Provider.of<CartProvider>(context, listen: false).setQuantity(true, cardIndex);
                                     } else {
-                                      showCustomSnackBar(getTranslated('out_of_stock', context), context);
+                                      showCustomSnackBar(getTranslated('out_of_stock', context)!, context);
                                     }
                                   },
                                   child: Padding(

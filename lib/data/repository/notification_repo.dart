@@ -5,13 +5,13 @@ import 'package:flutter_grocery/data/model/response/base/api_response.dart';
 import 'package:flutter_grocery/utill/app_constants.dart';
 
 class NotificationRepo {
-  final DioClient dioClient;
+  final DioClient? dioClient;
 
-  NotificationRepo({@required this.dioClient});
+  NotificationRepo({required this.dioClient});
 
   Future<ApiResponse> getNotificationList() async {
     try {
-      final response = await dioClient.get('${AppConstants.NOTIFICATION_URI}');
+      final response = await dioClient!.get('${AppConstants.NOTIFICATION_URI}');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

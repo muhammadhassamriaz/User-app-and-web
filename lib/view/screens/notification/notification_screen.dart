@@ -25,7 +25,7 @@ class NotificationScreen extends StatelessWidget {
     Provider.of<NotificationProvider>(context, listen: false).initNotificationList(context);
 
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)): CustomAppBar(title: getTranslated('notification', context)),
+      appBar: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)): CustomAppBar(title: getTranslated('notification', context))) as PreferredSizeWidget?,
       body: RefreshIndicator(
         onRefresh: () async {
           await Provider.of<NotificationProvider>(context, listen: false).initNotificationList(context);
@@ -39,17 +39,17 @@ class NotificationScreen extends StatelessWidget {
               child: Consumer<NotificationProvider>(
                   builder: (context, notificationProvider, child) {
                     List<DateTime> _dateTimeList = [];
-                    return notificationProvider.notificationList != null ? notificationProvider.notificationList.length > 0
+                    return notificationProvider.notificationList != null ? notificationProvider.notificationList!.length > 0
                         ? Scrollbar(
                       child: ConstrainedBox(
                         constraints: BoxConstraints(minHeight: MediaQuery.of(context).size.height*0.6),
                         child: ListView.builder(
-                            itemCount: notificationProvider.notificationList.length,
+                            itemCount: notificationProvider.notificationList!.length,
                             padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.symmetric(horizontal: 350, vertical: 20) :  EdgeInsets.zero,
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              DateTime _originalDateTime = DateConverter.isoStringToLocalDate(notificationProvider.notificationList[index].createdAt);
+                              DateTime _originalDateTime = DateConverter.isoStringToLocalDate(notificationProvider.notificationList![index].createdAt!);
                               DateTime _convertedDate = DateTime(_originalDateTime.year, _originalDateTime.month, _originalDateTime.day);
                               bool _addTitle = false;
                               if(!_dateTimeList.contains(_convertedDate)) {
@@ -59,7 +59,7 @@ class NotificationScreen extends StatelessWidget {
                               return InkWell(
                                 onTap: () {
                                   showDialog(context: context, builder: (BuildContext context) {
-                                    return NotificationDialog(notificationModel: notificationProvider.notificationList[index]);
+                                    return NotificationDialog(notificationModel: notificationProvider.notificationList![index]);
                                   });
                                 },
                                 hoverColor: Colors.transparent,
@@ -68,7 +68,7 @@ class NotificationScreen extends StatelessWidget {
                                   children: [
                                     _addTitle ? Padding(
                                       padding: EdgeInsets.fromLTRB(10, 10, 10, 2),
-                                      child: Text(DateConverter.isoStringToLocalDateOnly(notificationProvider.notificationList[index].createdAt)),
+                                      child: Text(DateConverter.isoStringToLocalDateOnly(notificationProvider.notificationList![index].createdAt!)),
                                     ) : SizedBox(),
                                     Container(
                                       padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
@@ -93,7 +93,7 @@ class NotificationScreen extends StatelessWidget {
                                                     borderRadius: BorderRadius.circular(10),
                                                     child: FadeInImage.assetNetwork(
                                                       placeholder: Images.placeholder(context),
-                                                      image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.notificationImageUrl}/${notificationProvider.notificationList[index].image}',
+                                                      image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.notificationImageUrl}/${notificationProvider.notificationList![index].image}',
                                                       height: 150, width: MediaQuery.of(context).size.width, fit: BoxFit.cover,
                                                       imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder(context), height: 150, width: MediaQuery.of(context).size.width, fit: BoxFit.cover),
                                                     ),
@@ -106,14 +106,14 @@ class NotificationScreen extends StatelessWidget {
                                                 child: ListTile(
                                                  contentPadding: EdgeInsets.zero,
                                                   title: Text(
-                                                    notificationProvider.notificationList[index].title,
+                                                    notificationProvider.notificationList![index].title!,
                                                     maxLines: 1,
                                                     overflow: TextOverflow.ellipsis,
                                                     style: poppinsBold.copyWith(
                                                       fontSize: Dimensions.FONT_SIZE_LARGE,
                                                     ),
                                                   ),
-                                                  subtitle: Text(notificationProvider.notificationList[index].description,
+                                                  subtitle: Text(notificationProvider.notificationList![index].description!,
                                                     style: poppinsLight.copyWith(
                                                       color: Theme.of(context).hintColor,
                                                     ),

@@ -6,31 +6,31 @@ import 'package:flutter_grocery/provider/splash_provider.dart';
 import 'package:provider/provider.dart';
 
 class PriceConverter {
-  static String convertPrice(BuildContext context, double price, {double discount, String discountType}) {
+  static String convertPrice(BuildContext context, double? price, {double? discount, String? discountType}) {
     if(discount != null && discountType != null){
       if(discountType == 'amount') {
-        price = price - discount;
+        price = price! - discount;
       }else if(discountType == 'percent') {
-        price = price - ((discount / 100) * price);
+        price = price! - ((discount / 100) * price);
       }
     }
-    ConfigModel _config = Provider.of<SplashProvider>(context, listen: false).configModel;
+    ConfigModel _config = Provider.of<SplashProvider>(context, listen: false).configModel!;
     bool _isLeft = _config.currencySymbolPosition == 'left';
-    return !_isLeft ?  '${(price).toStringAsFixed(_config.decimalPointSettings).replaceAllMapped(
+    return !_isLeft ?  '${price!.toStringAsFixed(_config.decimalPointSettings!).replaceAllMapped(
         RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}'' ${_config.currencySymbol}'
-        : '${_config.currencySymbol} ''${(price).toStringAsFixed(_config.decimalPointSettings).replaceAllMapped(
+        : '${_config.currencySymbol} ''${price!.toStringAsFixed(_config.decimalPointSettings!).replaceAllMapped(
         RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}'
         ;
   }
 
-  static double convertWithDiscount(double price, double discount, String discountType, {double maxDiscount}) {
+  static double? convertWithDiscount(double? price, double? discount, String? discountType, {double? maxDiscount}) {
     if(discountType == 'amount') {
-      price = price - discount;
+      price = price! - discount!;
     }else if(discountType == 'percent') {
-      if(maxDiscount != null && ((discount / 100) * price) > maxDiscount) {
+      if(maxDiscount != null && ((discount! / 100) * price!) > maxDiscount) {
         price = price - maxDiscount;
       }else{
-        price = price - ((discount / 100) * price);
+        price = price! - ((discount! / 100) * price);
       }
     }
     return price;
@@ -56,7 +56,7 @@ class PriceConverter {
     return calculatedAmount;
   }
 
-  static String percentageCalculation(BuildContext context, String price, double discount, String discountType) {
-    return '$discount${discountType == 'percent' ? '%' : '${Provider.of<SplashProvider>(context, listen: false).configModel.currencySymbol}'} OFF';
+  static String percentageCalculation(BuildContext context, String price, double? discount, String? discountType) {
+    return '$discount${discountType == 'percent' ? '%' : '${Provider.of<SplashProvider>(context, listen: false).configModel!.currencySymbol}'} OFF';
   }
 }

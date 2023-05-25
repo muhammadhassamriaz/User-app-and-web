@@ -16,7 +16,7 @@ import '../../custom_snackbar.dart';
 
 class LanguageHoverWidget extends StatefulWidget {
   final List<LanguageModel> languageList;
-  const LanguageHoverWidget({Key key, @required this.languageList}) : super(key: key);
+  const LanguageHoverWidget({Key? key, required this.languageList}) : super(key: key);
 
   @override
   State<LanguageHoverWidget> createState() => _LanguageHoverWidgetState();
@@ -41,7 +41,7 @@ class _LanguageHoverWidgetState extends State<LanguageHoverWidget> {
                 onTap: () async {
                   if(languageProvider.languages.length > 0 && languageProvider.selectIndex != -1) {
                     Provider.of<LocalizationProvider>(context, listen: false).setLanguage(Locale(
-                        language.languageCode, language.countryCode
+                        language.languageCode!, language.countryCode
                     ));
                     Provider.of<ProductProvider>(context, listen: false).getItemList(
                       context, '1', true, AppConstants.languages[languageProvider.selectIndex].languageCode,
@@ -54,7 +54,7 @@ class _LanguageHoverWidgetState extends State<LanguageHoverWidget> {
                       context,  AppConstants.languages[languageProvider.selectIndex].languageCode,true
                     );
                   }else {
-                    showCustomSnackBar(getTranslated('select_a_language', context), context);
+                    showCustomSnackBar(getTranslated('select_a_language', context)!, context);
                   }
 
                   print("-------------------------->${AppConstants.languages[languageProvider.selectIndex].languageCode}-----------------");
@@ -67,7 +67,7 @@ class _LanguageHoverWidgetState extends State<LanguageHoverWidget> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(language.languageName, overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontSize: Dimensions.FONT_SIZE_SMALL),),
+                            Text(language.languageName!, overflow: TextOverflow.ellipsis, maxLines: 1, style: TextStyle(fontSize: Dimensions.FONT_SIZE_SMALL),),
                           ],
                         ),
                       );

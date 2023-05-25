@@ -13,12 +13,12 @@ import 'package:flutter_grocery/view/base/custom_button.dart';
 import 'package:flutter_grocery/view/screens/order/order_details_screen.dart';
 
 class NotificationDialog extends StatefulWidget {
-  final String title;
-  final String body;
-  final int orderId;
-  final String image;
-  final String type;
-  NotificationDialog({@required this.title, @required this.body, @required this.orderId, this.image, this.type});
+  final String? title;
+  final String? body;
+  final int? orderId;
+  final String? image;
+  final String? type;
+  NotificationDialog({required this.title, required this.body, required this.orderId, this.image, this.type});
 
   @override
   State<NotificationDialog> createState() => _NewRequestDialogState();
@@ -65,7 +65,7 @@ class _NewRequestDialogState extends State<NotificationDialog> {
             child: Column(
               children: [
                 Text(
-                  widget.body, textAlign: TextAlign.center,
+                  widget.body!, textAlign: TextAlign.center,
                   style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
                 ),
                if(widget.image != null)
@@ -77,7 +77,7 @@ class _NewRequestDialogState extends State<NotificationDialog> {
                     child: CachedNetworkImage(
                       height: 100,
                       width: 500,
-                      imageUrl: widget.image,
+                      imageUrl: widget.image!,
                       placeholder: (context, url) => Image.asset(Images.placeholder(context)),
                       errorWidget: (context, url, error) => Image.asset(Images.placeholder(context)),
                     ),
@@ -99,8 +99,8 @@ class _NewRequestDialogState extends State<NotificationDialog> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SIZE_DEFAULT)),
                 ),
                 child: Text(
-                  getTranslated('cancel', context), textAlign: TextAlign.center,
-                  style: poppinsRegular.copyWith(color: Theme.of(context).textTheme.bodyText1.color),
+                  getTranslated('cancel', context)!, textAlign: TextAlign.center,
+                  style: poppinsRegular.copyWith(color: Theme.of(context).textTheme.bodyText1!.color),
                 ),
               )),
             ),
@@ -122,7 +122,7 @@ class _NewRequestDialogState extends State<NotificationDialog> {
                       if(widget.orderId == null) {
                         Navigator.pushNamed(context, RouteHelper.getChatRoute(orderModel: null));
                       }else{
-                        Get.navigator.push(MaterialPageRoute(
+                        Get.navigator!.push(MaterialPageRoute(
                           builder: (context) => OrderDetailsScreen(orderModel: null, orderId: widget.orderId),
                         ));
                       }

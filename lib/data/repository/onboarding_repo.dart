@@ -8,9 +8,9 @@ import 'package:flutter_grocery/localization/language_constrants.dart';
 import 'package:flutter_grocery/utill/images.dart';
 
 class OnBoardingRepo {
-  final DioClient dioClient;
+  final DioClient? dioClient;
 
-  OnBoardingRepo({@required this.dioClient});
+  OnBoardingRepo({required this.dioClient});
 
   Future<ApiResponse> getOnBoardingList(BuildContext context) async {
     try {

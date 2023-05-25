@@ -21,7 +21,7 @@ import 'add_new_address_screen.dart';
 
 class AddressScreen extends StatefulWidget {
 
-  final AddressModel addressModel;
+  final AddressModel? addressModel;
   AddressScreen({this.addressModel});
 
   @override
@@ -29,7 +29,7 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressScreenState extends State<AddressScreen> {
-  bool _isLoggedIn;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ResponsiveHelper.isMobilePhone()? null: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)) : AppBarBase(),
+      appBar: ResponsiveHelper.isMobilePhone()? null: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)) : AppBarBase()) as PreferredSizeWidget?,
         body: _isLoggedIn ? Consumer<LocationProvider>(
           builder: (context, locationProvider, child) {
             return RefreshIndicator(
@@ -68,7 +68,7 @@ class _AddressScreenState extends State<AddressScreen> {
                             children: [
 
                               Text(
-                                getTranslated('saved_address', context),
+                                getTranslated('saved_address', context)!,
                                 style: poppinsRegular.copyWith(color: ColorResources.getTextColor(context)),
                               ),
                               InkWell(
@@ -87,7 +87,7 @@ class _AddressScreenState extends State<AddressScreen> {
                                     children: [
                                       Icon(Icons.add, color: ResponsiveHelper.isDesktop(context)? Colors.white : ColorResources.getTextColor(context)),
                                       Text(
-                                        getTranslated('add_new', context),
+                                        getTranslated('add_new', context)!,
                                         style: poppinsRegular.copyWith(color: ResponsiveHelper.isDesktop(context)? Colors.white : ColorResources.getTextColor(context)),
                                       ),
                                     ],
@@ -99,7 +99,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         ),
                       ),
 
-                      locationProvider.addressList != null ? locationProvider.addressList.length > 0 ?
+                      locationProvider.addressList != null ? locationProvider.addressList!.length > 0 ?
 
                       Scrollbar(
                         child: Column(
@@ -114,30 +114,30 @@ class _AddressScreenState extends State<AddressScreen> {
                                       mainAxisSpacing: ResponsiveHelper.isDesktop(context) ? 13 : 5,
                                       childAspectRatio:ResponsiveHelper.isDesktop(context) ? 4.5 : ResponsiveHelper.isTab(context) ? 4 : 3.5,
                                       crossAxisCount: ResponsiveHelper.isDesktop(context) ? 2 : ResponsiveHelper.isTab(context) ? 2 : 1),
-                                  itemCount: locationProvider.addressList.length,
+                                  itemCount: locationProvider.addressList!.length,
                                   padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT,vertical: Dimensions.PADDING_SIZE_DEFAULT),
                                   physics: NeverScrollableScrollPhysics(),
                                   shrinkWrap: true,
                                   itemBuilder: (BuildContext context, int index) {
                                     return AddressWidget(
-                                      addressModel: locationProvider.addressList[index],
+                                      addressModel: locationProvider.addressList![index],
                                       index: index,
                                     );
                                   },
                                 )
                                     : ListView.builder(
                                   padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                                  itemCount: locationProvider.addressList.length,
+                                  itemCount: locationProvider.addressList!.length,
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) => AddressWidget(
-                                    addressModel: locationProvider.addressList[index],
+                                    addressModel: locationProvider.addressList![index],
                                     index: index,
                                   ),
                                 ),
                               ),
                             ),
-                            locationProvider.addressList.length <= 4 ?  const SizedBox(height: 300) : SizedBox(),
+                            locationProvider.addressList!.length <= 4 ?  const SizedBox(height: 300) : SizedBox(),
                             ResponsiveHelper.isDesktop(context) ? FooterView() : SizedBox(),
                           ],
                         ),

@@ -24,8 +24,8 @@ import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 class CategoryProductScreenNew extends StatefulWidget {
   final CategoryModel categoryModel;
-  final String subCategoryName;
-   CategoryProductScreenNew({Key key,@required this.categoryModel, this.subCategoryName}) : super(key: key);
+  final String? subCategoryName;
+   CategoryProductScreenNew({Key? key,required this.categoryModel, this.subCategoryName}) : super(key: key);
 
   @override
   State<CategoryProductScreenNew> createState() => _CategoryProductScreenNewState();
@@ -58,21 +58,21 @@ class _CategoryProductScreenNewState extends State<CategoryProductScreenNew> {
 
   @override
   Widget build(BuildContext context) {
-    String _appBarText = 'Sub Categories';
+    String? _appBarText = 'Sub Categories';
     if(widget.subCategoryName != null && widget.subCategoryName != 'null') {
       _appBarText = widget.subCategoryName;
     }else{
       _appBarText =
       Provider.of<CategoryProvider>(context).categoryModel != null
-          ? Provider.of<CategoryProvider>(context).categoryModel.name : 'name';
+          ? Provider.of<CategoryProvider>(context).categoryModel!.name! : 'name';
     }
     Provider.of<ProductProvider>(context, listen: false).initializeAllSortBy(context);
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120))
+      appBar: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120))
       : CustomAppBar(
         title: _appBarText,
         isCenter: false, isElevation: true,fromCategoryScreen: true,
-      ),
+      )) as PreferredSizeWidget?,
       body: Consumer<ProductProvider>(
         builder: (context, productProvider, child) {
           return Column(
@@ -108,7 +108,7 @@ class _CategoryProductScreenNewState extends State<CategoryProductScreenNew> {
                                           color: categoryProvider.categorySelectedIndex == -1 ? Theme.of(context).primaryColor : ColorResources.getGreyColor(context),
                                           borderRadius: BorderRadius.circular(7)),
                                       child: Text(
-                                        getTranslated('all', context),
+                                        getTranslated('all', context)!,
                                         style: poppinsRegular.copyWith(
                                           color: categoryProvider.categorySelectedIndex == -1 ? ColorResources.getBackgroundColor(context) : Colors.black ,
                                         ),
@@ -118,7 +118,7 @@ class _CategoryProductScreenNewState extends State<CategoryProductScreenNew> {
                                 ),
                                 ListView.builder(
                                     physics: NeverScrollableScrollPhysics(),
-                                    itemCount: categoryProvider.subCategoryList.length ,
+                                    itemCount: categoryProvider.subCategoryList!.length ,
                                     shrinkWrap: true,
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (BuildContext context, int index){
@@ -128,7 +128,7 @@ class _CategoryProductScreenNewState extends State<CategoryProductScreenNew> {
                                           print('index: $index');
 
                                           Provider.of<ProductProvider>(context, listen: false).initCategoryProductList(
-                                            categoryProvider.subCategoryList[index].id.toString(), context,
+                                            categoryProvider.subCategoryList![index].id.toString(), context,
                                             Provider.of<LocalizationProvider>(context, listen: false).locale.languageCode,
                                           );
 
@@ -142,7 +142,7 @@ class _CategoryProductScreenNewState extends State<CategoryProductScreenNew> {
                                               color: categoryProvider.categorySelectedIndex == index ? Theme.of(context).primaryColor : ColorResources.getGreyColor(context),
                                               borderRadius: BorderRadius.circular(7)),
                                           child: Text(
-                                            categoryProvider.subCategoryList[index].name,
+                                            categoryProvider.subCategoryList![index].name!,
                                             style: poppinsRegular.copyWith(
                                               color:  categoryProvider.categorySelectedIndex == index ? ColorResources.getBackgroundColor(context) : Colors.black,
                                             ),
@@ -158,7 +158,7 @@ class _CategoryProductScreenNewState extends State<CategoryProductScreenNew> {
                                 elevation: 20,
                                 enabled: true,
                                 icon: Icon(Icons.more_vert,color: Colors.black,),
-                                onSelected: (value) {
+                                onSelected: (dynamic value) {
                                   int _index = Provider.of<ProductProvider>(context,listen: false).allSortBy.indexOf(value);
 
                                   Provider.of<ProductProvider>(context,listen: false).sortCategoryProduct(_index);
@@ -206,7 +206,7 @@ class _CategoryProductScreenNewState extends State<CategoryProductScreenNew> {
                     )  : Center(
                       child: SizedBox(
                         width: 1170,
-                        child: productProvider.hasData
+                        child: productProvider.hasData!
                             ? Padding(
                           padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                           child: ProductShimmer(isEnabled: Provider.of<ProductProvider>(context).categoryProductList.length == 0),
@@ -233,22 +233,22 @@ class _CategoryProductScreenNewState extends State<CategoryProductScreenNew> {
   }
 
   Widget _cartTile(BuildContext context) {
-    bool _kmWiseCharge = Provider.of<SplashProvider>(context, listen: false).configModel.deliveryManagement.status == 1;
+    bool _kmWiseCharge = Provider.of<SplashProvider>(context, listen: false).configModel!.deliveryManagement!.status == 1;
     return Consumer<CartProvider>(
         builder: (context,cartProvider,_) {
-          double deliveryCharge = 0;
+          double? deliveryCharge = 0;
           (Provider.of<OrderProvider>(context).orderType == 'delivery' && !_kmWiseCharge)
-              ? deliveryCharge = Provider.of<SplashProvider>(context, listen: false).configModel.deliveryCharge : deliveryCharge = 0;
+              ? deliveryCharge = Provider.of<SplashProvider>(context, listen: false).configModel!.deliveryCharge : deliveryCharge = 0;
           double _itemPrice = 0;
           double _discount = 0;
           double _tax = 0;
           cartProvider.cartList.forEach((cartModel) {
-            _itemPrice = _itemPrice + (cartModel.price * cartModel.quantity);
-            _discount = _discount + (cartModel.discount * cartModel.quantity);
-            _tax = _tax + (cartModel.tax * cartModel.quantity);
+            _itemPrice = _itemPrice + (cartModel.price! * cartModel.quantity!);
+            _discount = _discount + (cartModel.discount! * cartModel.quantity!);
+            _tax = _tax + (cartModel.tax! * cartModel.quantity!);
           });
           double _subTotal = _itemPrice + _tax;
-          double _total = _subTotal - _discount - Provider.of<CouponProvider>(context).discount + deliveryCharge;
+          double _total = _subTotal - _discount - Provider.of<CouponProvider>(context).discount! + deliveryCharge!;
         return (cartProvider.cartList.length > 0 && ResponsiveHelper.isMobile(context)) ? Container(
           width: 1170,
           padding: EdgeInsets.symmetric(vertical: 20),
@@ -270,7 +270,7 @@ class _CategoryProductScreenNewState extends State<CategoryProductScreenNew> {
                   children: [
 
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                      Text(getTranslated('total_item', context),
+                      Text(getTranslated('total_item', context)!,
                           style: poppinsMedium.copyWith(
                             fontSize: Dimensions.FONT_SIZE_LARGE,
                             color: Theme.of(context).cardColor,
@@ -281,7 +281,7 @@ class _CategoryProductScreenNewState extends State<CategoryProductScreenNew> {
 
                     ]),
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                      Text(getTranslated('total_amount', context),
+                      Text(getTranslated('total_amount', context)!,
                           style: poppinsMedium.copyWith(
                             fontSize: Dimensions.FONT_SIZE_LARGE,
                             color:Theme.of(context).cardColor,
@@ -321,7 +321,7 @@ class subcategoryTitleShimmer extends StatelessWidget{
                 alignment: Alignment.center,
                 margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
                 decoration: BoxDecoration(
-                    color:  Theme.of(context).textTheme.headline6.color,
+                    color:  Theme.of(context).textTheme.headline6!.color,
                     borderRadius: BorderRadius.circular(10)),
                 child: Container(
                   height: 20, width: 60,
@@ -340,7 +340,7 @@ class subcategoryTitleShimmer extends StatelessWidget{
 class ProductShimmer extends StatelessWidget {
   final bool isEnabled;
 
-  ProductShimmer({@required this.isEnabled});
+  ProductShimmer({required this.isEnabled});
 
   @override
   Widget build(BuildContext context) {
@@ -370,9 +370,9 @@ class ProductShimmer extends StatelessWidget {
               height: 85, width: 85,
               padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
               decoration: BoxDecoration(
-                border: Border.all(width: 2, color: Theme.of(context).textTheme.headline6.color),
+                border: Border.all(width: 2, color: Theme.of(context).textTheme.headline6!.color!),
                 borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).textTheme.headline6.color,
+                color: Theme.of(context).textTheme.headline6!.color,
               ),
             ),
 
@@ -380,17 +380,17 @@ class ProductShimmer extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Container(height: 15, width: MediaQuery.of(context).size.width, color: Theme.of(context).textTheme.headline6.color),
+                  Container(height: 15, width: MediaQuery.of(context).size.width, color: Theme.of(context).textTheme.headline6!.color),
                   SizedBox(height: 2),
-                  Container(height: 15, width: MediaQuery.of(context).size.width, color: Theme.of(context).textTheme.headline6.color),
+                  Container(height: 15, width: MediaQuery.of(context).size.width, color: Theme.of(context).textTheme.headline6!.color),
                   SizedBox(height: 10),
-                  Container(height: 10, width: 50, color: Theme.of(context).textTheme.headline6.color),
+                  Container(height: 10, width: 50, color: Theme.of(context).textTheme.headline6!.color),
                 ]),
               ),
             ),
 
             Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Container(height: 15, width: 50, color: Theme.of(context).textTheme.headline6.color),
+              Container(height: 15, width: 50, color: Theme.of(context).textTheme.headline6!.color),
               Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(

@@ -7,7 +7,7 @@ import 'package:flutter_grocery/utill/styles.dart';
 import 'package:provider/provider.dart';
 
 class CookiesView extends StatelessWidget {
-  const CookiesView({Key key}) : super(key: key);
+  const CookiesView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +37,12 @@ class CookiesView extends StatelessWidget {
 
                     Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
                       Text(
-                        getTranslated('your_privacy_matters', context),
+                        getTranslated('your_privacy_matters', context)!,
                         style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT,color: Colors.white),
                       ),
                       SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
-                      Text(splashProvide.configModel.cookiesManagement.content ?? "",
+                      Text(splashProvide.configModel!.cookiesManagement!.content ?? "",
                         style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: Colors.white70),
                       ),
                       SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -57,7 +57,7 @@ class CookiesView extends StatelessWidget {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         onPressed: ()=>  splashProvide.cookiesStatusChange(null),
-                        child:  Text(getTranslated('no_thanks', context), style: poppinsRegular.copyWith(
+                        child:  Text(getTranslated('no_thanks', context)!, style: poppinsRegular.copyWith(
                             color: Colors.white70, fontSize: Dimensions.FONT_SIZE_SMALL)),
                       ),
                       SizedBox(width: ResponsiveHelper.isDesktop(context)?Dimensions.PADDING_SIZE_EXTRA_LARGE:Dimensions.PADDING_SIZE_LARGE,),
@@ -71,14 +71,14 @@ class CookiesView extends StatelessWidget {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         onPressed: (){
-                          splashProvide.cookiesStatusChange(splashProvide.configModel.cookiesManagement.content);
+                          splashProvide.cookiesStatusChange(splashProvide.configModel!.cookiesManagement!.content);
                         },
                         child:  Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: Dimensions.PADDING_SIZE_DEFAULT,
                               vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL,
                             ),
-                            child: Center(child: Text(getTranslated('yes_accept', context), style: poppinsRegular.copyWith(
+                            child: Center(child: Text(getTranslated('yes_accept', context)!, style: poppinsRegular.copyWith(
                               color: Colors.white70,fontSize: Dimensions.FONT_SIZE_SMALL,
                             )),
                             )),

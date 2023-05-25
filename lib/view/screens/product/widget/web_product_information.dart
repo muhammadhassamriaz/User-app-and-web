@@ -17,56 +17,56 @@ import 'package:provider/provider.dart';
 import 'product_title_view.dart';
 
 class WebProductInformation extends StatelessWidget {
-  final Product product;
-  final int stock;
-  final int cartIndex;
-  final  double priceWithQuantity;
-  WebProductInformation({@required this.product, @required this.stock, @required this.cartIndex, @required this.priceWithQuantity});
+  final Product? product;
+  final int? stock;
+  final int? cartIndex;
+  final  double? priceWithQuantity;
+  WebProductInformation({required this.product, required this.stock, required this.cartIndex, required this.priceWithQuantity});
 
   @override
   Widget build(BuildContext context) {
 
-    double _startingPrice;
-    double _startingPriceWithDiscount;
-    double _startingPriceWithCategoryDiscount;
-    double _endingPrice;
-    double _endingPriceWithDiscount;
-    double _endingPriceWithCategoryDiscount;
-    if(product.variations.length != 0) {
-      List<double> _priceList = [];
-      product.variations.forEach((variation) => _priceList.add(variation.price));
-      _priceList.sort((a, b) => a.compareTo(b));
+    double? _startingPrice;
+    double? _startingPriceWithDiscount;
+    double? _startingPriceWithCategoryDiscount;
+    double? _endingPrice;
+    double? _endingPriceWithDiscount;
+    double? _endingPriceWithCategoryDiscount;
+    if(product!.variations!.length != 0) {
+      List<double?> _priceList = [];
+      product!.variations!.forEach((variation) => _priceList.add(variation.price));
+      _priceList.sort((a, b) => a!.compareTo(b!));
       _startingPrice = _priceList[0];
-      if(_priceList[0] < _priceList[_priceList.length-1]) {
+      if(_priceList[0]! < _priceList[_priceList.length-1]!) {
         _endingPrice = _priceList[_priceList.length-1];
       }
     }else {
-      _startingPrice = product.price;
+      _startingPrice = product!.price;
     }
 
 
-    if(product.categoryDiscount != null) {
+    if(product!.categoryDiscount != null) {
       _startingPriceWithCategoryDiscount = PriceConverter.convertWithDiscount(
-        _startingPrice, product.categoryDiscount.discountAmount, product.categoryDiscount.discountType,
-        maxDiscount: product.categoryDiscount.maximumAmount,
+        _startingPrice, product!.categoryDiscount!.discountAmount, product!.categoryDiscount!.discountType,
+        maxDiscount: product!.categoryDiscount!.maximumAmount,
       );
 
       if(_endingPrice != null){
         _endingPriceWithCategoryDiscount = PriceConverter.convertWithDiscount(
-          _endingPrice, product.categoryDiscount.discountAmount, product.categoryDiscount.discountType,
-          maxDiscount: product.categoryDiscount.maximumAmount,
+          _endingPrice, product!.categoryDiscount!.discountAmount, product!.categoryDiscount!.discountType,
+          maxDiscount: product!.categoryDiscount!.maximumAmount,
         );
       }
     }
-    _startingPriceWithDiscount = PriceConverter.convertWithDiscount(_startingPrice, product.discount, product.discountType);
+    _startingPriceWithDiscount = PriceConverter.convertWithDiscount(_startingPrice, product!.discount, product!.discountType);
 
     if(_endingPrice != null) {
-      _endingPriceWithDiscount = PriceConverter.convertWithDiscount(_endingPrice, product.discount, product.discountType);
+      _endingPriceWithDiscount = PriceConverter.convertWithDiscount(_endingPrice, product!.discount, product!.discountType);
     }
 
     if(_startingPriceWithCategoryDiscount != null
         && _startingPriceWithCategoryDiscount > 0 &&
-        _startingPriceWithCategoryDiscount < _startingPriceWithDiscount) {
+        _startingPriceWithCategoryDiscount < _startingPriceWithDiscount!) {
       _startingPriceWithDiscount = _startingPriceWithCategoryDiscount;
       _endingPriceWithDiscount = _endingPriceWithCategoryDiscount;
     }
@@ -82,7 +82,7 @@ class WebProductInformation extends StatelessWidget {
         children: [
           Flexible(
             child: Text(
-              product.name ?? '',
+              product!.name ?? '',
               style: poppinsBold.copyWith(fontSize: Dimensions.FONT_SIZE_MAX_LARGE, color: ColorResources.getProductDescriptionColor(context)),
               maxLines: 2,
             ),
@@ -94,8 +94,8 @@ class WebProductInformation extends StatelessWidget {
      SizedBox(height: 5),
 
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        product.rating != null ? RatingBar(
-          rating: product.rating.length > 0 ? double.parse(product.rating[0].average) : 0.0,
+        product!.rating != null ? RatingBar(
+          rating: product!.rating!.length > 0 ? double.parse(product!.rating![0].average!) : 0.0,
           size: Dimensions.PADDING_SIZE_DEFAULT,
         ) : SizedBox(),
 
@@ -103,12 +103,12 @@ class WebProductInformation extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: 2),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Dimensions.RADIUS_SIZE_LARGE),
-            color: product.totalStock > 0
+            color: product!.totalStock! > 0
                 ?  Theme.of(context).primaryColor
                 : Theme.of(context).primaryColor.withOpacity(0.3),
           ),
           child: Text(
-            '${ getTranslated(product.totalStock > 0
+            '${ getTranslated(product!.totalStock! > 0
                 ? 'in_stock' : 'stock_out', context)}',
             style: poppinsMedium.copyWith(color: Colors.white),
           ),
@@ -117,7 +117,7 @@ class WebProductInformation extends StatelessWidget {
 
       const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
       Text(
-        '${product.capacity} ${product.unit}',
+        '${product!.capacity} ${product!.unit}',
         style: poppinsRegular.copyWith(color: Theme.of(context).hintColor, fontSize: Dimensions.FONT_SIZE_LARGE),
       ),
       const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
@@ -132,7 +132,7 @@ class WebProductInformation extends StatelessWidget {
             style: poppinsBold.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.FONT_SIZE_OVER_LARGE),
           ),
           const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-          if(_startingPriceWithDiscount < _startingPrice )
+          if(_startingPriceWithDiscount! < _startingPrice! )
             Text('${PriceConverter.convertPrice(context, _startingPrice)}'
                 '${_endingPrice!= null ? ' - ${PriceConverter.convertPrice(context, _endingPrice)}' : ''}',
             style: poppinsRegular.copyWith(
@@ -155,17 +155,17 @@ class WebProductInformation extends StatelessWidget {
       Builder(
         builder: (context) {
           return Row(children: [
-            QuantityButton(isIncrement: false, quantity: Provider.of<ProductProvider>(context, listen: false).quantity, stock: stock, cartIndex: cartIndex, maxOrderQuantity: product.maximumOrderQuantity),
+            QuantityButton(isIncrement: false, quantity: Provider.of<ProductProvider>(context, listen: false).quantity, stock: stock, cartIndex: cartIndex, maxOrderQuantity: product!.maximumOrderQuantity),
             SizedBox(width: 30),
 
             Consumer<ProductProvider>(builder: (context, product, child) {
               return Consumer<CartProvider>(builder: (context, cart, child) {
-                return Text(cartIndex != null ? cart.cartList[cartIndex].quantity.toString() : product.quantity.toString(), style: poppinsSemiBold);
+                return Text(cartIndex != null ? cart.cartList[cartIndex!].quantity.toString() : product.quantity.toString(), style: poppinsSemiBold);
               });
             }),
             SizedBox(width: 30),
 
-            QuantityButton(isIncrement: true, quantity: Provider.of<ProductProvider>(context, listen: false).quantity, stock: stock, cartIndex: cartIndex, maxOrderQuantity: product.maximumOrderQuantity),
+            QuantityButton(isIncrement: true, quantity: Provider.of<ProductProvider>(context, listen: false).quantity, stock: stock, cartIndex: cartIndex, maxOrderQuantity: product!.maximumOrderQuantity),
           ]);
         }
       ),

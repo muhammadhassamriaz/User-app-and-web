@@ -15,7 +15,7 @@ import 'package:flutter_grocery/view/base/web_product_shimmer.dart';
 import 'package:provider/provider.dart';
 
 class ProductView extends StatefulWidget {
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
   ProductView({this.scrollController});
 
   @override
@@ -24,7 +24,7 @@ class ProductView extends StatefulWidget {
 
 class _ProductViewState extends State<ProductView> {
 
-  int pageSize;
+  int? pageSize;
 
   @override
   void initState() {
@@ -37,9 +37,9 @@ class _ProductViewState extends State<ProductView> {
   Widget build(BuildContext context) {
 
     void seeMoreItems(){
-      pageSize = (Provider.of<ProductProvider>(context, listen: false).latestPageSize / 10).ceil();
+      pageSize = (Provider.of<ProductProvider>(context, listen: false).latestPageSize! / 10).ceil();
 
-      if (Provider.of<ProductProvider>(context, listen: false).offset < pageSize) {
+      if (Provider.of<ProductProvider>(context, listen: false).offset < pageSize!) {
         Provider.of<ProductProvider>(context, listen: false).offset++;
         Provider.of<ProductProvider>(context, listen: false).showBottomLoader();
         Provider.of<ProductProvider>(context, listen: false).getLatestProductList(
@@ -51,17 +51,17 @@ class _ProductViewState extends State<ProductView> {
 
 
      if(!ResponsiveHelper.isDesktop(context)) {
-        if(widget.scrollController.hasClients) {
+        if(widget.scrollController!.hasClients) {
           widget.scrollController?.addListener(() {
-            if (widget.scrollController.position.maxScrollExtent ==
-                widget.scrollController.position.pixels
+            if (widget.scrollController!.position.maxScrollExtent ==
+                widget.scrollController!.position.pixels
                 && Provider.of<ProductProvider>(context, listen: false)
                     .latestProductList != null
                 && !Provider
                     .of<ProductProvider>(context, listen: false)
                     .isLoading) {
-              pageSize = (Provider.of<ProductProvider>(context, listen: false).latestPageSize / 10).ceil();
-              if (Provider.of<ProductProvider>(context, listen: false).offset < pageSize) {
+              pageSize = (Provider.of<ProductProvider>(context, listen: false).latestPageSize! / 10).ceil();
+              if (Provider.of<ProductProvider>(context, listen: false).offset < pageSize!) {
                 Provider.of<ProductProvider>(context, listen: false).offset++;
                 Provider.of<ProductProvider>(context, listen: false).showBottomLoader();
                 Provider.of<ProductProvider>(context, listen: false).getLatestProductList(
@@ -76,7 +76,7 @@ class _ProductViewState extends State<ProductView> {
      }
     return Consumer<ProductProvider>(
       builder: (context, prodProvider, child) {
-        List<Product> productList;
+        List<Product>? productList;
         productList = prodProvider.latestProductList;
 
         return Column(children: [
@@ -95,7 +95,7 @@ class _ProductViewState extends State<ProductView> {
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
-                      return ProductWidget(product: productList[index], productType: ProductType.LATEST_PRODUCT,);
+                      return ProductWidget(product: productList![index], productType: ProductType.LATEST_PRODUCT,);
                     },
                   )
               : NoDataScreen(isSearch: true)
@@ -133,7 +133,7 @@ class _ProductViewState extends State<ProductView> {
                       },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Text(getTranslated('see_more', context), style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_OVER_LARGE)),
+                      child: Text(getTranslated('see_more', context)!, style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_OVER_LARGE)),
                     ),
                   ),
 

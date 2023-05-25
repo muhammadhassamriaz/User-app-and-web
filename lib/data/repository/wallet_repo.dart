@@ -5,12 +5,12 @@ import 'package:flutter_grocery/data/model/response/base/api_response.dart';
 import 'package:flutter_grocery/utill/app_constants.dart';
 
 class WalletRepo {
-  final DioClient dioClient;
-  WalletRepo({@required this.dioClient});
+  final DioClient? dioClient;
+  WalletRepo({required this.dioClient});
 
   Future<ApiResponse> getWalletTransactionList(String offset) async {
     try {
-      final response = await dioClient.get('${AppConstants.WALLET_TRANSACTION_URL}?offset=$offset&limit=10');
+      final response = await dioClient!.get('${AppConstants.WALLET_TRANSACTION_URL}?offset=$offset&limit=10');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -19,16 +19,16 @@ class WalletRepo {
 
   Future<ApiResponse> getLoyaltyTransactionList(String offset, String type) async {
     try {
-      final response = await dioClient.get('${AppConstants.LOYALTY_TRANSACTION_URL}?offset=$offset&limit=10&type=$type');
+      final response = await dioClient!.get('${AppConstants.LOYALTY_TRANSACTION_URL}?offset=$offset&limit=10&type=$type');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-  Future<ApiResponse> pointToWallet({int point}) async {
+  Future<ApiResponse> pointToWallet({int? point}) async {
     try {
-      final response = await dioClient.post(AppConstants.LOYALTY_POINT_TRANSFER_URL, data: {'point' : point});
+      final response = await dioClient!.post(AppConstants.LOYALTY_POINT_TRANSFER_URL, data: {'point' : point});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

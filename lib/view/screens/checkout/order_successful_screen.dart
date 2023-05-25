@@ -18,10 +18,10 @@ import 'package:flutter_grocery/view/screens/order/track_order_screen.dart';
 import 'package:provider/provider.dart';
 
 class OrderSuccessfulScreen extends StatefulWidget {
-  final String orderID;
-  final int status;
+  final String? orderID;
+  final int? status;
 
-  OrderSuccessfulScreen({@required this.orderID, this.status,});
+  OrderSuccessfulScreen({required this.orderID, this.status,});
 
   @override
   State<OrderSuccessfulScreen> createState() => _OrderSuccessfulScreenState();
@@ -51,9 +51,9 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
 
 
 
-            if(orderProvider.trackModel != null && Provider.of<SplashProvider>(context, listen: false).configModel.loyaltyPointItemPurchasePoint != null) {
-              total = ((orderProvider.trackModel.orderAmount / 100
-              ) * Provider.of<SplashProvider>(context, listen: false).configModel.loyaltyPointItemPurchasePoint ?? 0);
+            if(orderProvider.trackModel != null && Provider.of<SplashProvider>(context, listen: false).configModel!.loyaltyPointItemPurchasePoint != null) {
+              total = ((orderProvider.trackModel!.orderAmount! / 100
+              ) * Provider.of<SplashProvider>(context, listen: false).configModel!.loyaltyPointItemPurchasePoint! ?? 0);
 
             }
 
@@ -76,7 +76,7 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
                                   : widget.status == 1
                                       ? 'payment_failed'
                                       : 'payment_cancelled',
-                              context),
+                              context)!,
                           style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE, color: Theme.of(context).primaryColor),
                         ),
                         SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -86,7 +86,7 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
                         ]),
                         SizedBox(height: 30),
 
-                        (success && Provider.of<SplashProvider>(context).configModel.loyaltyPointStatus  && total.floor() > 0 )  ? Column(children: [
+                        (success && Provider.of<SplashProvider>(context).configModel!.loyaltyPointStatus!  && total.floor() > 0 )  ? Column(children: [
 
                           Image.asset(
                             Provider.of<ThemeProvider>(context, listen: false).darkTheme
@@ -94,13 +94,13 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
                             width: 150, height: 150,
                           ),
 
-                          Text(getTranslated('congratulations', context) , style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
+                          Text(getTranslated('congratulations', context)! , style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
                           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
                             child: Text(
-                              getTranslated('you_have_earned', context) + ' ${total.floor().toString()} ' + getTranslated('points_it_will_add_to', context),
+                              getTranslated('you_have_earned', context)! + ' ${total.floor().toString()} ' + getTranslated('points_it_will_add_to', context)!,
                               style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE,color: Theme.of(context).disabledColor),
                               textAlign: TextAlign.center,
                             ),
@@ -117,7 +117,7 @@ class _OrderSuccessfulScreenState extends State<OrderSuccessfulScreen> {
                                 buttonText: getTranslated(widget.status == 0 ? 'track_order' : 'back_home', context),
                                 onPressed: () {
                                   if (widget.status == 0) {
-                                    Navigator.pushReplacementNamed(context, RouteHelper.getOrderTrackingRoute(int.parse(widget.orderID)), arguments: TrackOrderScreen(orderID: widget.orderID, isBackButton: true));
+                                    Navigator.pushReplacementNamed(context, RouteHelper.getOrderTrackingRoute(int.parse(widget.orderID!)), arguments: TrackOrderScreen(orderID: widget.orderID, isBackButton: true));
                                   } else {
                                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => MenuScreen()), (route) => false);
                                   }

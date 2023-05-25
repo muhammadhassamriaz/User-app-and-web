@@ -36,11 +36,11 @@ import 'package:provider/provider.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final double amount;
-  final String orderType;
-  final double discount;
-  final String couponCode;
+  final String? orderType;
+  final double? discount;
+  final String? couponCode;
   final String freeDeliveryType;
-  CheckoutScreen({@required this.amount, @required this.orderType, @required this.discount, @required this.couponCode,@required this.freeDeliveryType});
+  CheckoutScreen({required this.amount, required this.orderType, required this.discount, required this.couponCode,required this.freeDeliveryType});
 
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
@@ -49,11 +49,11 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
   final TextEditingController _noteController = TextEditingController();
-  GoogleMapController _mapController;
-  List<Branches> _branches = [];
+  late GoogleMapController _mapController;
+  List<Branches>? _branches = [];
   bool _loading = true;
   Set<Marker> _markers = HashSet<Marker>();
-  bool _isLoggedIn;
+  late bool _isLoggedIn;
   List<String> _paymentList = [];
 
   @override
@@ -69,22 +69,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       Provider.of<OrderProvider>(context, listen: false).setAddressIndex(-1, notify: false);
       Provider.of<OrderProvider>(context, listen: false).initializeTimeSlot(context);
       Provider.of<LocationProvider>(context, listen: false).initAddressList(context);
-      _branches = Provider.of<SplashProvider>(context, listen: false).configModel.branches;
+      _branches = Provider.of<SplashProvider>(context, listen: false).configModel!.branches;
     }
 
-    if(Provider.of<SplashProvider>(context, listen: false).configModel.cashOnDelivery == 'true') {
+    if(Provider.of<SplashProvider>(context, listen: false).configModel!.cashOnDelivery == 'true') {
       _paymentList.add('cash_on_delivery');
     }
 
-    if(Provider.of<SplashProvider>(context, listen: false).configModel.offlinePayment) {
+    if(Provider.of<SplashProvider>(context, listen: false).configModel!.offlinePayment!) {
       _paymentList.add('offline_payment');
     }
 
-    if(Provider.of<SplashProvider>(context, listen: false).configModel.walletStatus) {
+    if(Provider.of<SplashProvider>(context, listen: false).configModel!.walletStatus!) {
       _paymentList.add('wallet_payment');
     }
 
-    Provider.of<SplashProvider>(context, listen: false).configModel.activePaymentMethodList.forEach((_method){
+    Provider.of<SplashProvider>(context, listen: false).configModel!.activePaymentMethodList!.forEach((_method){
       if(!_paymentList.contains(_method)) {
         _paymentList.add(_method);
       }
@@ -99,21 +99,21 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool _kmWiseCharge = Provider.of<SplashProvider>(context, listen: false).configModel.deliveryManagement.status == 1;
+    bool _kmWiseCharge = Provider.of<SplashProvider>(context, listen: false).configModel!.deliveryManagement!.status == 1;
     bool _selfPickup = widget.orderType == 'self_pickup';
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120))  : CustomAppBar(title: getTranslated('checkout', context)),
+      appBar: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120))  : CustomAppBar(title: getTranslated('checkout', context))) as PreferredSizeWidget?,
       body:  _isLoggedIn ? Consumer<OrderProvider>(
         builder: (context, order, child) {
           double _deliveryCharge = order.distance
-              * Provider.of<SplashProvider>(context, listen: false).configModel.deliveryManagement.shippingPerKm;
-          if(_deliveryCharge < Provider.of<SplashProvider>(context, listen: false).configModel.deliveryManagement.minShippingCharge) {
-            _deliveryCharge = Provider.of<SplashProvider>(context, listen: false).configModel.deliveryManagement.minShippingCharge;
+              * Provider.of<SplashProvider>(context, listen: false).configModel!.deliveryManagement!.shippingPerKm!;
+          if(_deliveryCharge < Provider.of<SplashProvider>(context, listen: false).configModel!.deliveryManagement!.minShippingCharge!) {
+            _deliveryCharge = Provider.of<SplashProvider>(context, listen: false).configModel!.deliveryManagement!.minShippingCharge!;
           }
           if(!_kmWiseCharge || order.distance == -1
-              || (widget.amount + widget.discount) > Provider.of<SplashProvider>(context, listen: false).configModel.freeDeliveryOverAmount) {
+              || (widget.amount + widget.discount!) > Provider.of<SplashProvider>(context, listen: false).configModel!.freeDeliveryOverAmount!) {
             _deliveryCharge = 0;
           }
 
@@ -144,10 +144,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ) : BoxDecoration(),
                             child: Column(children: [
                               //Branch
-                              _branches.length > 0 ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                              _branches!.length > 0 ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                  child: Text(getTranslated('select_branch', context), style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
+                                  child: Text(getTranslated('select_branch', context)!, style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
                                 ),
 
                                 SizedBox(
@@ -156,7 +156,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                     scrollDirection: Axis.horizontal,
                                     padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                                     physics: BouncingScrollPhysics(),
-                                    itemCount: _branches.length,
+                                    itemCount: _branches!.length,
                                     itemBuilder: (context, index) {
                                       return Padding(
                                         padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
@@ -164,7 +164,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                           onTap: () {
                                             try {
                                               order.setBranchIndex(index);
-                                              double.parse(_branches[index].latitude);
+                                              double.parse(_branches![index].latitude!);
                                               _setMarkers(index);
                                             }catch(e) {}
                                           },
@@ -175,8 +175,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                               color: index == order.branchIndex ? Theme.of(context).primaryColor : ColorResources.getBackgroundColor(context),
                                               borderRadius: BorderRadius.circular(5),
                                             ),
-                                            child: Text(_branches[index].name, maxLines: 1, overflow: TextOverflow.ellipsis, style: poppinsMedium.copyWith(
-                                              color: index == order.branchIndex ? Colors.white : Theme.of(context).textTheme.bodyLarge.color,
+                                            child: Text(_branches![index].name!, maxLines: 1, overflow: TextOverflow.ellipsis, style: poppinsMedium.copyWith(
+                                              color: index == order.branchIndex ? Colors.white : Theme.of(context).textTheme.bodyLarge!.color,
                                             )),
                                           ),
                                         ),
@@ -199,8 +199,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       minMaxZoomPreference: MinMaxZoomPreference(0, 16),
                                       mapType: MapType.normal,
                                       initialCameraPosition: CameraPosition(target: LatLng(
-                                        double.parse(_branches[0].latitude),
-                                        double.parse(_branches[0].longitude),
+                                        double.parse(_branches![0].latitude!),
+                                        double.parse(_branches![0].longitude!),
                                       ), zoom: 8),
                                       zoomControlsEnabled: true,
                                       markers: _markers,
@@ -223,29 +223,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                                   child: Row(children: [
-                                    Text(getTranslated('delivery_address', context), style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
+                                    Text(getTranslated('delivery_address', context)!, style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
                                     Expanded(child: SizedBox()),
                                     TextButton.icon(
                                       onPressed: () => Navigator.pushNamed(context, RouteHelper.getAddAddressRoute('checkout', 'add', AddressModel()), arguments: AddNewAddressScreen(fromCheckout: true)),
                                       icon: Icon(Icons.add),
-                                      label: Text(getTranslated('add', context), style: poppinsRegular),
+                                      label: Text(getTranslated('add', context)!, style: poppinsRegular),
                                     ),
                                   ]),
                                 ),
 
-                                address.addressList != null ? address.addressList.length > 0 ? ListView.builder(
+                                address.addressList != null ? address.addressList!.length > 0 ? ListView.builder(
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
                                   padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                  itemCount: address.addressList.length,
+                                  itemCount: address.addressList!.length,
                                   itemBuilder: (context, index) {
-                                    bool _isAvailable = _branches.length == 1 && (_branches[0].latitude == null || _branches[0].latitude.isEmpty);
+                                    bool _isAvailable = _branches!.length == 1 && (_branches![0].latitude == null || _branches![0].latitude!.isEmpty);
                                     if(!_isAvailable) {
                                       double _distance = Geolocator.distanceBetween(
-                                        double.parse(_branches[order.branchIndex].latitude), double.parse(_branches[order.branchIndex].longitude),
-                                        double.parse(address.addressList[index].latitude), double.parse(address.addressList[index].longitude),
+                                        double.parse(_branches![order.branchIndex].latitude!), double.parse(_branches![order.branchIndex].longitude!),
+                                        double.parse(address.addressList![index].latitude!), double.parse(address.addressList![index].longitude!),
                                       ) / 1000;
-                                      _isAvailable = _distance < _branches[order.branchIndex].coverage;
+                                      _isAvailable = _distance < _branches![order.branchIndex].coverage!;
                                     }
 
                                     return Padding(
@@ -264,12 +264,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                               )), barrierDismissible: false);
                                               bool _isSuccess = await order.getDistanceInMeter(
                                                 LatLng(
-                                                  double.parse(_branches[order.branchIndex].latitude),
-                                                  double.parse(_branches[order.branchIndex].longitude),
+                                                  double.parse(_branches![order.branchIndex].latitude!),
+                                                  double.parse(_branches![order.branchIndex].longitude!),
                                                 ),
                                                 LatLng(
-                                                  double.parse(address.addressList[index].latitude),
-                                                  double.parse(address.addressList[index].longitude),
+                                                  double.parse(address.addressList![index].latitude!),
+                                                  double.parse(address.addressList![index].longitude!),
                                                 ),
                                               );
                                               Navigator.pop(context);
@@ -284,7 +284,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                   //=> _deliveryCharge = deliveryChargeAmount,
                                                 ));
                                               }else {
-                                                showCustomSnackBar(getTranslated('failed_to_fetch_distance', context), context);
+                                                showCustomSnackBar(getTranslated('failed_to_fetch_distance', context)!, context);
                                               }
                                             }
                                           }
@@ -316,12 +316,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                 ),
                                                 SizedBox(width: 10),
                                                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-                                                  Text(address.addressList[index].addressType, style: poppinsBold.copyWith(
+                                                  Text(address.addressList![index].addressType!, style: poppinsBold.copyWith(
                                                     fontSize: Dimensions.FONT_SIZE_SMALL,
                                                     color: index == order.addressIndex ? ColorResources.getTextColor(context)
                                                         : ColorResources.getHintColor(context).withOpacity(.8),
                                                   )),
-                                                  Text(address.addressList[index].address, style: poppinsRegular.copyWith(
+                                                  Text(address.addressList![index].address!, style: poppinsRegular.copyWith(
                                                     color: index == order.addressIndex ? ColorResources.getTextColor(context)
                                                         : ColorResources.getHintColor(context).withOpacity(.8),
                                                   ), maxLines: 2, overflow: TextOverflow.ellipsis),
@@ -335,7 +335,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.black.withOpacity(0.6)),
                                                 child: Text(
-                                                  getTranslated('out_of_coverage_for_this_branch', context),
+                                                  getTranslated('out_of_coverage_for_this_branch', context)!,
                                                   textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis,
                                                   style: poppinsRegular.copyWith(color: Colors.white, fontSize: 10),
                                                 ),
@@ -346,7 +346,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       ),
                                     );
                                   },
-                                ) : Center(child: Text(getTranslated('no_address_found', context)))
+                                ) : Center(child: Text(getTranslated('no_address_found', context)!))
                                     : Center(child: CustomLoader(color: Theme.of(context).primaryColor)),
                                 SizedBox(height: 20),
                               ]) : SizedBox(),
@@ -358,7 +358,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                 child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                   Padding(
                                     padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                    child: Text(getTranslated('preference_time', context), style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
+                                    child: Text(getTranslated('preference_time', context)!, style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
                                   ),
                                   SizedBox(height: 10),
 
@@ -382,9 +382,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                 color: order.selectDateSlot == index ? Theme.of(context).primaryColor
                                                     : ColorResources.getTimeColor(context),
                                                 borderRadius: BorderRadius.circular(7),
-                                                boxShadow: [ BoxShadow(color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 800 : 100], spreadRadius: .5, blurRadius: .5)],),
+                                                boxShadow: [ BoxShadow(color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 800 : 100]!, spreadRadius: .5, blurRadius: .5)],),
                                               child: Text(
-                                                index == 0 ? getTranslated('today', context) : index == 1 ? getTranslated('tomorrow', context)
+                                                index == 0 ? getTranslated('today', context)! : index == 1 ? getTranslated('tomorrow', context)!
                                                     : DateConverter.estimatedDate(DateTime.now().add(Duration(days: 2))),
                                                 style: poppinsRegular.copyWith(
                                                     fontSize: Dimensions.FONT_SIZE_LARGE,
@@ -400,8 +400,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                   SizedBox(height: 12),
 
                                   order.timeSlots != null ? SingleChildScrollView(scrollDirection: Axis.horizontal, child: Row(
-                                    children: order.timeSlots.map((timeSlotModel) {
-                                      int index = order.timeSlots.indexOf(timeSlotModel);
+                                    children: order.timeSlots!.map((timeSlotModel) {
+                                      int index = order.timeSlots!.indexOf(timeSlotModel);
                                       return Padding(
                                         padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
                                         child: InkWell(
@@ -415,13 +415,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                   : ColorResources.getTimeColor(context),
                                               borderRadius: BorderRadius.circular(7),
                                               boxShadow: [BoxShadow(
-                                                color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 800 : 100],
+                                                color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 800 : 100]!,
                                                 spreadRadius: .5, blurRadius: .5,
                                               )],
                                             ),
                                             child: Text(
-                                              '${DateConverter.stringToStringTime(order.timeSlots[index].startTime, context)} '
-                                                  '- ${DateConverter.stringToStringTime(order.timeSlots[index].endTime, context)}',
+                                              '${DateConverter.stringToStringTime(order.timeSlots![index].startTime!, context)} '
+                                                  '- ${DateConverter.stringToStringTime(order.timeSlots![index].endTime!, context)}',
                                               style: poppinsRegular.copyWith(
                                                 fontSize: Dimensions.FONT_SIZE_LARGE,
                                                 color: order.selectTimeSlot == index
@@ -519,8 +519,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void _setMarkers(int selectedIndex) async {
-    BitmapDescriptor _bitmapDescriptor;
-    BitmapDescriptor _bitmapDescriptorUnSelect;
+    late BitmapDescriptor _bitmapDescriptor;
+    late BitmapDescriptor _bitmapDescriptorUnSelect;
     await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(25, 30)), Images.restaurant_marker).then((_marker) {
       _bitmapDescriptor = _marker;
     });
@@ -529,18 +529,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     });
     // Marker
     _markers = HashSet<Marker>();
-    for(int index=0; index<_branches.length; index++) {
+    for(int index=0; index<_branches!.length; index++) {
       _markers.add(Marker(
         markerId: MarkerId('branch_$index'),
-        position: LatLng(double.tryParse(_branches[index].latitude), double.tryParse(_branches[index].longitude)),
-        infoWindow: InfoWindow(title: _branches[index].name, snippet: _branches[index].address),
+        position: LatLng(double.tryParse(_branches![index].latitude!)!, double.tryParse(_branches![index].longitude!)!),
+        infoWindow: InfoWindow(title: _branches![index].name, snippet: _branches![index].address),
         icon: selectedIndex == index ? _bitmapDescriptor : _bitmapDescriptorUnSelect,
       ));
     }
 
     _mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
-      double.tryParse(_branches[selectedIndex].latitude),
-      double.tryParse(_branches[selectedIndex].longitude),
+      double.tryParse(_branches![selectedIndex].latitude!)!,
+      double.tryParse(_branches![selectedIndex].longitude!)!,
     ), zoom: ResponsiveHelper.isMobile(context) ? 12 : 16)));
 
     setState(() {});
@@ -550,7 +550,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     ByteData data = await rootBundle.load(imagePath);
     Codec codec = await instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
     FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ImageByteFormat.png)).buffer.asUint8List();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))!.buffer.asUint8List();
   }
 
 }

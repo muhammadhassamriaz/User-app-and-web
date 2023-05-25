@@ -26,13 +26,13 @@ import 'dart:convert'as convert;
 
 
 class PlaceOrderButtonView extends StatefulWidget {
-  final double amount;
-  final TextEditingController noteController;
-  final bool kmWiseCharge;
-  final String orderType;
-  final double deliveryCharge;
-  final bool selfPickUp;
-  final String couponCode;
+  final double? amount;
+  final TextEditingController? noteController;
+  final bool? kmWiseCharge;
+  final String? orderType;
+  final double? deliveryCharge;
+  final bool? selfPickUp;
+  final String? couponCode;
 
   PlaceOrderButtonView({
     this.amount,
@@ -73,14 +73,14 @@ class _PlaceOrderButtonViewState extends State<PlaceOrderButtonView> {
               margin: Dimensions.PADDING_SIZE_SMALL,
               buttonText: getTranslated('place_order', context),
               onPressed: () {
-                if (!widget.selfPickUp && orderProvider.addressIndex == -1) {
-                  showCustomSnackBar(getTranslated('select_delivery_address', context),context,isError: true);
-                }else if (orderProvider.timeSlots == null || orderProvider.timeSlots.length == 0) {
-                  showCustomSnackBar(getTranslated('select_a_time', context),context,isError: true);
+                if (!widget.selfPickUp! && orderProvider.addressIndex == -1) {
+                  showCustomSnackBar(getTranslated('select_delivery_address', context)!,context,isError: true);
+                }else if (orderProvider.timeSlots == null || orderProvider.timeSlots!.length == 0) {
+                  showCustomSnackBar(getTranslated('select_a_time', context)!,context,isError: true);
                 }else if (orderProvider.paymentMethod == '') {
-                  showCustomSnackBar(getTranslated('select_payment_method', context),context,isError: true);
-                } else if (!widget.selfPickUp && widget.kmWiseCharge && orderProvider.distance == -1) {
-                  showCustomSnackBar(getTranslated('delivery_fee_not_set_yet', context),context,isError: true);
+                  showCustomSnackBar(getTranslated('select_payment_method', context)!,context,isError: true);
+                } else if (!widget.selfPickUp! && widget.kmWiseCharge! && orderProvider.distance == -1) {
+                  showCustomSnackBar(getTranslated('delivery_fee_not_set_yet', context)!,context,isError: true);
                 }
                 else {
                   List<CartModel> _cartList = Provider.of<CartProvider>(context, listen: false).cartList;
@@ -89,24 +89,24 @@ class _PlaceOrderButtonViewState extends State<PlaceOrderButtonView> {
                     Cart cart = Cart(
                       productId: _cartList[index].id, price: _cartList[index].price, discountAmount: _cartList[index].discountedPrice,
                       quantity: _cartList[index].quantity, taxAmount: _cartList[index].tax,
-                      variant: '', variation: [Variation(type: _cartList[index].variation != null ? _cartList[index].variation.type : null)],
+                      variant: '', variation: [Variation(type: _cartList[index].variation != null ? _cartList[index].variation!.type : null)],
                     );
                     carts.add(cart);
                   }
 
                   PlaceOrderBody _placeOrderBody = PlaceOrderBody(
                     cart: carts, orderType: widget.orderType,
-                    couponCode: widget.couponCode, orderNote: widget.noteController.text,
-                    branchId: _configModel.branches[orderProvider.branchIndex].id,
-                    deliveryAddressId: !widget.selfPickUp
-                        ? Provider.of<LocationProvider>(context, listen: false).addressList[orderProvider.addressIndex].id
-                        : 0, distance: widget.selfPickUp ? 0 : orderProvider.distance,
+                    couponCode: widget.couponCode, orderNote: widget.noteController!.text,
+                    branchId: _configModel!.branches![orderProvider.branchIndex].id,
+                    deliveryAddressId: !widget.selfPickUp!
+                        ? Provider.of<LocationProvider>(context, listen: false).addressList![orderProvider.addressIndex].id
+                        : 0, distance: widget.selfPickUp! ? 0 : orderProvider.distance,
                     couponDiscountAmount: Provider.of<CouponProvider>(context, listen: false).discount,
-                    timeSlotId: orderProvider.timeSlots[orderProvider.selectTimeSlot].id,
+                    timeSlotId: orderProvider.timeSlots![orderProvider.selectTimeSlot].id,
                     paymentMethod: orderProvider.paymentMethod,
                     deliveryDate: orderProvider.getDates(context)[orderProvider.selectDateSlot],
                     couponDiscountTitle: '',
-                    orderAmount: widget.amount + widget.deliveryCharge,
+                    orderAmount: widget.amount! + widget.deliveryCharge!,
                   );
 
                   print('order Place --- \n ${_placeOrderBody.toJson()}');
@@ -116,14 +116,14 @@ class _PlaceOrderButtonViewState extends State<PlaceOrderButtonView> {
 
                     if(orderProvider.paymentMethod != 'offline_payment') {
                       if(_placeOrderBody.paymentMethod == 'cash_on_delivery'
-                          && _configModel.maxAmountCodStatus &&
-                          _placeOrderBody.orderAmount >
-                              _configModel.maxOrderForCODAmount) {
+                          && _configModel.maxAmountCodStatus! &&
+                          _placeOrderBody.orderAmount! >
+                              _configModel.maxOrderForCODAmount!) {
                         showCustomSnackBar('${getTranslated('for_cod_order_must_be', context)} ${_configModel.maxOrderForCODAmount}', context);
                       }else if(orderProvider.paymentMethod == 'wallet_payment' &&
-                          Provider.of<ProfileProvider>(context, listen: false).userInfoModel.walletBalance
-                              < _placeOrderBody.orderAmount) {
-                        showCustomSnackBar(getTranslated('wallet_balance_is_insufficient', context), context);
+                          Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.walletBalance!
+                              < _placeOrderBody.orderAmount!) {
+                        showCustomSnackBar(getTranslated('wallet_balance_is_insufficient', context)!, context);
 
                       } else{
                         orderProvider.placeOrder( _placeOrderBody, _callback);
@@ -137,16 +137,16 @@ class _PlaceOrderButtonViewState extends State<PlaceOrderButtonView> {
 
 
                   }else{
-                    String hostname = html.window.location.hostname;
+                    String? hostname = html.window.location.hostname;
                     String protocol = html.window.location.protocol;
                     String port = html.window.location.port;
                     final String _placeOrder =  convert.base64Url.encode(convert.utf8.encode(convert.jsonEncode(_placeOrderBody.toJson())));
 
-                    String _url = "customer_id=${Provider.of<ProfileProvider>(context, listen: false).userInfoModel.id}"
-                        "&&callback=${AppConstants.BASE_URL}${RouteHelper.orderSuccessful}&&order_amount=${(widget.amount + widget.deliveryCharge).toStringAsFixed(2)}";
+                    String _url = "customer_id=${Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.id}"
+                        "&&callback=${AppConstants.BASE_URL}${RouteHelper.orderSuccessful}&&order_amount=${(widget.amount! + widget.deliveryCharge!).toStringAsFixed(2)}";
 
-                    String _webUrl = "customer_id=${Provider.of<ProfileProvider>(context, listen: false).userInfoModel.id}"
-                        "&&callback=$protocol//$hostname:$port${RouteHelper.ORDER_WEB_PAYMENT}&&order_amount=${(widget.amount + widget.deliveryCharge).toStringAsFixed(2)}&&status=";
+                    String _webUrl = "customer_id=${Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.id}"
+                        "&&callback=$protocol//$hostname:$port${RouteHelper.ORDER_WEB_PAYMENT}&&order_amount=${(widget.amount! + widget.deliveryCharge!).toStringAsFixed(2)}&&status=";
 
                     String _tokenUrl = convert.base64Encode(convert.utf8.encode(ResponsiveHelper.isWeb() ? _webUrl : _url));
                     String selectedUrl = '${AppConstants.BASE_URL}/payment-mobile?token=$_tokenUrl&&payment_method=${orderProvider.paymentMethod}';
@@ -172,20 +172,20 @@ class _PlaceOrderButtonViewState extends State<PlaceOrderButtonView> {
 
   void _callback(bool isSuccess, String message, String orderID) async {
     if (isSuccess) {
-      Provider.of<CartProvider>(Get.context, listen: false).clearCartList();
-      Provider.of<OrderProvider>(Get.context, listen: false).stopLoader();
-      if ( Provider.of<OrderProvider>(Get.context, listen: false).paymentMethod != 'cash_on_delivery') {
-        Navigator.pushReplacementNamed(Get.context,
+      Provider.of<CartProvider>(Get.context!, listen: false).clearCartList();
+      Provider.of<OrderProvider>(Get.context!, listen: false).stopLoader();
+      if ( Provider.of<OrderProvider>(Get.context!, listen: false).paymentMethod != 'cash_on_delivery') {
+        Navigator.pushReplacementNamed(Get.context!,
           '${RouteHelper.orderSuccessful+'/'}$orderID/success',
           arguments: OrderSuccessfulScreen(
             orderID: orderID, status: 0,
           ),
         );
       } else {
-        Navigator.pushReplacementNamed(Get.context, '${RouteHelper.orderSuccessful}/$orderID/success');
+        Navigator.pushReplacementNamed(Get.context!, '${RouteHelper.orderSuccessful}/$orderID/success');
       }
     } else {
-      ScaffoldMessenger.of(Get.context).showSnackBar(SnackBar(content: Text(message), duration: Duration(milliseconds: 600), backgroundColor: Colors.red),);
+      ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(content: Text(message), duration: Duration(milliseconds: 600), backgroundColor: Colors.red),);
     }
   }
 }

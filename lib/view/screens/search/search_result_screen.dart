@@ -17,7 +17,7 @@ import 'package:flutter_grocery/view/screens/search/widget/filter_widget.dart';
 import 'package:provider/provider.dart';
 
 class SearchResultScreen extends StatefulWidget {
-  final String searchString;
+  final String? searchString;
 
   SearchResultScreen({this.searchString});
 
@@ -32,7 +32,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
     Provider.of<SearchProvider>(context, listen: false).initHistoryList();
     Provider.of<SearchProvider>(context, listen: false).initializeAllSortBy(notify: false);
     Provider.of<SearchProvider>(context,listen: false).saveSearchAddress(widget.searchString, isUpdate: false);
-    Provider.of<SearchProvider>(context,listen: false).searchProduct(widget.searchString, context, isUpdate: false);
+    Provider.of<SearchProvider>(context,listen: false).searchProduct(widget.searchString!, context, isUpdate: false);
     super.initState();
   }
 
@@ -68,7 +68,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                           color: ColorResources.getCardBgColor(context),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 200],
+                              color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 200]!,
                               spreadRadius: 0.5,
                               blurRadius: 0.5,
                               offset: Offset(0, 3), // changes position of shadow
@@ -79,7 +79,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              widget.searchString,
+                              widget.searchString!,
                               style: poppinsLight.copyWith(color: ColorResources.getTextColor(context), fontSize: Dimensions.PADDING_SIZE_LARGE),
                             ),
                             InkWell(
@@ -104,7 +104,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                           color: ColorResources.getCardBgColor(context),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 200],
+                              color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 200]!,
                               spreadRadius: 0.5,
                               blurRadius: 0.5,
                               offset: Offset(0, 3), // changes position of shadow
@@ -118,7 +118,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                               children: [
                                 searchProvider.searchProductList!=null?
                                 Text(
-                                  "${searchProvider.searchProductList.length??0}",
+                                  "${searchProvider.searchProductList!.length??0}",
                                   style: poppinsMedium.copyWith(color: Theme.of(context).primaryColor),
                                 ):SizedBox.shrink(),
                                 Text(
@@ -133,10 +133,10 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      List<double> _prices = [];
-                                      searchProvider.filterProductList.forEach((product) => _prices.add(product.price));
+                                      List<double?> _prices = [];
+                                      searchProvider.filterProductList!.forEach((product) => _prices.add(product.price));
                                       _prices.sort();
-                                      double _maxValue = _prices.length > 0 ? _prices[_prices.length-1] : 1000;
+                                      double? _maxValue = _prices.length > 0 ? _prices[_prices.length-1] : 1000;
 
                                       return Dialog(
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -167,19 +167,19 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                       ),
                       SizedBox(height: 22),
 
-                      searchProvider.searchProductList != null ? searchProvider.searchProductList.length > 0 ?
+                      searchProvider.searchProductList != null ? searchProvider.searchProductList!.length > 0 ?
                       GridView.builder(
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisSpacing: ResponsiveHelper.isDesktop(context) ? 13 : 5,
                             mainAxisSpacing: ResponsiveHelper.isDesktop(context) ? 13 : 5,
                             childAspectRatio: ResponsiveHelper.isDesktop(context) ? (1/1.4) : 2.8,
                             crossAxisCount: ResponsiveHelper.isDesktop(context) ? 5 : ResponsiveHelper.isTab(context) ? 2 : 1),
-                        itemCount: searchProvider.searchProductList.length,
+                        itemCount: searchProvider.searchProductList!.length,
                         padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL,vertical: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_LARGE : 0.0),
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) => ProductWidget(
-                          product: searchProvider.searchProductList[index],
+                          product: searchProvider.searchProductList![index],
                           productType: ProductType.SEARCH_ITEM,
                         ),
 

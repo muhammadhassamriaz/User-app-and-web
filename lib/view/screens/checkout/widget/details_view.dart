@@ -11,14 +11,14 @@ import 'package:provider/provider.dart';
 
 class DetailsView extends StatelessWidget {
   const DetailsView({
-    Key key,
-    @required List<String> paymentList,
-    @required double amount,
-    @required TextEditingController noteController,
-    @required bool kmWiseCharge,
-    @required bool selfPickup,
-    @required double deliveryCharge,
-    @required bool freeDelivery,
+    Key? key,
+    required List<String> paymentList,
+    required double amount,
+    required TextEditingController noteController,
+    required bool kmWiseCharge,
+    required bool selfPickup,
+    required double deliveryCharge,
+    required bool freeDelivery,
   }) : _amount = amount,  _paymentList = paymentList, _freeDelivery = freeDelivery, _noteController = noteController, _kmWiseCharge = kmWiseCharge, _selfPickup = selfPickup, _deliveryCharge = deliveryCharge, super(key: key);
 
   final List<String> _paymentList;
@@ -34,7 +34,7 @@ class DetailsView extends StatelessWidget {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
         padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-        child: Text(getTranslated('payment_method', context), style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
+        child: Text(getTranslated('payment_method', context)!, style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
       ),
       SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
@@ -57,21 +57,21 @@ class DetailsView extends StatelessWidget {
         child: Column(children: [
           SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(getTranslated('subtotal', context), style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
+            Text(getTranslated('subtotal', context)!, style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
             Text(PriceConverter.convertPrice(context, _amount), style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
           ]),
           SizedBox(height: 10),
 
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text(
-              getTranslated('delivery_fee', context),
+              getTranslated('delivery_fee', context)!,
               style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
             ),
             Consumer<OrderProvider>(builder: (context, orderProvider, _) {
-              return Text(_freeDelivery ? getTranslated('free', context) : (_selfPickup ||  orderProvider.distance != -1)
+              return Text(_freeDelivery ? getTranslated('free', context)! : (_selfPickup ||  orderProvider.distance != -1)
                   ? '(+) ${PriceConverter.convertPrice(context, _selfPickup
                   ? 0 : _deliveryCharge)}'
-                  : getTranslated('not_found', context),
+                  : getTranslated('not_found', context)!,
                 style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
               );
             }),
@@ -83,7 +83,7 @@ class DetailsView extends StatelessWidget {
           ),
 
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(getTranslated('total_amount', context), style: poppinsMedium.copyWith(
+            Text(getTranslated('total_amount', context)!, style: poppinsMedium.copyWith(
               fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE, color: Theme.of(context).primaryColor,
             )),
             Text(

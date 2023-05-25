@@ -21,7 +21,7 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final PageController _pageController = PageController();
   int _pageIndex = 0;
-  List<Widget> _screens;
+  late List<Widget> _screens;
   GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
 
   @override
@@ -88,7 +88,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  BottomNavigationBarItem _barItem(String icon, String label, int index) {
+  BottomNavigationBarItem _barItem(String icon, String? label, int index) {
     return BottomNavigationBarItem(
       icon: Image.asset(icon, color: index == _pageIndex ? Theme.of(context).primaryColor : Colors.grey, width: 25),
       label: label,

@@ -21,10 +21,10 @@ import 'package:provider/provider.dart';
 import 'package:flutter_grocery/view/screens/order/widget/tracking_map_widget.dart';
 
 class TrackOrderScreen extends StatelessWidget {
-  final String orderID;
+  final String? orderID;
   final bool isBackButton;
-  final OrderModel orderModel;
-  TrackOrderScreen({@required this.orderID, this.isBackButton = false, this.orderModel});
+  final OrderModel? orderModel;
+  TrackOrderScreen({required this.orderID, this.isBackButton = false, this.orderModel});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class TrackOrderScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: ColorResources.getBackgroundColor(context),
-      appBar: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)): CustomAppBar(
+      appBar: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)): CustomAppBar(
         title: getTranslated('track_order', context),
         isCenter: false,
         onBackPressed: () {
@@ -48,13 +48,13 @@ class TrackOrderScreen extends StatelessWidget {
             Navigator.of(context).pop();
           }
         },
-      ),
+      )) as PreferredSizeWidget?,
       body: Center(
         child: Consumer<OrderProvider>(
           builder: (context, orderProvider, child) {
-            String _status;
+            String? _status;
             if (orderProvider.trackModel != null) {
-              _status = orderProvider.trackModel.orderStatus;
+              _status = orderProvider.trackModel!.orderStatus;
             }
 
             return orderProvider.trackModel != null
@@ -73,18 +73,18 @@ class TrackOrderScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                   color: ColorResources.getCardBgColor(context),
                                   boxShadow: [
-                                    BoxShadow(color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 200], spreadRadius: 0.5, blurRadius: 0.5)
+                                    BoxShadow(color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 200]!, spreadRadius: 0.5, blurRadius: 0.5)
                                   ],
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
-                                      child: Text('${getTranslated('order_id', context)} #${orderProvider.trackModel.id}',
+                                      child: Text('${getTranslated('order_id', context)} #${orderProvider.trackModel!.id}',
                                           style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
                                     ),
                                     Text(
-                                      '${getTranslated('amount', context)}${PriceConverter.convertPrice(context, orderProvider.trackModel.orderAmount)}',
+                                      '${getTranslated('amount', context)}${PriceConverter.convertPrice(context, orderProvider.trackModel!.orderAmount)}',
                                       style: poppinsRegular,
                                     ),
                                   ],
@@ -98,7 +98,7 @@ class TrackOrderScreen extends StatelessWidget {
                                   color: ColorResources.getCardBgColor(context),
                                   borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                   boxShadow: [
-                                    BoxShadow(color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 200], spreadRadius: 0.5, blurRadius: 0.5)
+                                    BoxShadow(color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 200]!, spreadRadius: 0.5, blurRadius: 0.5)
                                   ],
                                 ),
                                 child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -106,7 +106,7 @@ class TrackOrderScreen extends StatelessWidget {
                                   SizedBox(width: 20),
                                   Expanded(
                                     child: Text(
-                                      orderProvider.trackModel.deliveryAddress != null? orderProvider.trackModel.deliveryAddress.address : getTranslated('address_was_deleted', context),
+                                      orderProvider.trackModel!.deliveryAddress != null? orderProvider.trackModel!.deliveryAddress!.address! : getTranslated('address_was_deleted', context)!,
                                       style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE, color: ColorResources.getTextColor(context)),
                                     ),
                                   ),
@@ -115,8 +115,8 @@ class TrackOrderScreen extends StatelessWidget {
 
                               SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
-                              orderProvider.trackModel.deliveryMan != null ? DeliveryManWidget(deliveryMan: orderProvider.trackModel.deliveryMan) : SizedBox(),
-                              orderProvider.trackModel.deliveryMan != null ? SizedBox(height: 30) : SizedBox(),
+                              orderProvider.trackModel!.deliveryMan != null ? DeliveryManWidget(deliveryMan: orderProvider.trackModel!.deliveryMan) : SizedBox(),
+                              orderProvider.trackModel!.deliveryMan != null ? SizedBox(height: 30) : SizedBox(),
 
                               CustomStepper(title: getTranslated('order_placed', context), isActive: true, haveTopBar: false),
                               CustomStepper(title: getTranslated('order_accepted', context), isActive: _status != _statusList[0]),
@@ -125,14 +125,14 @@ class TrackOrderScreen extends StatelessWidget {
                                 title: getTranslated('order_in_the_way', context),
                                 isActive: _status != _statusList[0] && _status != _statusList[1] && _status != _statusList[2],
                               ),
-                              (orderProvider.trackModel != null && orderProvider.trackModel.deliveryAddress != null) ?
+                              (orderProvider.trackModel != null && orderProvider.trackModel!.deliveryAddress != null) ?
                               CustomStepper(title: getTranslated('delivered_the_order', context), isActive: _status == _statusList[4], height: _status == _statusList[3] ? 170 : 30,
                                 child: _status == _statusList[3] ? Flexible(
                                   child: TrackingMapWidget(
                                     deliveryManModel: orderProvider.deliveryManModel,
-                                    orderID: orderID, branchID: orderProvider.trackModel.branchId,
+                                    orderID: orderID, branchID: orderProvider.trackModel!.branchId,
 
-                                    addressModel: orderProvider.trackModel.deliveryAddress??''
+                                    addressModel: orderProvider.trackModel!.deliveryAddress??'' as DeliveryAddress
                                   ),
                                 ) : null,
                               ) : CustomStepper(

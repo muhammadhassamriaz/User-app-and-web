@@ -16,7 +16,7 @@ import 'package:flutter_grocery/view/base/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 class ConvertMoneyView extends StatefulWidget {
-  const ConvertMoneyView({Key key}) : super(key: key);
+  const ConvertMoneyView({Key? key}) : super(key: key);
 
   @override
   State<ConvertMoneyView> createState() => _ConvertMoneyViewState();
@@ -36,10 +36,10 @@ class _ConvertMoneyViewState extends State<ConvertMoneyView> {
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
     
-    final List<String>  _noteList = [
+    final List<String?>  _noteList = [
       getTranslated('only_earning_point_can_converted', context),
 
-      '${Provider.of<SplashProvider>(context, listen: false).configModel.loyaltyPointExchangeRate
+      '${Provider.of<SplashProvider>(context, listen: false).configModel!.loyaltyPointExchangeRate
       } ${getTranslated('point', context)} ${getTranslated('remain', context)} ${PriceConverter.convertPrice(context, 1)}',
       getTranslated('once_you_convert_the_point', context),
       getTranslated('point_can_use_for_get_bonus_money', context),
@@ -55,7 +55,7 @@ class _ConvertMoneyViewState extends State<ConvertMoneyView> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
           SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
           Text(
-            getTranslated('enters_point_amount', context),
+            getTranslated('enters_point_amount', context)!,
             style: poppinsMedium.copyWith(
               fontSize: Dimensions.FONT_SIZE_DEFAULT,
             ),
@@ -69,7 +69,7 @@ class _ConvertMoneyViewState extends State<ConvertMoneyView> {
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(5),
               boxShadow: [BoxShadow(
-                color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(0.1),
+                color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.1),
                 offset: Offset(-1, 1),
                 blurRadius: 10,
                 spreadRadius: -3,
@@ -79,7 +79,7 @@ class _ConvertMoneyViewState extends State<ConvertMoneyView> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
 
-                Text(getTranslated('convert_point_to_wallet_money', context),style: poppinsBold.copyWith(
+                Text(getTranslated('convert_point_to_wallet_money', context)!,style: poppinsBold.copyWith(
                   fontSize: Dimensions.FONT_SIZE_DEFAULT, color: Theme.of(context).primaryColor,
                 )),
 
@@ -130,13 +130,13 @@ class _ConvertMoneyViewState extends State<ConvertMoneyView> {
                   children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
-                    child: Icon(Icons.circle,  size: 6, color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(0.5)),
+                    child: Icon(Icons.circle,  size: 6, color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.5)),
                   ),
                   SizedBox(width: Dimensions.PADDING_SIZE_SMALL,),
 
                   Flexible(
-                    child: Text(note, style: poppinsRegular.copyWith(
-                      color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(0.5),
+                    child: Text(note!, style: poppinsRegular.copyWith(
+                      color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.5),
                       fontSize: Dimensions.FONT_SIZE_DEFAULT,
                     ), maxLines: 3, overflow: TextOverflow.ellipsis),
                   ),
@@ -156,12 +156,12 @@ class _ConvertMoneyViewState extends State<ConvertMoneyView> {
                 borderRadius: 30,
                 buttonText: getTranslated('convert_point', context), onPressed: (){
                 if(_pointController.text.isEmpty) {
-                  showCustomSnackBar(getTranslated('please_enter_your_point', context), context);
+                  showCustomSnackBar(getTranslated('please_enter_your_point', context)!, context);
                 }else{
                   int _point = int.parse(_pointController.text.trim());
 
-                  if(_point < _configModel.loyaltyPointMinimumPoint){
-                    showCustomSnackBar(getTranslated('please_exchange_more_then', context) + ' ${_configModel.loyaltyPointMinimumPoint} ' + getTranslated('points', context), context);
+                  if(_point < _configModel!.loyaltyPointMinimumPoint!){
+                    showCustomSnackBar(getTranslated('please_exchange_more_then', context)! + ' ${_configModel.loyaltyPointMinimumPoint} ' + getTranslated('points', context)!, context);
                   } else {
 
                     walletProvider.pointToWallet(_point, false).then((isSuccess) => openDialog(Stack(
@@ -179,9 +179,9 @@ class _ConvertMoneyViewState extends State<ConvertMoneyView> {
                               Image.asset(Images.converted_image, color: Theme.of(context).primaryColor),
                               SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
 
-                              Text(getTranslated('loyalty_point_converted_to', context), style: poppinsMedium),
+                              Text(getTranslated('loyalty_point_converted_to', context)!, style: poppinsMedium),
                               Text(
-                                getTranslated(isSuccess ?  'successfully' : 'failed', context),
+                                getTranslated(isSuccess ?  'successfully' : 'failed', context)!,
                                 style: poppinsMedium.copyWith(color:isSuccess ?  Theme.of(context).primaryColor : Theme.of(context).colorScheme.error),
                               ),
                               SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
@@ -193,7 +193,7 @@ class _ConvertMoneyViewState extends State<ConvertMoneyView> {
                                   }
                                   Navigator.of(context).pop();
                                 },
-                                child: Text(getTranslated(isSuccess ? 'check_history' : 'go_back', context), style: poppinsRegular.copyWith(
+                                child: Text(getTranslated(isSuccess ? 'check_history' : 'go_back', context)!, style: poppinsRegular.copyWith(
                                   decoration: TextDecoration.underline,
                                   color: isSuccess ?  Theme.of(context).primaryColor : Theme.of(context).colorScheme.error,
                                 )),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomDivider extends StatelessWidget {
   final double height;
-  final Color color;
+  final Color? color;
   const CustomDivider({this.height = 1, this.color = Colors.black});
 
   @override

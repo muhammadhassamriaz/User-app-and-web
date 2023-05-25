@@ -27,20 +27,20 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _configModel = Provider.of<SplashProvider>(context, listen: false).configModel;
+    final _configModel = Provider.of<SplashProvider>(context, listen: false).configModel!;
 
     Provider.of<CouponProvider>(context, listen: false).removeCouponData(false);
     Provider.of<OrderProvider>(context, listen: false).setOrderType('delivery', notify: false);
     bool _isSelfPickupActive = _configModel.selfPickup == 1;
-    bool _kmWiseCharge = _configModel.deliveryManagement.status == 1;
+    bool _kmWiseCharge = _configModel.deliveryManagement!.status == 1;
 
     return Scaffold(
-      appBar: ResponsiveHelper.isMobilePhone() ? null: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)) : AppBarBase(),
+      appBar: ResponsiveHelper.isMobilePhone() ? null: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)) : AppBarBase()) as PreferredSizeWidget?,
       body: Center(
         child: Consumer<CouponProvider>(builder: (context, couponProvider, _) {
             return Consumer<CartProvider>(
               builder: (context, cart, child) {
-                double deliveryCharge = 0;
+                double? deliveryCharge = 0;
                 (Provider.of<OrderProvider>(context).orderType == 'delivery' && !_kmWiseCharge)
                     ? deliveryCharge = _configModel.deliveryCharge : deliveryCharge = 0;
 
@@ -52,16 +52,16 @@ class CartScreen extends StatelessWidget {
                 double _discount = 0;
                 double _tax = 0;
                 cart.cartList.forEach((cartModel) {
-                  _itemPrice = _itemPrice + (cartModel.price * cartModel.quantity);
-                  _discount = _discount + (cartModel.discount * cartModel.quantity);
-                  _tax = _tax + (cartModel.tax * cartModel.quantity);
+                  _itemPrice = _itemPrice + (cartModel.price! * cartModel.quantity!);
+                  _discount = _discount + (cartModel.discount! * cartModel.quantity!);
+                  _tax = _tax + (cartModel.tax! * cartModel.quantity!);
                 });
 
-                double _subTotal = _itemPrice + (_configModel.isVatTexInclude ? 0 : _tax);
-                bool _isFreeDelivery = _subTotal >= _configModel.freeDeliveryOverAmount && _configModel.freeDeliveryStatus
+                double _subTotal = _itemPrice + (_configModel.isVatTexInclude! ? 0 : _tax);
+                bool _isFreeDelivery = _subTotal >= _configModel.freeDeliveryOverAmount! && _configModel.freeDeliveryStatus!
                     || couponProvider.couponType == 'free_delivery';
 
-                double _total = _subTotal - _discount - Provider.of<CouponProvider>(context).discount + (_isFreeDelivery ? 0 : deliveryCharge);
+                double _total = _subTotal - _discount - Provider.of<CouponProvider>(context).discount! + (_isFreeDelivery ? 0 : deliveryCharge!);
 
                 return cart.cartList.length > 0
                     ? !ResponsiveHelper.isDesktop(context) ? Column(children: [
@@ -83,7 +83,7 @@ class CartScreen extends StatelessWidget {
                             isSelfPickupActive: _isSelfPickupActive,
                             kmWiseCharge: _kmWiseCharge, isFreeDelivery: _isFreeDelivery,
                             itemPrice: _itemPrice, tax: _tax,
-                            discount: _discount, deliveryCharge: deliveryCharge,
+                            discount: _discount, deliveryCharge: deliveryCharge!,
                           ),
                            SizedBox(height: 40),
                          ]),
@@ -119,7 +119,7 @@ class CartScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 900 : 300],
+                                        color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 900 : 300]!,
                                         blurRadius: 5,
                                         spreadRadius: 1,
                                       )
@@ -138,7 +138,7 @@ class CartScreen extends StatelessWidget {
                                     isSelfPickupActive: _isSelfPickupActive,
                                     kmWiseCharge: _kmWiseCharge, isFreeDelivery: _isFreeDelivery,
                                     itemPrice: _itemPrice, tax: _tax,
-                                    discount: _discount, deliveryCharge: deliveryCharge,
+                                    discount: _discount, deliveryCharge: deliveryCharge!,
                                   ),
                                 ),
 
@@ -170,12 +170,12 @@ class CartScreen extends StatelessWidget {
 
 class CartButtonView extends StatelessWidget {
   const CartButtonView({
-    Key key,
-    @required double subTotal,
-    @required ConfigModel configModel,
-    @required double itemPrice,
-    @required double total,
-    @required bool isFreeDelivery,
+    Key? key,
+    required double subTotal,
+    required ConfigModel configModel,
+    required double itemPrice,
+    required double total,
+    required bool isFreeDelivery,
   }) : _subTotal = subTotal, _configModel = configModel, _isFreeDelivery = isFreeDelivery, _itemPrice = itemPrice,  _total = total, super(key: key);
 
   final double _subTotal;
@@ -204,16 +204,16 @@ class CartButtonView extends StatelessWidget {
         CustomButton(
           buttonText: getTranslated('continue_checkout', context),
           onPressed: () {
-            if(_itemPrice < _configModel.minimumOrderValue) {
+            if(_itemPrice < _configModel.minimumOrderValue!) {
               showCustomSnackBar(' ${getTranslated('minimum_order_amount_is', context)} ${PriceConverter.convertPrice(context, _configModel.minimumOrderValue)
               }, ${getTranslated('you_have', context)} ${PriceConverter.convertPrice(context, _itemPrice)} ${getTranslated('in_your_cart_please_add_more_item', context)}', context,isError: true);
             } else {
-              String _orderType = Provider.of<OrderProvider>(context, listen: false).orderType;
-              double _discount = Provider.of<CouponProvider>(context, listen: false).discount;
+              String? _orderType = Provider.of<OrderProvider>(context, listen: false).orderType;
+              double? _discount = Provider.of<CouponProvider>(context, listen: false).discount;
               Navigator.pushNamed(
                 context, RouteHelper.getCheckoutRoute(
                 _total, _discount, _orderType,
-                Provider.of<CouponProvider>(context, listen: false).code,
+                Provider.of<CouponProvider>(context, listen: false).code!,
                  _isFreeDelivery ? 'free_delivery' : '',
               ),
                 arguments: CheckoutScreen(
@@ -235,31 +235,31 @@ class CartButtonView extends StatelessWidget {
 
 class FreeDeliveryProgressBar extends StatelessWidget {
   const FreeDeliveryProgressBar({
-    Key key,
-    @required double subTotal,
-    @required ConfigModel configModel,
+    Key? key,
+    required double subTotal,
+    required ConfigModel configModel,
   }) : _subTotal = subTotal, super(key: key);
 
   final double _subTotal;
 
   @override
   Widget build(BuildContext context) {
-    final _configModel = Provider.of<SplashProvider>(context, listen: false).configModel;
+    final _configModel = Provider.of<SplashProvider>(context, listen: false).configModel!;
 
-    return _configModel.freeDeliveryStatus ? Container(
+    return _configModel.freeDeliveryStatus! ? Container(
         margin: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
         child: Column(children: [
           Row(children: [
             Icon(Icons.discount_outlined, color: Theme.of(context).primaryColor),
             SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-            (_subTotal / _configModel.freeDeliveryOverAmount)  < 1 ?
-            Text('${PriceConverter.convertPrice(context, _configModel.freeDeliveryOverAmount - _subTotal)} ${getTranslated('more_to_free_delivery', context)}')
-            : Text(getTranslated('enjoy_free_delivery', context)),
+            (_subTotal / _configModel.freeDeliveryOverAmount!)  < 1 ?
+            Text('${PriceConverter.convertPrice(context, _configModel.freeDeliveryOverAmount! - _subTotal)} ${getTranslated('more_to_free_delivery', context)}')
+            : Text(getTranslated('enjoy_free_delivery', context)!),
           ]),
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
           LinearProgressIndicator(
-            value: (_subTotal / _configModel.freeDeliveryOverAmount),
+            value: (_subTotal / _configModel.freeDeliveryOverAmount!),
             color: Theme.of(context).primaryColor,
           ),
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),

@@ -15,15 +15,15 @@ import '../../base/web_app_bar/web_app_bar.dart';
 
 class RateReviewScreen extends StatefulWidget {
   final List<OrderDetailsModel> orderDetailsList;
-  final DeliveryMan deliveryMan;
-  RateReviewScreen({@required this.orderDetailsList, @required this.deliveryMan});
+  final DeliveryMan? deliveryMan;
+  RateReviewScreen({required this.orderDetailsList, required this.deliveryMan});
 
   @override
   _RateReviewScreenState createState() => _RateReviewScreenState();
 }
 
 class _RateReviewScreenState extends State<RateReviewScreen> with TickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _RateReviewScreenState extends State<RateReviewScreen> with TickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)) : CustomAppBar(title: getTranslated('rate_review', context)),
+      appBar: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)) : CustomAppBar(title: getTranslated('rate_review', context))) as PreferredSizeWidget?,
 
       body: Column(children: [
 
@@ -42,7 +42,7 @@ class _RateReviewScreenState extends State<RateReviewScreen> with TickerProvider
           color: Theme.of(context).cardColor,
           child: TabBar(
             controller: _tabController,
-            labelColor: Theme.of(context).textTheme.bodyText1.color,
+            labelColor: Theme.of(context).textTheme.bodyText1!.color,
             indicatorColor: Theme.of(context).primaryColor,
             indicatorWeight: 3,
             unselectedLabelStyle: poppinsRegular.copyWith(color: ColorResources.getHintColor(context), fontSize: Dimensions.FONT_SIZE_SMALL),

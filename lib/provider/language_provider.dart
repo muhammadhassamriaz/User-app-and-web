@@ -4,7 +4,7 @@ import 'package:flutter_grocery/data/model/response/language_model.dart';
 import 'package:flutter_grocery/data/repository/language_repo.dart';
 
 class LanguageProvider with ChangeNotifier {
-  final LanguageRepo languageRepo;
+  final LanguageRepo? languageRepo;
 
   LanguageProvider({this.languageRepo});
 
@@ -24,13 +24,13 @@ class LanguageProvider with ChangeNotifier {
   void searchLanguage(String query, BuildContext context) {
     if (query.isEmpty) {
       _languages.clear();
-      _languages = languageRepo.getAllLanguages(context: context);
+      _languages = languageRepo!.getAllLanguages(context: context);
       notifyListeners();
     } else {
       _selectIndex = -1;
       _languages = [];
-      languageRepo.getAllLanguages(context: context).forEach((product) async {
-        if (product.languageName.toLowerCase().contains(query.toLowerCase())) {
+      languageRepo!.getAllLanguages(context: context).forEach((product) async {
+        if (product.languageName!.toLowerCase().contains(query.toLowerCase())) {
           _languages.add(product);
         }
       });
@@ -41,7 +41,7 @@ class LanguageProvider with ChangeNotifier {
   void initializeAllLanguages(BuildContext context) {
     if (_languages.length == 0) {
       _languages.clear();
-      _languages = languageRepo.getAllLanguages(context: context);
+      _languages = languageRepo!.getAllLanguages(context: context);
     }
   }
 }

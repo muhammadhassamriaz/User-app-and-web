@@ -21,7 +21,7 @@ import 'menu_item_web.dart';
 
 class MenuScreenWeb extends StatelessWidget {
   final bool isLoggedIn;
-  const MenuScreenWeb({Key key, @required this.isLoggedIn}) : super(key: key);
+  const MenuScreenWeb({Key? key, required this.isLoggedIn}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,22 +39,22 @@ class MenuScreenWeb extends StatelessWidget {
       MenuModel(icon: Images.coupon, title: getTranslated('coupon', context), route: RouteHelper.coupon),
       MenuModel(icon: Images.notification, title: getTranslated('notification', context), route: RouteHelper.notification),
 
-      if(_splashProvider.configModel.walletStatus)
+      if(_splashProvider.configModel!.walletStatus!)
         MenuModel(icon: Images.wallet, title: getTranslated('wallet', context), route: RouteHelper.getWalletRoute(true)),
-      if(_splashProvider.configModel.loyaltyPointStatus)
+      if(_splashProvider.configModel!.loyaltyPointStatus!)
         MenuModel(icon: Images.loyalty_icon, title: getTranslated('loyalty_point', context), route: RouteHelper.getWalletRoute(false)),
 
       MenuModel(icon: Images.language, title: getTranslated('contact_us', context), route: RouteHelper.getContactRoute()),
       MenuModel(icon: Images.privacy_policy, title: getTranslated('privacy_policy', context), route: RouteHelper.getPolicyRoute()),
       MenuModel(icon: Images.terms_and_conditions, title: getTranslated('terms_and_condition', context), route: RouteHelper.getTermsRoute()),
 
-      if(_splashProvider.configModel.returnPolicyStatus)
+      if(_splashProvider.configModel!.returnPolicyStatus!)
       MenuModel(icon: Images.return_policy, title: getTranslated('return_policy', context), route: RouteHelper.getReturnPolicyRoute()),
 
-      if(_splashProvider.configModel.refundPolicyStatus)
+      if(_splashProvider.configModel!.refundPolicyStatus!)
       MenuModel(icon: Images.refund_policy, title: getTranslated('refund_policy', context), route: RouteHelper.getRefundPolicyRoute()),
 
-      if(_splashProvider.configModel.cancellationPolicyStatus)
+      if(_splashProvider.configModel!.cancellationPolicyStatus!)
       MenuModel(icon: Images.cancellation_policy, title: getTranslated('cancellation_policy', context), route: RouteHelper.getCancellationPolicyRoute()),
 
       MenuModel(icon: Images.about_us, title: getTranslated('about_us', context), route: RouteHelper.getAboutUsRoute()),
@@ -67,9 +67,9 @@ class MenuScreenWeb extends StatelessWidget {
     return SingleChildScrollView(child: Column(children: [
       Center(child: Consumer<ProfileProvider>(builder: (context, profileProvider, child) {
 
-        if(_splashProvider.configModel.referEarnStatus
+        if(_splashProvider.configModel!.referEarnStatus!
             && profileProvider.userInfoModel != null
-            && _profileProvider.userInfoModel.referCode != null) {
+            && _profileProvider.userInfoModel!.referCode != null) {
          final MenuModel _referMenu = MenuModel(
             icon: Images.referral_icon,
             title: getTranslated('refer_and_earn', context),
@@ -97,15 +97,15 @@ class MenuScreenWeb extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     isLoggedIn ? profileProvider.userInfoModel != null ? Text(
-                      '${profileProvider.userInfoModel.fName ?? ''} ${profileProvider.userInfoModel.lName ?? ''}',
+                      '${profileProvider.userInfoModel!.fName ?? ''} ${profileProvider.userInfoModel!.lName ?? ''}',
                       style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE, color: ColorResources.getTextColor(context)),
                     ) : SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT, width: 150) : Text(
-                      getTranslated('guest', context),
+                      getTranslated('guest', context)!,
                       style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE, color: ColorResources.getTextColor(context)),
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                     isLoggedIn ? profileProvider.userInfoModel != null ? Text(
-                      '${profileProvider.userInfoModel.email ?? ''}',
+                      '${profileProvider.userInfoModel!.email ?? ''}',
                       style: poppinsRegular.copyWith(color: ColorResources.getTextColor(context)),
                     ) : SizedBox(height: 15, width: 100) : Text(
                       'demo@demo.com',
@@ -144,8 +144,8 @@ class MenuScreenWeb extends StatelessWidget {
               child: ClipOval(
                 child: isLoggedIn ? FadeInImage.assetNetwork(
                   placeholder: Images.placeholder(context), height: 170, width: 170, fit: BoxFit.cover,
-                  image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.customerImageUrl}/'
-                      '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel.image : ''}',
+                  image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/'
+                      '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel!.image : ''}',
                   imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder(context), height: 170, width: 170, fit: BoxFit.cover),
                 ) : Image.asset(Images.placeholder(context), height: 170, width: 170, fit: BoxFit.cover),
               ),
@@ -175,7 +175,7 @@ class MenuScreenWeb extends StatelessWidget {
                   ),
 
                   Padding(padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                    child: Text(getTranslated('delete_account', context)),
+                    child: Text(getTranslated('delete_account', context)!),
                   ),
 
                 ],),
@@ -194,9 +194,9 @@ class MenuScreenWeb extends StatelessWidget {
 
 class MenuModel {
   String icon;
-  String title;
-  String route;
-  Widget iconWidget;
+  String? title;
+  String? route;
+  Widget? iconWidget;
 
-  MenuModel({@required this.icon, @required this.title, @required this.route, this.iconWidget});
+  MenuModel({required this.icon, required this.title, required this.route, this.iconWidget});
 }

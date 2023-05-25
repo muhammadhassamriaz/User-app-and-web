@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 
 class MenuItemWeb extends StatelessWidget {
   final MenuModel menu;
-  const MenuItemWeb({Key key, @required this.menu}) : super(key: key);
+  const MenuItemWeb({Key? key, required this.menu}) : super(key: key);
 
 
   @override
@@ -34,7 +34,7 @@ class MenuItemWeb extends StatelessWidget {
             context: context, barrierDismissible: false, builder: (context) => SignOutConfirmationDialog(),
           ) : Navigator.pushNamed(context, RouteHelper.getLoginRoute());
         }else{
-          Navigator.pushNamed(context, menu.route);
+          Navigator.pushNamed(context, menu.route!);
         }
       },
       child: Container(
@@ -42,11 +42,11 @@ class MenuItemWeb extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            menu.icon == null || menu.iconWidget != null ? menu.iconWidget
-                : Image.asset(menu.icon, width: 50, height: 50, color: Theme.of(context).textTheme.bodyLarge.color),
+            menu.icon == null || menu.iconWidget != null ? menu.iconWidget!
+                : Image.asset(menu.icon, width: 50, height: 50, color: Theme.of(context).textTheme.bodyLarge!.color),
             SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
-            Text(menu.title, style: poppinsRegular),
+            Text(menu.title!, style: poppinsRegular),
           ],
         ),
       ),

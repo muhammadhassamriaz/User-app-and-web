@@ -37,17 +37,17 @@ void showAnimatedDialog(BuildContext context, Widget dialog, {bool isFlip = fals
 
 class Rotation3DTransition extends AnimatedWidget {
   const Rotation3DTransition({
-    Key key,
-    @required Animation<double> turns,
+    Key? key,
+    required Animation<double> turns,
     this.alignment = Alignment.center,
     this.child,
   })  : assert(turns != null),
         super(key: key, listenable: turns);
 
-  Animation<double> get turns => listenable;
+  Animation<double> get turns => listenable as Animation<double>;
 
   final Alignment alignment;
-  final Widget child;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -70,10 +70,10 @@ void openDialog(Widget child, {bool isDismissible = true, bool isDialog = false,
     isDismissible: isDismissible,
     isScrollControlled: true,
     builder: (BuildContext context) => WillPopScope(child: child, onWillPop: ()async=> willPop),
-    context: Get.context,
+    context: Get.context!,
   ) :
   showAnimatedDialog(
-    Get.context,
+    Get.context!,
     Dialog(
       backgroundColor: Colors.transparent,
       child:   WillPopScope(child: child, onWillPop: ()async=> willPop),

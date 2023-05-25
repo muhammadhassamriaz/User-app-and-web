@@ -4,18 +4,18 @@ import 'package:flutter_grocery/provider/localization_provider.dart';
 import 'package:provider/provider.dart';
 
 class CustomDrawerController {
-  Function open;
-  Function close;
-  Function toggle;
-  Function isOpen;
-  ValueNotifier<DrawerState> stateNotifier;
+  Function? open;
+  Function? close;
+  late Function toggle;
+  late Function isOpen;
+  ValueNotifier<DrawerState>? stateNotifier;
 }
 
 class CustomDrawer extends StatefulWidget {
   CustomDrawer({
     this.controller,
-    @required this.menuScreen,
-    @required this.mainScreen,
+    required this.menuScreen,
+    required this.mainScreen,
     this.slideWidth = 275.0,
     this.borderRadius = 16.0,
     this.angle = -12.0,
@@ -25,7 +25,7 @@ class CustomDrawer extends StatefulWidget {
     this.closeCurve,
   }) : assert(angle <= 0.0 && angle >= -30.0);
 
-  final CustomDrawerController controller;
+  final CustomDrawerController? controller;
   final Widget menuScreen;
   final Widget mainScreen;
   final double slideWidth;
@@ -33,15 +33,15 @@ class CustomDrawer extends StatefulWidget {
   final double angle;
   final Color backgroundColor;
   final bool showShadow;
-  final Curve openCurve;
-  final Curve closeCurve;
+  final Curve? openCurve;
+  final Curve? closeCurve;
 
   @override
   _CustomDrawerState createState() => new _CustomDrawerState();
 
   /// static function to provide the drawer state
-  static _CustomDrawerState of(BuildContext context) {
-    return context.findAncestorStateOfType<State<CustomDrawer>>();
+  static _CustomDrawerState? of(BuildContext context) {
+    return context.findAncestorStateOfType<State<CustomDrawer>>() as _CustomDrawerState?;
   }
 
   /// Static function to determine the device text direction RTL/LTR
@@ -61,7 +61,7 @@ class _CustomDrawerState extends State<CustomDrawer>
   /// check the slide direction
 
 
-  AnimationController _animationController;
+  late AnimationController _animationController;
   DrawerState _state = DrawerState.closed;
 
   double get _percentOpen => _animationController.value;
@@ -86,7 +86,7 @@ class _CustomDrawerState extends State<CustomDrawer>
       _state == DrawerState.open  /*|| _state == DrawerState.opening*/;
 
   /// Drawer state
-  ValueNotifier<DrawerState> stateNotifier;
+  ValueNotifier<DrawerState>? stateNotifier;
 
   @override
   void initState() {
@@ -119,16 +119,16 @@ class _CustomDrawerState extends State<CustomDrawer>
 
     /// assign controller function to the widget methods
     if (widget.controller != null) {
-      widget.controller.open = open;
-      widget.controller.close = close;
-      widget.controller.toggle = toggle;
-      widget.controller.isOpen = isOpen;
-      widget.controller.stateNotifier = stateNotifier;
+      widget.controller!.open = open;
+      widget.controller!.close = close;
+      widget.controller!.toggle = toggle;
+      widget.controller!.isOpen = isOpen;
+      widget.controller!.stateNotifier = stateNotifier;
     }
   }
 
   _updateStatusNotifier() {
-    stateNotifier.value = _state;
+    stateNotifier!.value = _state;
   }
 
   @override
@@ -137,8 +137,8 @@ class _CustomDrawerState extends State<CustomDrawer>
     super.dispose();
   }
 
-  Widget _zoomAndSlideContent(Widget container,BuildContext context,
-      {double angle, double scale, double slide = 0}) {
+  Widget _zoomAndSlideContent(Widget? container,BuildContext context,
+      {double? angle, double? scale, double slide = 0}) {
     var slidePercent, scalePercent;
 
     /// determine current slide percent based on the MenuStatus

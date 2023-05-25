@@ -16,25 +16,25 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class SelectLocationScreen extends StatefulWidget {
-  final GoogleMapController googleMapController;
-  SelectLocationScreen({@required this.googleMapController});
+  final GoogleMapController? googleMapController;
+  SelectLocationScreen({required this.googleMapController});
 
   @override
   _SelectLocationScreenState createState() => _SelectLocationScreenState();
 }
 
 class _SelectLocationScreenState extends State<SelectLocationScreen> {
-  GoogleMapController _controller;
+  GoogleMapController? _controller;
   TextEditingController _locationController = TextEditingController();
-  CameraPosition _cameraPosition;
-  LatLng _initialPosition;
+  CameraPosition? _cameraPosition;
+  late LatLng _initialPosition;
 
   @override
   void initState() {
     super.initState();
     _initialPosition = LatLng(
-      double.parse(Provider.of<SplashProvider>(context, listen: false).configModel.branches[0].latitude ),
-      double.parse(Provider.of<SplashProvider>(context, listen: false).configModel.branches[0].longitude),
+      double.parse(Provider.of<SplashProvider>(context, listen: false).configModel!.branches![0].latitude! ),
+      double.parse(Provider.of<SplashProvider>(context, listen: false).configModel!.branches![0].longitude!),
     );
     if(Provider.of<LocationProvider>(context, listen: false).position != null ) {
       Provider.of<LocationProvider>(context, listen: false).setPickData();
@@ -44,10 +44,10 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    _controller!.dispose();
   }
 
-  void _openSearchDialog(BuildContext context, GoogleMapController mapController) async {
+  void _openSearchDialog(BuildContext context, GoogleMapController? mapController) async {
     showDialog(context: context, builder: (context) => LocationSearchDialog(mapController: mapController));
   }
 
@@ -58,7 +58,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
     }
 
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)): CustomAppBar(title: getTranslated('select_delivery_address', context), isCenter: true),
+      appBar: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)): CustomAppBar(title: getTranslated('select_delivery_address', context), isCenter: true)) as PreferredSizeWidget?,
       body: Center(
         child: Container(
           width: 1170,
@@ -85,7 +85,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                   onMapCreated: (GoogleMapController controller) {
                     Future.delayed(Duration(milliseconds: 600)).then((value) {
                       _controller = controller;
-                      _controller.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(
+                      _controller!.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(
                           target:  locationProvider.pickPosition.longitude.toInt() == 0 &&  locationProvider.pickPosition.latitude.toInt() == 0 ? _initialPosition : LatLng(
                         locationProvider.pickPosition.latitude, locationProvider.pickPosition.longitude,
                       ), zoom: 17)));
@@ -103,7 +103,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                           decoration: BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL)),
                           child: Builder(
                             builder: (context) {
-                              _locationController.text = locationProvider.pickAddress;
+                              _locationController.text = locationProvider.pickAddress!;
 
                               return Row(children: [
                                 Expanded(child: Text(
@@ -151,8 +151,8 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                             buttonText: getTranslated('select_location', context),
                             onPressed: locationProvider.loading ? null : () {
                               if(widget.googleMapController != null) {
-                                widget.googleMapController.setMapStyle('[]');
-                                widget.googleMapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
+                                widget.googleMapController!.setMapStyle('[]');
+                                widget.googleMapController!.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
                                   locationProvider.pickPosition.latitude, locationProvider.pickPosition.longitude,
                                 ), zoom: 16)));
 

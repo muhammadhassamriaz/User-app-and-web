@@ -34,12 +34,12 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode _emailFocus = FocusNode();
   FocusNode _numberFocus = FocusNode();
   FocusNode _passwordFocus = FocusNode();
-  TextEditingController _emailController;
-  TextEditingController _passwordController;
-  GlobalKey<FormState> _formKeyLogin;
+  TextEditingController? _emailController;
+  TextEditingController? _passwordController;
+  GlobalKey<FormState>? _formKeyLogin;
   bool email = true;
   bool phone =false;
-  String _countryDialCode;
+  String? _countryDialCode;
 
   @override
   void initState() {
@@ -48,36 +48,36 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
 
-    UserLogData _userData = Provider.of<AuthProvider>(context, listen: false).getUserData();
+    UserLogData? _userData = Provider.of<AuthProvider>(context, listen: false).getUserData();
 
 
     if(_userData != null) {
-      if(Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification) {
-        _emailController.text = _userData.email;
+      if(Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification!) {
+        _emailController!.text = _userData.email!;
       }else{
-        _emailController.text = _userData.phoneNumber;
+        _emailController!.text = _userData.phoneNumber!;
       }
 
-      _passwordController.text = _userData.password;
+      _passwordController!.text = _userData.password!;
 
 
       _countryDialCode = _userData.countryCode;
     }else{
-      _countryDialCode = CountryCode.fromCountryCode(Provider.of<SplashProvider>(context, listen: false).configModel.country).dialCode;
+      _countryDialCode = CountryCode.fromCountryCode(Provider.of<SplashProvider>(context, listen: false).configModel!.country!).dialCode;
     }
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _emailController!.dispose();
+    _passwordController!.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
-    final _configModel = Provider.of<SplashProvider>(context,listen: false).configModel;
+    final _configModel = Provider.of<SplashProvider>(context,listen: false).configModel!;
     final _socialStatus = _configModel.socialLoginStatus;
 
     return Scaffold(
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: ResponsiveHelper.isDesktop(context) ? EdgeInsets.symmetric(horizontal: 100,vertical: 50) :  _width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
               decoration: _width > 700 ? BoxDecoration(
                 color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(10),
-                boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)],
+                boxShadow: [BoxShadow(color: Colors.grey[300]!, blurRadius: 5, spreadRadius: 1)],
               ) : null,
               child: Consumer<AuthProvider>(
                 builder: (context, authProvider, child) => Form(key: _formKeyLogin, child: Column(
@@ -114,22 +114,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     //SizedBox(height: 20),
 
                     Center(child: Text(
-                      getTranslated('login', context),
+                      getTranslated('login', context)!,
                       style: poppinsMedium.copyWith(fontSize: 24, color: ColorResources.getTextColor(context)),
                     )),
                     SizedBox(height: 35),
 
-                    Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification ?
+                    Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification! ?
                     Text(
-                      getTranslated('email', context),
+                      getTranslated('email', context)!,
                       style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
                     ):Text(
-                      getTranslated('mobile_number', context),
+                      getTranslated('mobile_number', context)!,
                       style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
-                    Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification ?
+                    Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification! ?
                     CustomTextField(
                       hintText: getTranslated('demo_gmail', context),
                       isShowBorder: true,
@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         showDropDownButton: true,
                         padding: EdgeInsets.zero,
                         showFlagMain: true,
-                        textStyle: TextStyle(color: Theme.of(context).textTheme.displayLarge.color),
+                        textStyle: TextStyle(color: Theme.of(context).textTheme.displayLarge!.color),
 
                       ),
 
@@ -164,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                     Text(
-                      getTranslated('password', context),
+                      getTranslated('password', context)!,
                       style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
                     ),
                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -201,10 +201,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
                             Text(
-                              getTranslated('remember_me', context),
+                              getTranslated('remember_me', context)!,
                               style: Theme.of(context)
                                   .textTheme
-                                  .displayMedium
+                                  .displayMedium!
                                   .copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, color: ColorResources.getHintColor(context)),
                             ),
                           ]),
@@ -218,10 +218,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
-                            getTranslated('forgot_password', context),
+                            getTranslated('forgot_password', context)!,
                             style: Theme.of(context)
                                 .textTheme
-                                .displayMedium
+                                .displayMedium!
                                 .copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.getHintColor(context)),
                           ),
                         ),
@@ -230,14 +230,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 10),
 
                     Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      authProvider.loginErrorMessage.length > 0
+                      authProvider.loginErrorMessage!.length > 0
                           ? CircleAvatar(backgroundColor: Theme.of(context).primaryColor, radius: 5)
                           : SizedBox.shrink(),
                       SizedBox(width: 8),
 
                       Expanded(child: Text(
                         authProvider.loginErrorMessage ?? "",
-                        style: Theme.of(context).textTheme.displayMedium.copyWith(
+                        style: Theme.of(context).textTheme.displayMedium!.copyWith(
                           fontSize: Dimensions.FONT_SIZE_SMALL,
                           color: Theme.of(context).primaryColor,
                         ),
@@ -251,24 +251,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     !authProvider.isLoading ? CustomButton(
                       buttonText: getTranslated('login', context),
                       onPressed: () async {
-                        String _email = _emailController.text.trim();
-                        if(!Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification) {
-                          _email = _countryDialCode + _emailController.text.trim();
+                        String _email = _emailController!.text.trim();
+                        if(!Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification!) {
+                          _email = _countryDialCode! + _emailController!.text.trim();
                         }
-                        String _password = _passwordController.text.trim();
+                        String _password = _passwordController!.text.trim();
                         if (_email.isEmpty) {
-                          if(Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification){
-                            showCustomSnackBar(getTranslated('enter_email_address', context), context);
+                          if(Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification!){
+                            showCustomSnackBar(getTranslated('enter_email_address', context)!, context);
                           }else {
-                            showCustomSnackBar(getTranslated('enter_phone_number', context), context);
+                            showCustomSnackBar(getTranslated('enter_phone_number', context)!, context);
                           }
-                        }else if (Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification
+                        }else if (Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification!
                             && EmailChecker.isNotValid(_email)) {
-                          showCustomSnackBar(getTranslated('enter_valid_email', context), context);
+                          showCustomSnackBar(getTranslated('enter_valid_email', context)!, context);
                         }else if (_password.isEmpty) {
-                          showCustomSnackBar(getTranslated('enter_password', context), context);
+                          showCustomSnackBar(getTranslated('enter_password', context)!, context);
                         }else if (_password.length < 6) {
-                          showCustomSnackBar(getTranslated('password_should_be', context), context);
+                          showCustomSnackBar(getTranslated('password_should_be', context)!, context);
                         }else {
                           authProvider.login(_email, _password).then((status) async {
                             
@@ -276,8 +276,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (authProvider.isActiveRememberMe) {
                                 authProvider.saveUserNumberAndPassword(UserLogData(
                                   countryCode:  _countryDialCode,
-                                  phoneNumber: _configModel.emailVerification ? null : _emailController.text,
-                                  email: _configModel.emailVerification ? _emailController.text : null,
+                                  phoneNumber: _configModel.emailVerification! ? null : _emailController!.text,
+                                  email: _configModel.emailVerification! ? _emailController!.text : null,
                                   password: _password,
                                 ));
                               } else {
@@ -305,23 +305,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              getTranslated('create_an_account', context),
+                              getTranslated('create_an_account', context)!,
                               style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.getHintColor(context)),
                             ),
                             SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
                             Text(
-                              getTranslated('signup', context),
+                              getTranslated('signup', context)!,
                               style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.getTextColor(context)),
                             ),
                           ])),
                     ),
 
-                    if(_socialStatus.isFacebook || _socialStatus.isGoogle)
+                    if(_socialStatus!.isFacebook! || _socialStatus.isGoogle!)
                       Center(child: SocialLoginWidget()),
 
 
-                    Center(child: Text(getTranslated('OR', context), style: poppinsRegular.copyWith(fontSize: 12))),
+                    Center(child: Text(getTranslated('OR', context)!, style: poppinsRegular.copyWith(fontSize: 12))),
 
                     Center(child: TextButton(
                       style: TextButton.styleFrom(
@@ -332,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       child: RichText(text: TextSpan(children: [
                         TextSpan(text: '${getTranslated('continue_as_a', context)} ',  style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.getHintColor(context))),
-                        TextSpan(text: getTranslated('guest', context), style: poppinsRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge.color)),
+                        TextSpan(text: getTranslated('guest', context), style: poppinsRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge!.color)),
                       ])),
 
                     )),

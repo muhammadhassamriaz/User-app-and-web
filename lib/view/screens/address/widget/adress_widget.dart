@@ -15,7 +15,7 @@ class AddressWidget extends StatelessWidget {
 
   final AddressModel addressModel;
   final int index;
-  AddressWidget({@required this.addressModel, @required this.index});
+  AddressWidget({required this.addressModel, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class AddressWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(7),
               color: ColorResources.getCardBgColor(context),
               boxShadow: [
-                BoxShadow(color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 200], spreadRadius: 0.5, blurRadius: 0.5)
+                BoxShadow(color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 200]!, spreadRadius: 0.5, blurRadius: 0.5)
               ],
             ),
             child: Column(
@@ -56,11 +56,11 @@ class AddressWidget extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  addressModel.addressType,
+                                  addressModel.addressType!,
                                   style: poppinsMedium.copyWith(color: Theme.of(context).primaryColor, fontSize: Dimensions.FONT_SIZE_LARGE),
                                 ),
                                 Text(
-                                  addressModel.address,
+                                  addressModel.address!,
                                   style: poppinsRegular.copyWith(color: ColorResources.getTextColor(context), fontSize: Dimensions.FONT_SIZE_LARGE),
                                 ),
                               ],
@@ -96,11 +96,11 @@ class AddressWidget extends StatelessWidget {
                       itemBuilder: (BuildContext c) => <PopupMenuEntry<String>>[
                         PopupMenuItem<String>(
                           value: 'edit',
-                          child: Text(getTranslated('edit', context), style: poppinsMedium),
+                          child: Text(getTranslated('edit', context)!, style: poppinsMedium),
                         ),
                         PopupMenuItem<String>(
                           value: 'delete',
-                          child: Text(getTranslated('delete', context), style: poppinsMedium),
+                          child: Text(getTranslated('delete', context)!, style: poppinsMedium),
                         ),
                       ],
                     ),

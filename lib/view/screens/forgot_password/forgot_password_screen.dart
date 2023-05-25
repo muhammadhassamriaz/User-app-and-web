@@ -28,13 +28,13 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController _emailController = TextEditingController();
-  String _countryDialCode;
+  String? _countryDialCode;
 
   @override
   void initState() {
     super.initState();
 
-    _countryDialCode = CountryCode.fromCountryCode(Provider.of<SplashProvider>(context, listen: false).configModel.country).dialCode;
+    _countryDialCode = CountryCode.fromCountryCode(Provider.of<SplashProvider>(context, listen: false).configModel!.country!).dialCode;
   }
 
   @override
@@ -42,7 +42,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     double _width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)): CustomAppBar(title: getTranslated('forgot_password', context)),
+      appBar: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)): CustomAppBar(title: getTranslated('forgot_password', context))) as PreferredSizeWidget?,
       body: Center(
         child: Scrollbar(
           child: SingleChildScrollView(
@@ -58,7 +58,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       margin: _width > 1170 ? EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_LARGE) : null,
                       decoration: _width > 700 ? BoxDecoration(
                         color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(10),
-                        boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)],
+                        boxShadow: [BoxShadow(color: Colors.grey[300]!, blurRadius: 5, spreadRadius: 1)],
                       ) : null,
                       child: Consumer<AuthProvider>(
                         builder: (context, auth, child) {
@@ -69,7 +69,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               SizedBox(height: 40),
                               Center(
                                   child: Text(
-                                getTranslated('please_enter_your_number_to', context),
+                                getTranslated('please_enter_your_number_to', context)!,
                                 textAlign: TextAlign.center,
                                 style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
                               )),
@@ -79,15 +79,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SizedBox(height: 80),
-                                    Provider.of<SplashProvider>(context, listen: false).configModel.phoneVerification ? Text(
-                                      getTranslated('mobile_number', context),
+                                    Provider.of<SplashProvider>(context, listen: false).configModel!.phoneVerification! ? Text(
+                                      getTranslated('mobile_number', context)!,
                                       style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
                                     ) : Text(
-                                      getTranslated('email', context),
+                                      getTranslated('email', context)!,
                                       style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
                                     ),
                                     SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                    Provider.of<SplashProvider>(context, listen: false).configModel.phoneVerification ? Row(children: [
+                                    Provider.of<SplashProvider>(context, listen: false).configModel!.phoneVerification! ? Row(children: [
                                       CodePickerWidget(
                                         onChanged: (CountryCode countryCode) {
                                           _countryDialCode = countryCode.dialCode;
@@ -97,7 +97,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                         showDropDownButton: true,
                                         padding: EdgeInsets.zero,
                                         showFlagMain: true,
-                                        textStyle: TextStyle(color: Theme.of(context).textTheme.headline1.color),
+                                        textStyle: TextStyle(color: Theme.of(context).textTheme.headline1!.color),
 
                                       ),
                                       Expanded(child: CustomTextField(
@@ -122,10 +122,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                               buttonText: getTranslated('send', context),
                                               onPressed: () {
                                                 String _email = _emailController.text.trim();
-                                                if(Provider.of<SplashProvider>(context, listen: false).configModel.phoneVerification) {
-                                                  String _phone = _countryDialCode+_email;
+                                                if(Provider.of<SplashProvider>(context, listen: false).configModel!.phoneVerification!) {
+                                                  String _phone = _countryDialCode!+_email;
                                                   if (_email.isEmpty) {
-                                                    showCustomSnackBar(getTranslated('enter_phone_number', context), context);
+                                                    showCustomSnackBar(getTranslated('enter_phone_number', context)!, context);
                                                   } else {
                                                     Provider.of<AuthProvider>(context, listen: false).forgetPassword(_phone).then((value) {
                                                       if (value.isSuccess) {
@@ -134,15 +134,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                                           arguments: VerificationScreen(emailAddress: _phone),
                                                         );
                                                       } else {
-                                                        showCustomSnackBar(value.message, context);
+                                                        showCustomSnackBar(value.message!, context);
                                                       }
                                                     });
                                                   }
                                                 }else {
                                                   if (_email.isEmpty) {
-                                                    showCustomSnackBar(getTranslated('enter_email_address', context), context);
+                                                    showCustomSnackBar(getTranslated('enter_email_address', context)!, context);
                                                   } else if (EmailChecker.isNotValid(_email)) {
-                                                    showCustomSnackBar(getTranslated('enter_valid_email', context), context);
+                                                    showCustomSnackBar(getTranslated('enter_valid_email', context)!, context);
                                                   } else {
                                                     Provider.of<AuthProvider>(context, listen: false).forgetPassword(_email).then((value) {
                                                       if (value.isSuccess) {
@@ -151,7 +151,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                                           arguments: VerificationScreen(emailAddress: _email),
                                                         );
                                                       } else {
-                                                        showCustomSnackBar(value.message, context);
+                                                        showCustomSnackBar(value.message!, context);
                                                       }
                                                     });
                                                   }

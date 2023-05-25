@@ -17,22 +17,22 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:provider/provider.dart';
 
 class PaymentScreen extends StatefulWidget {
-  final OrderModel orderModel;
+  final OrderModel? orderModel;
   final bool fromCheckout;
-  final String url;
-  final PlaceOrderBody placeOrderBody;
-  PaymentScreen({this.orderModel, @required this.fromCheckout, this.url, this.placeOrderBody});
+  final String? url;
+  final PlaceOrderBody? placeOrderBody;
+  PaymentScreen({this.orderModel, required this.fromCheckout, this.url, this.placeOrderBody});
 
   @override
   _PaymentScreenState createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  String selectedUrl;
+  late String selectedUrl;
   double value = 0.0;
   bool _isLoading = true;
-  PullToRefreshController pullToRefreshController;
-  MyInAppBrowser browser;
+  PullToRefreshController? pullToRefreshController;
+  late MyInAppBrowser browser;
 
   @override
   void initState() {
@@ -87,7 +87,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => _exitApp(context),
+      onWillPop: (() => _exitApp(context).then((value) => value!)) as Future<bool> Function()?,
       child: Scaffold(
         // backgroundColor: Theme.of(context).primaryColor,
         // appBar: CustomAppBar(title: getTranslated('PAYMENT', context), onBackPressed: () => _exitApp(context))
@@ -107,22 +107,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  Future<bool> _exitApp(BuildContext context) async {
+  Future<bool?> _exitApp(BuildContext context) async {
     return showDialog(context: context,
-        builder: (context) => CancelDialog(orderID: widget.orderModel.id));
+        builder: (context) => CancelDialog(orderID: widget.orderModel!.id));
   }
 }
 
 
 class MyInAppBrowser extends InAppBrowser {
-  final OrderModel orderModel;
-  final bool fromCheckout;
+  final OrderModel? orderModel;
+  final bool? fromCheckout;
   final BuildContext context;
-  final PlaceOrderBody placeOrderBody;
+  final PlaceOrderBody? placeOrderBody;
   MyInAppBrowser(this.context, this.placeOrderBody, {
-    @required this.orderModel,
-    int windowId,
-    UnmodifiableListView<UserScript> initialUserScripts,
+    required this.orderModel,
+    int? windowId,
+    UnmodifiableListView<UserScript>? initialUserScripts,
     this.fromCheckout
   })
       : super(windowId: windowId, initialUserScripts: initialUserScripts);
@@ -164,7 +164,7 @@ class MyInAppBrowser extends InAppBrowser {
   @override
   void onExit() {
     if(_canRedirect) {
-      Navigator.pushReplacementNamed(context, '${RouteHelper.orderSuccessful}/${orderModel.id}/payment-fail');
+      Navigator.pushReplacementNamed(context, '${RouteHelper.orderSuccessful}/${orderModel!.id}/payment-fail');
     }
 
     print("\n\nBrowser closed!\n\n");
@@ -209,13 +209,13 @@ class MyInAppBrowser extends InAppBrowser {
           String _decodeValue = utf8.decode(base64Url.decode(_token.replaceAll(' ', '+')));
           String _paymentMethod = _decodeValue.substring(0, _decodeValue.indexOf('&&'));
           String _transactionReference = _decodeValue.substring(_decodeValue.indexOf('&&') + '&&'.length, _decodeValue.length);
-          PlaceOrderBody _placeOrderBody =  placeOrderBody.copyWith(
+          PlaceOrderBody _placeOrderBody =  placeOrderBody!.copyWith(
             paymentMethod: _paymentMethod.replaceAll('payment_method=', ''),
             transactionReference: _transactionReference.replaceAll('transaction_reference=', ''),
           );
           Provider.of<OrderProvider>(context, listen: false).placeOrder(_placeOrderBody, _callback);
         }else{
-          Navigator.pushReplacementNamed(context, '${RouteHelper.orderSuccessful}/${orderModel.id}/payment-fail');
+          Navigator.pushReplacementNamed(context, '${RouteHelper.orderSuccessful}/${orderModel!.id}/payment-fail');
         }
 
       }else if(_isFailed) {

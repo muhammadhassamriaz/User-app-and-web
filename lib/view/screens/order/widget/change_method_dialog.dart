@@ -12,7 +12,7 @@ class ChangeMethodDialog extends StatelessWidget {
   final String orderID;
   final Function callback;
   final bool fromOrder;
-  ChangeMethodDialog({@required this.orderID, @required this.callback, @required this.fromOrder});
+  ChangeMethodDialog({required this.orderID, required this.callback, required this.fromOrder});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class ChangeMethodDialog extends StatelessWidget {
                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                 Text(
-                  getTranslated('do_you_want_to_switch', context), textAlign: TextAlign.justify,
+                  getTranslated('do_you_want_to_switch', context)!, textAlign: TextAlign.justify,
                   style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
                 ),
                 SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
@@ -43,7 +43,7 @@ class ChangeMethodDialog extends StatelessWidget {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(width: 2, color: Theme.of(context).primaryColor)),
                         minimumSize: Size(1, 50),
                       ),
-                      child: Text(getTranslated('no', context)),
+                      child: Text(getTranslated('no', context)!),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),

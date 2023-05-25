@@ -11,24 +11,24 @@ import 'package:provider/provider.dart';
 
 import 'profile_provider.dart';
 
-List<TabButtonModel> tabButtonList =  [
-  TabButtonModel(getTranslated('convert_to_money', Get.context), Images.wallet, (){}),
-  TabButtonModel(getTranslated('earning', Get.context), Images.earning_image, (){}),
-  TabButtonModel(getTranslated('converted', Get.context), Images.converted_image, (){}),
+List<TabButtonModel?> tabButtonList =  [
+  TabButtonModel(getTranslated('convert_to_money', Get.context!), Images.wallet, (){}),
+  TabButtonModel(getTranslated('earning', Get.context!), Images.earning_image, (){}),
+  TabButtonModel(getTranslated('converted', Get.context!), Images.converted_image, (){}),
 ];
 
 class WalletProvider with ChangeNotifier {
-  final WalletRepo walletRepo;
-  WalletProvider({@required this.walletRepo});
+  final WalletRepo? walletRepo;
+  WalletProvider({required this.walletRepo});
 
-  List<Transaction> _transactionList;
+  List<Transaction>? _transactionList;
   List<String> _offsetList = [];
   int _offset = 1;
-  int _pageSize;
+  int? _pageSize;
   bool _isLoading = false;
 
-  List<Transaction> get transactionList => _transactionList;
-  int get popularPageSize => _pageSize;
+  List<Transaction>? get transactionList => _transactionList;
+  int? get popularPageSize => _pageSize;
   bool get isLoading => _isLoading;
   int get offset => _offset;
   bool _paginationLoader = false;
@@ -40,7 +40,7 @@ class WalletProvider with ChangeNotifier {
   }
 
 
-  int selectedTabButtonIndex;
+  int? selectedTabButtonIndex;
 
   set setOffset(int offset) {
     _offset = offset;
@@ -62,19 +62,19 @@ class WalletProvider with ChangeNotifier {
       _offsetList.add(offset);
       ApiResponse apiResponse;
       if(fromWallet){
-        apiResponse = await walletRepo.getWalletTransactionList(offset);
+        apiResponse = await walletRepo!.getWalletTransactionList(offset);
       }else{
-        apiResponse = await walletRepo.getLoyaltyTransactionList(offset, isEarning ? 'earning' : 'converted');
+        apiResponse = await walletRepo!.getLoyaltyTransactionList(offset, isEarning ? 'earning' : 'converted');
       }
 
 
 
-      if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
         if (offset == '1') {
           _transactionList = [];
         }
-        _transactionList.addAll(WalletModel.fromJson(apiResponse.response.data).data);
-        _pageSize = WalletModel.fromJson(apiResponse.response.data).totalSize;
+        _transactionList!.addAll(WalletModel.fromJson(apiResponse.response!.data).data!);
+        _pageSize = WalletModel.fromJson(apiResponse.response!.data).totalSize;
 
         _isLoading = false;
         _paginationLoader = false;
@@ -94,10 +94,10 @@ class WalletProvider with ChangeNotifier {
     bool _isSuccess = false;
     _isLoading = true;
     notifyListeners();
-    ApiResponse apiResponse = await walletRepo.pointToWallet(point: point);
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    ApiResponse apiResponse = await walletRepo!.pointToWallet(point: point);
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       _isSuccess = true;
-      Provider.of<ProfileProvider>(Get.context, listen: false).getUserInfo(Get.context);
+      Provider.of<ProfileProvider>(Get.context!, listen: false).getUserInfo(Get.context);
     } else {
       ApiChecker.checkApi(apiResponse);
     }

@@ -23,7 +23,7 @@ import 'widget/refer_hint_view.dart';
 
 
 class ReferAndEarnScreen extends StatefulWidget {
-  const ReferAndEarnScreen({Key key}) : super(key: key);
+  const ReferAndEarnScreen({Key? key}) : super(key: key);
 
   @override
   State<ReferAndEarnScreen> createState() => _ReferAndEarnScreenState();
@@ -31,10 +31,10 @@ class ReferAndEarnScreen extends StatefulWidget {
 
 class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
   final List<String> shareItem = ['messenger', 'whatsapp', 'gmail', 'viber', 'share' ];
-  final List<String> hintList = [
-    getTranslated('invite_your_friends', Get.context),
-    '${getTranslated('they_register', Get.context)} ${AppConstants.APP_NAME} ${getTranslated('with_special_offer', Get.context)}',
-    getTranslated('you_made_your_earning', Get.context),
+  final List<String?> hintList = [
+    getTranslated('invite_your_friends', Get.context!),
+    '${getTranslated('they_register', Get.context!)} ${AppConstants.APP_NAME} ${getTranslated('with_special_offer', Get.context!)}',
+    getTranslated('you_made_your_earning', Get.context!),
   ];
   bool _isLoggedIn = false;
 
@@ -89,15 +89,15 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
 
 class DetailsView extends StatelessWidget {
   const DetailsView({
-    Key key,
-    @required Size size,
-    @required this.shareItem,
-    @required this.hintList,
+    Key? key,
+    required Size size,
+    required this.shareItem,
+    required this.hintList,
   }) : _size = size, super(key: key);
 
   final Size _size;
   final List<String> shareItem;
-  final List<String> hintList;
+  final List<String?> hintList;
 
   @override
   Widget build(BuildContext context) {
@@ -109,17 +109,17 @@ class DetailsView extends StatelessWidget {
               SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
 
               Text(
-                getTranslated('invite_friend_and_businesses', context),
+                getTranslated('invite_friend_and_businesses', context)!,
                 textAlign: TextAlign.center,
                 style: poppinsMedium.copyWith(
                   fontSize: Dimensions.FONT_SIZE_OVER_LARGE,
-                  color: Theme.of(context).textTheme.bodyLarge.color,
+                  color: Theme.of(context).textTheme.bodyLarge!.color,
                 ),
               ),
               SizedBox(height: Dimensions.PADDING_SIZE_SMALL,),
 
               Text(
-                getTranslated('copy_your_code', context),
+                getTranslated('copy_your_code', context)!,
                 textAlign: TextAlign.center,
                 style: poppinsRegular.copyWith(
                   fontSize: Dimensions.FONT_SIZE_DEFAULT,
@@ -128,7 +128,7 @@ class DetailsView extends StatelessWidget {
               SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
 
               Text(
-                getTranslated('your_personal_code', context),
+                getTranslated('your_personal_code', context)!,
                 textAlign: TextAlign.center,
                 style: poppinsRegular.copyWith(
                   fontSize: Dimensions.FONT_SIZE_DEFAULT,
@@ -150,7 +150,7 @@ class DetailsView extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
-                        child: Text('${profileProvider.userInfoModel.referCode ?? ''}',
+                        child: Text('${profileProvider.userInfoModel!.referCode ?? ''}',
                           style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
                         ),
                       ),
@@ -159,9 +159,9 @@ class DetailsView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                         onTap: () {
 
-                          if(profileProvider.userInfoModel.referCode != null && profileProvider.userInfoModel.referCode  != ''){
-                            Clipboard.setData(ClipboardData(text: '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel.referCode : ''}'));
-                            showCustomSnackBar(getTranslated('referral_code_copied', context), context, isError: false);
+                          if(profileProvider.userInfoModel!.referCode != null && profileProvider.userInfoModel!.referCode  != ''){
+                            Clipboard.setData(ClipboardData(text: '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel!.referCode : ''}'));
+                            showCustomSnackBar(getTranslated('referral_code_copied', context)!, context, isError: false);
                           }
                         },
                         child: Container(
@@ -171,7 +171,7 @@ class DetailsView extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(60),
                           ),
-                          child: Text(getTranslated('copy', context),style: poppinsRegular.copyWith(
+                          child: Text(getTranslated('copy', context)!,style: poppinsRegular.copyWith(
                             fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE, color: Colors.white.withOpacity(0.9),
                           )),
                         ),
@@ -182,7 +182,7 @@ class DetailsView extends StatelessWidget {
               SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE,),
 
               Text(
-                getTranslated('or_share', context),
+                getTranslated('or_share', context)!,
                 style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
               ),
 
@@ -194,7 +194,7 @@ class DetailsView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: shareItem.map((_item) => InkWell(
                     borderRadius: BorderRadius.circular(10),
-                    onTap: () => Share.share(profileProvider.userInfoModel.referCode),
+                    onTap: () => Share.share(profileProvider.userInfoModel!.referCode!),
                     child: Container(
                       margin: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                       child: Image.asset(

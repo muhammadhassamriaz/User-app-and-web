@@ -18,7 +18,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  int pageSize;
+  int? pageSize;
   final ScrollController scrollController = ScrollController();
   TextEditingController _searchController = TextEditingController();
 
@@ -76,7 +76,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               shadowColor: Theme.of(context).primaryColor,
                             ),
                               child: Text(
-                                getTranslated('cancel', context),
+                                getTranslated('cancel', context)!,
                                 style: poppinsRegular.copyWith(color: ColorResources.getTextColor(context))),
                               )
                         ],
@@ -87,14 +87,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            getTranslated('recent_search', context),
+                            getTranslated('recent_search', context)!,
                             style: poppinsMedium.copyWith(color: ColorResources.getTextColor(context),fontSize: Dimensions.FONT_SIZE_LARGE),
                           ),
                           searchProvider.historyList.length > 0
                               ? TextButton(
                                   onPressed: searchProvider.clearSearchAddress,
                                   child: Text(
-                                    getTranslated('remove_all', context),
+                                    getTranslated('remove_all', context)!,
                                     style: poppinsMedium.copyWith(color: ColorResources.getTextColor(context),fontSize: Dimensions.FONT_SIZE_LARGE),
                                   ))
                               : SizedBox.shrink(),
@@ -108,9 +108,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             physics: BouncingScrollPhysics(),
                             itemBuilder: (context, index) => InkWell(
                                   onTap: () {
-                                    List<int> _encoded = utf8.encode(searchProvider.historyList[index]);
+                                    List<int> _encoded = utf8.encode(searchProvider.historyList[index]!);
                                     String _data = base64Encode(_encoded);
-                                    searchProvider.searchProduct(searchProvider.historyList[index],context);
+                                    searchProvider.searchProduct(searchProvider.historyList[index]!,context);
                                     Navigator.pushNamed(context, RouteHelper.searchResult+'?text=$_data', arguments: SearchResultScreen(searchString: searchProvider.historyList[index]));
                                    // Navigator.of(context).push(MaterialPageRoute(builder: (_) => SearchResultScreen(searchString: searchProvider.historyList[index])));
                                   },
@@ -124,10 +124,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                             Icon(Icons.history, size: 16, color: ColorResources.getHintColor(context)),
                                             SizedBox(width: 13),
                                             Text(
-                                              searchProvider.historyList[index],
+                                              searchProvider.historyList[index]!,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline2
+                                                  .headline2!
                                                   .copyWith(color: ColorResources.getHintColor(context), fontSize: Dimensions.FONT_SIZE_SMALL),
                                             )
                                           ],

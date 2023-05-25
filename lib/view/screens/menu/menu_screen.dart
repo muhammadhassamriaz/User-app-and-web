@@ -58,7 +58,7 @@ class _MenuScreenState extends State<MenuScreen> {
 }
 
 class MenuWidget extends StatelessWidget {
-  final CustomDrawerController drawerController;
+  final CustomDrawerController? drawerController;
 
   MenuWidget({ this.drawerController});
 
@@ -71,8 +71,8 @@ class MenuWidget extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () async {
-        if (drawerController.isOpen()) {
-          drawerController.toggle();
+        if (drawerController!.isOpen()) {
+          drawerController!.toggle();
           return false;
         } else {
           return true;
@@ -101,7 +101,7 @@ class MenuWidget extends StatelessWidget {
                               color: Provider.of<ThemeProvider>(context).darkTheme
                               ? ColorResources.getTextColor(context)
                               : ResponsiveHelper.isDesktop(context)? ColorResources.getBackgroundColor(context): ColorResources.getBackgroundColor(context)),
-                          onPressed: () => drawerController.toggle(),
+                          onPressed: () => drawerController!.toggle(),
                         ),
                       ):SizedBox(),
                       Consumer<ProfileProvider>(
@@ -118,8 +118,8 @@ class MenuWidget extends StatelessWidget {
                                     builder: (context) {
                                       return FadeInImage.assetNetwork(
                                         placeholder: Images.placeholder(context),
-                                        image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.customerImageUrl}/'
-                                            '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel.image : ''}',
+                                        image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/'
+                                            '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel!.image : ''}',
                                         height: 50, width: 50, fit: BoxFit.cover,
                                         imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder(context), height: 50, width: 50, fit: BoxFit.cover),
                                       );
@@ -129,18 +129,18 @@ class MenuWidget extends StatelessWidget {
                                 title: Column( crossAxisAlignment: CrossAxisAlignment.start, children: [
 
                                   _isLoggedIn ? profileProvider.userInfoModel != null ? Text(
-                                    '${profileProvider.userInfoModel.fName ?? ''} ${profileProvider.userInfoModel.lName ?? ''}',
+                                    '${profileProvider.userInfoModel!.fName ?? ''} ${profileProvider.userInfoModel!.lName ?? ''}',
                                     style: poppinsRegular.copyWith(color: Provider.of<ThemeProvider>(context).darkTheme
                                         ? ColorResources.getTextColor(context)
                                         : ResponsiveHelper.isDesktop(context)? ColorResources.getDarkColor(context): ColorResources.getBackgroundColor(context),),
                                   ) : Container(height: 10, width: 150, color: ResponsiveHelper.isDesktop(context)? ColorResources.getDarkColor(context): ColorResources.getBackgroundColor(context)) : Text(
-                                    getTranslated('guest', context),
+                                    getTranslated('guest', context)!,
                                     style: poppinsRegular.copyWith( color: Provider.of<ThemeProvider>(context).darkTheme
                                         ? ColorResources.getTextColor(context)
                                         : ResponsiveHelper.isDesktop(context)? ColorResources.getDarkColor(context): ColorResources.getBackgroundColor(context),),
                                   ),
                                   _isLoggedIn ? profileProvider.userInfoModel != null ? Text(
-                                    '${profileProvider.userInfoModel.phone ?? ''}',
+                                    '${profileProvider.userInfoModel!.phone ?? ''}',
                                     style: poppinsRegular.copyWith(color: Provider.of<ThemeProvider>(context).darkTheme
                                         ? ColorResources.getTextColor(context)
                                         : ResponsiveHelper.isDesktop(context)? ColorResources.getDarkColor(context): ColorResources.getBackgroundColor(context),)
@@ -175,7 +175,7 @@ class MenuWidget extends StatelessWidget {
                               print('page index -- ${splash.pageIndex}');
                             }
                             //Navigator.pushNamed(context, model.routeName);
-                            drawerController.toggle();
+                            drawerController!.toggle();
                         },
                         selected: splash.pageIndex == _screenList.indexOf(model),
                         selectedTileColor: Colors.black.withAlpha(30),
@@ -184,7 +184,7 @@ class MenuWidget extends StatelessWidget {
                             ? ColorResources.getDarkColor(context) : Colors.white,
                           width: 25, height: 25,
                         ),
-                        title: Text(getTranslated(model.title, context), style: poppinsRegular.copyWith(
+                        title: Text(getTranslated(model.title, context)!, style: poppinsRegular.copyWith(
                           fontSize: Dimensions.FONT_SIZE_LARGE,
                           color: Provider.of<ThemeProvider>(context).darkTheme
                               ? ColorResources.getTextColor(context)
@@ -207,7 +207,7 @@ class MenuWidget extends StatelessWidget {
                           width: 25, height: 25,
                         ),
                         title: Text(
-                          getTranslated(_isLoggedIn ? 'log_out' : 'login', context),
+                          getTranslated(_isLoggedIn ? 'log_out' : 'login', context)!,
                           style: poppinsRegular.copyWith(
                             fontSize: Dimensions.FONT_SIZE_LARGE,
                             color: Provider.of<ThemeProvider>(context).darkTheme
@@ -235,6 +235,6 @@ class MenuButton {
   final String routeName;
   final String icon;
   final String title;
-  final IconData iconData;
-  MenuButton({@required this.routeName, @required this.icon, @required this.title, this.iconData = null});
+  final IconData? iconData;
+  MenuButton({required this.routeName, required this.icon, required this.title, this.iconData = null});
 }

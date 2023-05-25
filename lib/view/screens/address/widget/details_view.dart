@@ -19,7 +19,7 @@ class DetailsView extends StatelessWidget {
   final FocusNode numberNode;
   final bool isEnableUpdate;
   final bool fromCheckout;
-  final AddressModel address;
+  final AddressModel? address;
   final TextEditingController locationTextController;
   final TextEditingController streetNumberController;
   final TextEditingController houseNumberController;
@@ -28,27 +28,27 @@ class DetailsView extends StatelessWidget {
   final FocusNode houseNode;
   final FocusNode florNode;
   const DetailsView({
-    Key key,
-    @required this.locationProvider,
-    @required this.contactPersonNameController,
-    @required this.contactPersonNumberController,
-    @required this.addressNode, @required this.nameNode,
-    @required this.numberNode,
-    @required this.isEnableUpdate,
-    @required this.fromCheckout,
-    @required this.address,
-    @required this.locationTextController,
-    @required this.streetNumberController,
-    @required this.houseNumberController,
-    @required this.stateNode,
-    @required this.houseNode,
-    @required this.florNumberController,
-    @required this.florNode,
+    Key? key,
+    required this.locationProvider,
+    required this.contactPersonNameController,
+    required this.contactPersonNumberController,
+    required this.addressNode, required this.nameNode,
+    required this.numberNode,
+    required this.isEnableUpdate,
+    required this.fromCheckout,
+    required this.address,
+    required this.locationTextController,
+    required this.streetNumberController,
+    required this.houseNumberController,
+    required this.stateNode,
+    required this.houseNode,
+    required this.florNumberController,
+    required this.florNode,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    locationTextController.text = locationProvider.address;
+    locationTextController.text = locationProvider.address!;
 
     return Container(
       decoration: ResponsiveHelper.isDesktop(context) ?  BoxDecoration(
@@ -69,14 +69,14 @@ class DetailsView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.0),
             child: Text(
-              getTranslated('delivery_address', context),
+              getTranslated('delivery_address', context)!,
               style:
-              Theme.of(context).textTheme.headline3.copyWith(color: ColorResources.getHintColor(context), fontSize: Dimensions.FONT_SIZE_LARGE),
+              Theme.of(context).textTheme.headline3!.copyWith(color: ColorResources.getHintColor(context), fontSize: Dimensions.FONT_SIZE_LARGE),
             ),
           ),
           // for Address Field
           Text(
-            getTranslated('address_line_01', context),
+            getTranslated('address_line_01', context)!,
             style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
           ),
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -88,7 +88,7 @@ class DetailsView extends StatelessWidget {
             inputAction: TextInputAction.next,
             focusNode: addressNode,
             nextFocus: stateNode,
-            controller: locationTextController ??'',
+            controller: locationTextController ??'' as TextEditingController?,
           ),
           SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
@@ -105,7 +105,7 @@ class DetailsView extends StatelessWidget {
             inputAction: TextInputAction.next,
             focusNode: stateNode,
             nextFocus: houseNode,
-            controller: streetNumberController ??'',
+            controller: streetNumberController ??'' as TextEditingController?,
           ),
           SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
@@ -125,7 +125,7 @@ class DetailsView extends StatelessWidget {
                 inputAction: TextInputAction.next,
                 focusNode: houseNode,
                 nextFocus: florNode,
-                controller: houseNumberController ??'',
+                controller: houseNumberController ??'' as TextEditingController?,
               ),
             ),
 
@@ -139,7 +139,7 @@ class DetailsView extends StatelessWidget {
                 inputAction: TextInputAction.next,
                 focusNode: florNode,
                 nextFocus: nameNode,
-                controller: florNumberController ??'',
+                controller: florNumberController ??'' as TextEditingController?,
               ),
             ),
 
@@ -148,7 +148,7 @@ class DetailsView extends StatelessWidget {
 
           // for Contact Person Name
           Text(
-            getTranslated('contact_person_name', context),
+            getTranslated('contact_person_name', context)!,
             style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
           ),
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -166,7 +166,7 @@ class DetailsView extends StatelessWidget {
 
           // for Contact Person Number
           Text(
-            getTranslated('contact_person_number', context),
+            getTranslated('contact_person_number', context)!,
             style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
           ),
           SizedBox(height: Dimensions.PADDING_SIZE_SMALL),

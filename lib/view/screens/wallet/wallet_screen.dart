@@ -25,7 +25,7 @@ import 'widget/tab_button_view.dart';
 
 class WalletScreen extends StatefulWidget {
   final bool fromWallet;
-  WalletScreen({Key key, @required this.fromWallet}) : super(key: key);
+  WalletScreen({Key? key, required this.fromWallet}) : super(key: key);
 
   @override
   State<WalletScreen> createState() => _WalletScreenState();
@@ -33,7 +33,7 @@ class WalletScreen extends StatefulWidget {
 
 class _WalletScreenState extends State<WalletScreen> {
   final ScrollController scrollController = ScrollController();
-  final bool _isLoggedIn = Provider.of<AuthProvider>(Get.context, listen: false).isLoggedIn();
+  final bool _isLoggedIn = Provider.of<AuthProvider>(Get.context!, listen: false).isLoggedIn();
 
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _WalletScreenState extends State<WalletScreen> {
     );
 
     if(_isLoggedIn){
-      Provider.of<ProfileProvider>(Get.context, listen: false).getUserInfo(context);
+      Provider.of<ProfileProvider>(Get.context!, listen: false).getUserInfo(context);
       _walletProvide.getLoyaltyTransactionList('1', false, widget.fromWallet, isEarning: _walletProvide.selectedTabButtonIndex == 1);
 
       scrollController?.addListener(() {
@@ -54,7 +54,7 @@ class _WalletScreenState extends State<WalletScreen> {
             && _walletProvide.transactionList != null
             && !_walletProvide.isLoading) {
 
-          int pageSize = (_walletProvide.popularPageSize / 10).ceil();
+          int pageSize = (_walletProvide.popularPageSize! / 10).ceil();
           print('end of the page || pageSize: $pageSize|| offset ${_walletProvide.offset}');
           if (_walletProvide.offset < pageSize) {
             _walletProvide.setOffset = _walletProvide.offset + 1;
@@ -129,7 +129,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
                                         Text(
                                           widget.fromWallet ?
-                                          PriceConverter.convertPrice(context, profileProvider.userInfoModel.walletBalance ?? 0) : '${Provider.of<ProfileProvider>(context, listen: false).userInfoModel.point ?? 0}',
+                                          PriceConverter.convertPrice(context, profileProvider.userInfoModel!.walletBalance ?? 0) : '${Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.point ?? 0}',
                                           style: poppinsBold.copyWith(
                                             fontSize: Dimensions.FONT_SIZE_OVER_LARGE,
                                             color: widget.fromWallet ? Theme.of(context).cardColor : null,
@@ -138,7 +138,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                       ],),
                                       SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
 
-                                      Text( getTranslated( widget.fromWallet ? 'wallet_amount' : 'withdrawable_point', context),
+                                      Text( getTranslated( widget.fromWallet ? 'wallet_amount' : 'withdrawable_point', context)!,
                                         style: poppinsBold.copyWith(
                                           fontSize: Dimensions.FONT_SIZE_DEFAULT,
                                           color: widget.fromWallet ? Theme.of(context).cardColor : null,
@@ -195,7 +195,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
                                                               )),
                                                             ),
-                                                            walletProvider.transactionList != null ? walletProvider.transactionList.length > 0 ? GridView.builder(
+                                                            walletProvider.transactionList != null ? walletProvider.transactionList!.length > 0 ? GridView.builder(
                                                               key: UniqueKey(),
                                                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                                                 crossAxisSpacing: 50,
@@ -207,10 +207,10 @@ class _WalletScreenState extends State<WalletScreen> {
                                                               ),
                                                               physics:  NeverScrollableScrollPhysics(),
                                                               shrinkWrap:  true,
-                                                              itemCount: walletProvider.transactionList.length ,
+                                                              itemCount: walletProvider.transactionList!.length ,
                                                               padding: EdgeInsets.only(top: ResponsiveHelper.isDesktop(context) ? 28 : 25),
                                                               itemBuilder: (context, index) {
-                                                                return widget.fromWallet ? WalletHistory(transaction: walletProvider.transactionList[index] ,) : HistoryItem(
+                                                                return widget.fromWallet ? WalletHistory(transaction: walletProvider.transactionList![index] ,) : HistoryItem(
                                                                   index: index,formEarning: walletProvider.selectedTabButtonIndex == 1,
                                                                   data: walletProvider.transactionList,
                                                                 );
@@ -256,7 +256,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
 
 class TabButtonModel{
-  final String buttonText;
+  final String? buttonText;
   final String buttonIcon;
   final Function onTap;
 
@@ -271,7 +271,7 @@ class TabButtonModel{
 
 class WalletShimmer extends StatelessWidget {
   final WalletProvider walletProvider;
-  WalletShimmer({@required this.walletProvider});
+  WalletShimmer({required this.walletProvider});
 
   @override
   Widget build(BuildContext context) {
@@ -292,7 +292,7 @@ class WalletShimmer extends StatelessWidget {
           margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_EXTRA_SMALL),
           decoration: BoxDecoration(
               color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(0.08))
+              border: Border.all(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.08))
           ),
           padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL, horizontal: Dimensions.PADDING_SIZE_DEFAULT),
           child: Shimmer(

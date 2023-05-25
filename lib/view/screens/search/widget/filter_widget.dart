@@ -10,10 +10,10 @@ import 'package:flutter_grocery/view/base/custom_button.dart';
 import 'package:provider/provider.dart';
 
 class FilterWidget extends StatelessWidget {
-  final double maxValue;
-  final int index;
+  final double? maxValue;
+  final int? index;
 
-  FilterWidget({@required this.maxValue, this.index});
+  FilterWidget({required this.maxValue, this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class FilterWidget extends StatelessWidget {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      getTranslated('filter', context),
+                      getTranslated('filter', context)!,
                       textAlign: TextAlign.center,
                       style: poppinsMedium.copyWith(
                         fontSize: Dimensions.FONT_SIZE_LARGE,
@@ -52,7 +52,7 @@ class FilterWidget extends StatelessWidget {
                       searchProvider.setFilterIndex(-1);
                     },
                     child: Text(
-                      getTranslated('reset', context),
+                      getTranslated('reset', context)!,
                       style: poppinsRegular.copyWith(color: Colors.red),
                     ),
                   )
@@ -60,14 +60,14 @@ class FilterWidget extends StatelessWidget {
               ),
               SizedBox(height: 15),
               Text(
-                getTranslated('price', context),
+                getTranslated('price', context)!,
                 style: poppinsMedium.copyWith(color: ColorResources.getTextColor(context)),
               ),
 
               // price range
               RangeSlider(
                 values: RangeValues(searchProvider.lowerValue, searchProvider.upperValue),
-                max: maxValue,
+                max: maxValue!,
                 min: 0,
                 activeColor: Theme.of(context).primaryColor,
                 labels: RangeLabels(searchProvider.lowerValue.toString(), searchProvider.upperValue.toString()),
@@ -78,7 +78,7 @@ class FilterWidget extends StatelessWidget {
 
               SizedBox(height: 15),
               Text(
-                getTranslated('sort_by', context),
+                getTranslated('sort_by', context)!,
                 style: poppinsMedium.copyWith(color: ColorResources.getTextColor(context)),
               ),
               SizedBox(height: 13),
@@ -98,7 +98,7 @@ class FilterWidget extends StatelessWidget {
                           ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
                       children: [
                       if(!ResponsiveHelper.isDesktop(context))  Text(
-                          searchProvider.allSortBy[index],
+                          searchProvider.allSortBy[index]!,
                           style: poppinsRegular.copyWith(color: ColorResources.getTextColor(context)),
                         ),
 
@@ -127,7 +127,7 @@ class FilterWidget extends StatelessWidget {
                           SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
 
                         if(ResponsiveHelper.isDesktop(context))  Text(
-                          searchProvider.allSortBy[index],
+                          searchProvider.allSortBy[index]!,
                           style: poppinsRegular.copyWith(color: ColorResources.getTextColor(context)),
                         ),
                       ],

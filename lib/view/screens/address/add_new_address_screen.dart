@@ -25,7 +25,7 @@ import 'widget/permission_dialog.dart';
 class AddNewAddressScreen extends StatefulWidget {
   final bool isEnableUpdate;
   final bool fromCheckout;
-  final AddressModel address;
+  final AddressModel? address;
   AddNewAddressScreen({this.isEnableUpdate = true, this.address, this.fromCheckout = false});
 
   @override
@@ -45,8 +45,8 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
   final FocusNode _stateNode = FocusNode();
   final FocusNode _houseNode = FocusNode();
   final FocusNode _floorNode = FocusNode();
-  GoogleMapController _controller;
-  CameraPosition _cameraPosition;
+  GoogleMapController? _controller;
+  CameraPosition? _cameraPosition;
   bool _updateAddress = true;
   _initLoading() async {
     final _userModel =  Provider.of<ProfileProvider>(context, listen: false).userInfoModel ;
@@ -63,25 +63,25 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
       _updateAddress = false;
 
       Provider.of<LocationProvider>(context, listen: false).updatePosition(
-        CameraPosition(target: LatLng(double.parse(widget.address.latitude),
-          double.parse(widget.address.longitude))), true, widget.address.address, context, false,
+        CameraPosition(target: LatLng(double.parse(widget.address!.latitude!),
+          double.parse(widget.address!.longitude!))), true, widget.address!.address, context, false,
       );
-      _contactPersonNameController.text = '${widget.address.contactPersonName}';
-      _contactPersonNumberController.text = '${widget.address.contactPersonNumber}';
-      _streetNumberController.text = '${widget.address.streetNumber ?? ''}';
-      _houseNumberController.text = '${widget.address.houseNumber ?? ''}';
-      _florNumberController.text = '${widget.address.floorNumber ?? ''}';
+      _contactPersonNameController.text = '${widget.address!.contactPersonName}';
+      _contactPersonNumberController.text = '${widget.address!.contactPersonNumber}';
+      _streetNumberController.text = '${widget.address!.streetNumber ?? ''}';
+      _houseNumberController.text = '${widget.address!.houseNumber ?? ''}';
+      _florNumberController.text = '${widget.address!.floorNumber ?? ''}';
 
-      if (widget.address.addressType == 'Home') {
+      if (widget.address!.addressType == 'Home') {
         Provider.of<LocationProvider>(context, listen: false).updateAddressIndex(0, false);
-      } else if (widget.address.addressType == 'Workplace') {
+      } else if (widget.address!.addressType == 'Workplace') {
         Provider.of<LocationProvider>(context, listen: false).updateAddressIndex(1, false);
       } else {
         Provider.of<LocationProvider>(context, listen: false).updateAddressIndex(2, false);
       }
     }else {
       _contactPersonNameController.text = _userModel == null ? '' : '${_userModel.fName}' ' ${_userModel.lName}';
-      _contactPersonNumberController.text =  _userModel == null ? '' : _userModel.phone;
+      _contactPersonNumberController.text =  _userModel == null ? '' : _userModel.phone!;
     }
 
 
@@ -94,7 +94,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
     _initLoading();
 
     if(widget.address != null && !widget.fromCheckout) {
-      _locationTextController.text = widget.address.address;
+      _locationTextController.text = widget.address!.address!;
     }
 
 
@@ -105,12 +105,12 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
   Widget build(BuildContext context) {
     final _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context)
+      appBar: (ResponsiveHelper.isDesktop(context)
           ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120))
           : CustomAppBar(title: widget.isEnableUpdate
           ? getTranslated('update_address', context)
           : getTranslated('add_new_address', context),
-      ),
+      )) as PreferredSizeWidget?,
 
       body: Consumer<LocationProvider>(
         builder: (context, locationProvider, child) {
@@ -248,9 +248,9 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
             padding: const EdgeInsets.only(top: 10),
             child: Center(
                 child: Text(
-                  getTranslated('add_the_location_correctly', context),
+                  getTranslated('add_the_location_correctly', context)!,
                   style: poppinsRegular.copyWith(
-                    color: Theme.of(context).textTheme.bodyText1.color,
+                    color: Theme.of(context).textTheme.bodyText1!.color,
                     fontSize: Dimensions.FONT_SIZE_SMALL,
                   ),
                 )),
@@ -258,7 +258,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24.0),
             child: Text(
-              getTranslated('label_us', context),
+              getTranslated('label_us', context)!,
               style: poppinsRegular.copyWith(
                 color: Theme.of(context).hintColor, fontSize: Dimensions.FONT_SIZE_LARGE,
               ),
@@ -292,7 +292,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                         ? Theme.of(context).primaryColor : ColorResources.SEARCH_BG,
                   ),
                   child: Text(
-                    getTranslated(locationProvider.getAllAddressType[index].toLowerCase(), context),
+                    getTranslated(locationProvider.getAllAddressType[index].toLowerCase(), context)!,
                     style: poppinsRegular.copyWith(
                       color: locationProvider.selectAddressIndex == index
                           ? Theme.of(context).cardColor
@@ -310,7 +310,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
   }
 
   Widget _map(BuildContext context, LocationProvider locationProvider) {
-    final _branch = Provider.of<SplashProvider>(context, listen: false).configModel.branches[0];
+    final _branch = Provider.of<SplashProvider>(context, listen: false).configModel!.branches![0];
     return Container(
             height: ResponsiveHelper.isMobile(context) ? 130 : 250,
             width: MediaQuery.of(context).size.width,
@@ -323,13 +323,13 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                   mapType: MapType.normal,
                   initialCameraPosition: CameraPosition(
                     target: widget.isEnableUpdate
-                        ? LatLng(double.parse(widget.address.latitude)
-                        ?? double.parse(_branch.latitude), double.parse(widget.address.longitude)
-                        ?? double.parse(_branch.longitude))
+                        ? LatLng(double.parse(widget.address!.latitude!)
+                        ?? double.parse(_branch.latitude!), double.parse(widget.address!.longitude!)
+                        ?? double.parse(_branch.longitude!))
                         : LatLng(locationProvider.position.latitude.toInt()  == 0
-                        ? double.parse(_branch.latitude)
+                        ? double.parse(_branch.latitude!)
                         : locationProvider.position.latitude, locationProvider.position.longitude.toInt() == 0
-                        ? double.parse(_branch.longitude)
+                        ? double.parse(_branch.longitude!)
                         : locationProvider.position.longitude,
                     ),
                     zoom: 8,

@@ -22,7 +22,7 @@ class PermissionDialog extends StatelessWidget {
             SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
             Text(
-              getTranslated('you_denied_location_permission', context), textAlign: TextAlign.center,
+              getTranslated('you_denied_location_permission', context)!, textAlign: TextAlign.center,
               style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
             ),
             SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
@@ -34,7 +34,7 @@ class PermissionDialog extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(width: 2, color: Theme.of(context).primaryColor)),
                     minimumSize: Size(1, 50),
                   ),
-                  child: Text(getTranslated('no', context)),
+                  child: Text(getTranslated('no', context)!),
                   onPressed: () => Navigator.pop(context),
                 ),
               ),

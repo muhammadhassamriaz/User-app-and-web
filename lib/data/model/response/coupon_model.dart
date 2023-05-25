@@ -1,17 +1,17 @@
 class CouponModel {
-  int id;
-  String title;
-  String code;
-  String startDate;
-  String expireDate;
-  double minPurchase;
-  double maxDiscount;
-  double discount;
-  String discountType;
-  int status;
-  String createdAt;
-  String updatedAt;
-  String couponType;
+  int? id;
+  String? title;
+  String? code;
+  String? startDate;
+  String? expireDate;
+  double? minPurchase;
+  double? maxDiscount;
+  double? discount;
+  String? discountType;
+  int? status;
+  String? createdAt;
+  String? updatedAt;
+  String? couponType;
 
   CouponModel(
       {this.id,

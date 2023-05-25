@@ -9,21 +9,21 @@ import 'package:flutter_grocery/utill/styles.dart';
 
 
 class TitleRow extends StatelessWidget {
-  final String title;
-  final Function onTap;
-  final Duration eventDuration;
-  final bool isDetailsPage;
-  TitleRow({@required this.title, this.onTap, this.eventDuration, this.isDetailsPage});
+  final String? title;
+  final Function? onTap;
+  final Duration? eventDuration;
+  final bool? isDetailsPage;
+  TitleRow({required this.title, this.onTap, this.eventDuration, this.isDetailsPage});
 
   @override
   Widget build(BuildContext context) {
-    final _isFlashDealScreen = ModalRoute.of(context).settings.name == RouteHelper.getHomeItemRoute(ProductType.FLASH_SALE);
-    int days, hours, minutes, seconds;
+    final _isFlashDealScreen = ModalRoute.of(context)!.settings.name == RouteHelper.getHomeItemRoute(ProductType.FLASH_SALE);
+    int? days, hours, minutes, seconds;
     if (eventDuration != null) {
-      days = eventDuration.inDays;
-      hours = eventDuration.inHours - days * 24;
-      minutes = eventDuration.inMinutes - (24 * days * 60) - (hours * 60);
-      seconds = eventDuration.inSeconds - (24 * days * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
+      days = eventDuration!.inDays;
+      hours = eventDuration!.inHours - days * 24;
+      minutes = eventDuration!.inMinutes - (24 * days * 60) - (hours * 60);
+      seconds = eventDuration!.inSeconds - (24 * days * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
     }
 
     return Container(
@@ -38,7 +38,7 @@ class TitleRow extends StatelessWidget {
         Image.asset(Images.flash_deal, scale: 4),
         SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
-        Text(title, style: ResponsiveHelper.isDesktop(context) ?  poppinsSemiBold.copyWith(fontSize: Dimensions.FONT_SIZE_OVER_LARGE) : poppinsMedium),
+        Text(title!, style: ResponsiveHelper.isDesktop(context) ?  poppinsSemiBold.copyWith(fontSize: Dimensions.FONT_SIZE_OVER_LARGE) : poppinsMedium),
 
         SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
@@ -57,10 +57,10 @@ class TitleRow extends StatelessWidget {
 
         onTap != null ?
         InkWell(
-          onTap: onTap,
+          onTap: onTap as void Function()?,
           child: Row(children: [
             isDetailsPage == null ? Text(
-              getTranslated('view_all', context),
+              getTranslated('view_all', context)!,
               style: ResponsiveHelper.isDesktop(context)
                   ?  poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE, color: Theme.of(context).primaryColor) : poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: Theme.of(context).primaryColor.withOpacity(0.8)),
             )
@@ -97,11 +97,11 @@ class TitleRow extends StatelessWidget {
 }
 
 class TimerBox extends StatelessWidget {
-  final int time;
+  final int? time;
   final bool isBorder;
-  final String day;
+  final String? day;
 
-  TimerBox({@required this.time, this.isBorder = false, this.day});
+  TimerBox({required this.time, this.isBorder = false, this.day});
 
   @override
   Widget build(BuildContext context) {
@@ -117,13 +117,13 @@ class TimerBox extends StatelessWidget {
       child: Center(
         child: Column(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(time < 10 ? '0$time' : time.toString(),
+            Text(time! < 10 ? '0$time' : time.toString(),
               style: poppinsRegular.copyWith(
                 color: isBorder ? Theme.of(context).primaryColor : Colors.white,
                 fontSize: Dimensions.FONT_SIZE_SMALL,
               ),
             ),
-            Text(day, style: poppinsRegular.copyWith(color: isBorder ?
+            Text(day!, style: poppinsRegular.copyWith(color: isBorder ?
             Theme.of(context).primaryColor : Colors.white,
               fontSize: Dimensions.FONT_SIZE_SMALL,)),
           ],

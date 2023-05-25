@@ -1,10 +1,10 @@
 class SignUpModel {
-  String fName;
-  String lName;
-  String phone;
-  String email;
-  String password;
-  String referralCode;
+  String? fName;
+  String? lName;
+  String? phone;
+  String? email;
+  String? password;
+  String? referralCode;
 
   SignUpModel({this.fName, this.lName, this.phone, this.email='', this.password, this.referralCode = ''});
 

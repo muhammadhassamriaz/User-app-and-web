@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ThirdPartyChatWidget extends StatefulWidget {
   const ThirdPartyChatWidget({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -23,9 +23,9 @@ class _ThirdPartyChatWidgetState extends State<ThirdPartyChatWidget> {
     List<SpeedDialChild> _dialList = [];
     return Consumer<SplashProvider>(
       builder: (context, splashProvider, _) {
-        if(splashProvider.configModel != null && (splashProvider.configModel.whatsapp != null
-            && splashProvider.configModel.whatsapp.status
-            && splashProvider.configModel.whatsapp.number != null)){
+        if(splashProvider.configModel != null && (splashProvider.configModel!.whatsapp != null
+            && splashProvider.configModel!.whatsapp!.status!
+            && splashProvider.configModel!.whatsapp!.number != null)){
 
           _dialList.add(SpeedDialChild(
             backgroundColor: Colors.transparent,
@@ -37,7 +37,7 @@ class _ThirdPartyChatWidgetState extends State<ThirdPartyChatWidget> {
               child: Image.asset(Images.whatsapp),
             ),
             onPressed: () async {
-              final String whatsapp = splashProvider.configModel.whatsapp.number;
+              final String? whatsapp = splashProvider.configModel!.whatsapp!.number;
               final Uri whatsappMobile = Uri.parse("whatsapp://send?phone=$whatsapp");
               if (await canLaunchUrl(whatsappMobile)) {
                 await launchUrl(whatsappMobile, mode: LaunchMode.externalApplication);
@@ -53,9 +53,9 @@ class _ThirdPartyChatWidgetState extends State<ThirdPartyChatWidget> {
         }
 
 
-        if(splashProvider.configModel != null && (splashProvider.configModel.telegram != null
-            && splashProvider.configModel.telegram.status
-            && splashProvider.configModel.telegram.userName != null)){
+        if(splashProvider.configModel != null && (splashProvider.configModel!.telegram != null
+            && splashProvider.configModel!.telegram!.status!
+            && splashProvider.configModel!.telegram!.userName != null)){
 
 
           _dialList.add(SpeedDialChild(backgroundColor: Colors.transparent,child: Container(
@@ -68,7 +68,7 @@ class _ThirdPartyChatWidgetState extends State<ThirdPartyChatWidget> {
             child: Image.asset(Images.telegram),
           ),
             onPressed: () async {
-              final String userName = splashProvider.configModel.telegram.userName;
+              final String? userName = splashProvider.configModel!.telegram!.userName;
               final Uri whatsappMobile = Uri.parse("https://t.me/$userName");
               if (await canLaunchUrl(whatsappMobile)) {
                 await launchUrl(whatsappMobile, mode: LaunchMode.externalApplication);
@@ -84,9 +84,9 @@ class _ThirdPartyChatWidgetState extends State<ThirdPartyChatWidget> {
 
         }
 
-        if(splashProvider.configModel != null && (splashProvider.configModel.messenger != null
-            && splashProvider.configModel.messenger.status
-            && splashProvider.configModel.messenger.userName != null)){
+        if(splashProvider.configModel != null && (splashProvider.configModel!.messenger != null
+            && splashProvider.configModel!.messenger!.status!
+            && splashProvider.configModel!.messenger!.userName != null)){
 
           _dialList.add(SpeedDialChild(
             backgroundColor: Colors.transparent,
@@ -100,7 +100,7 @@ class _ThirdPartyChatWidgetState extends State<ThirdPartyChatWidget> {
               child: Image.asset(Images.messenger),
             ),
             onPressed: () async {
-              final String userId = splashProvider.configModel.messenger.userName;
+              final String? userId = splashProvider.configModel!.messenger!.userName;
               final Uri messengerUrl = Uri.parse("https://m.me/$userId");
               if (await canLaunchUrl(messengerUrl)) {
                 await launchUrl(messengerUrl, mode: LaunchMode.externalApplication);
@@ -125,7 +125,7 @@ class _ThirdPartyChatWidgetState extends State<ThirdPartyChatWidget> {
           openBackgroundColor: Theme.of(context).primaryColor.withOpacity(0.3),
           labelsBackgroundColor: Colors.white,
           speedDialChildren: _dialList,
-        ) : InkWell(child: _dialList.first.child, onTap: _dialList.first.onPressed);
+        ) : InkWell(child: _dialList.first.child, onTap: _dialList.first.onPressed as void Function()?);
       }
     );
   }

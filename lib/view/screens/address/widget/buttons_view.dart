@@ -21,20 +21,20 @@ class ButtonsView extends StatelessWidget {
   final TextEditingController streetNumberController;
   final TextEditingController houseNumberController;
   final TextEditingController floorNumberController;
-  final AddressModel address;
+  final AddressModel? address;
   final String location;
   const ButtonsView({
-    Key key,
-    @required this.locationProvider,
-    @required this.isEnableUpdate,
-    @required this.fromCheckout,
-    @required this.contactPersonNumberController,
-    @required this.contactPersonNameController,
-    @required this.address,
-    @required this.location,
-    @required this.streetNumberController,
-    @required this.floorNumberController,
-    @required this.houseNumberController,
+    Key? key,
+    required this.locationProvider,
+    required this.isEnableUpdate,
+    required this.fromCheckout,
+    required this.contactPersonNumberController,
+    required this.contactPersonNameController,
+    required this.address,
+    required this.location,
+    required this.streetNumberController,
+    required this.floorNumberController,
+    required this.houseNumberController,
   }) : super(key: key);
 
   @override
@@ -45,13 +45,13 @@ class ButtonsView extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            locationProvider.addressStatusMessage.length > 0 ? CircleAvatar(backgroundColor: Colors.green, radius: 5) : SizedBox.shrink(),
+            locationProvider.addressStatusMessage!.length > 0 ? CircleAvatar(backgroundColor: Colors.green, radius: 5) : SizedBox.shrink(),
             SizedBox(width: 8),
             Expanded(
               child: Text(
                 locationProvider.addressStatusMessage ?? "",
                 style:
-                Theme.of(context).textTheme.headline2.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: Colors.green, height: 1),
+                Theme.of(context).textTheme.headline2!.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: Colors.green, height: 1),
               ),
             )
           ],
@@ -59,7 +59,7 @@ class ButtonsView extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            locationProvider.errorMessage.length > 0
+            locationProvider.errorMessage!.length > 0
                 ? CircleAvatar(backgroundColor: Colors.red, radius: 5)
                 : SizedBox.shrink(),
             SizedBox(width: 8),
@@ -68,7 +68,7 @@ class ButtonsView extends StatelessWidget {
                 locationProvider.errorMessage ?? "",
                 style: Theme.of(context)
                     .textTheme
-                    .headline2
+                    .headline2!
                     .copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: Colors.red, height: 1),
               ),
             )
@@ -82,29 +82,29 @@ class ButtonsView extends StatelessWidget {
           child: !locationProvider.isLoading ? CustomButton(
             buttonText: isEnableUpdate ? getTranslated('update_address', context) : getTranslated('save_location', context),
             onPressed: locationProvider.loading ? null : () {
-              List<Branches> _branches = Provider.of<SplashProvider>(context, listen: false).configModel.branches;
-              bool _isAvailable = _branches.length == 1 && (_branches[0].latitude == null || _branches[0].latitude.isEmpty);
+              List<Branches> _branches = Provider.of<SplashProvider>(context, listen: false).configModel!.branches!;
+              bool _isAvailable = _branches.length == 1 && (_branches[0].latitude == null || _branches[0].latitude!.isEmpty);
               if(!_isAvailable) {
                 for (Branches branch in _branches) {
                   double _distance = Geolocator.distanceBetween(
-                    double.parse(branch.latitude), double.parse(branch.longitude),
+                    double.parse(branch.latitude!), double.parse(branch.longitude!),
                     locationProvider.position.latitude, locationProvider.position.longitude,
                   ) / 1000;
-                  if (_distance < branch.coverage) {
+                  if (_distance < branch.coverage!) {
                     _isAvailable = true;
                     break;
                   }
                 }
               }
               if(!_isAvailable) {
-                showCustomSnackBar(getTranslated('service_is_not_available', context), context);
+                showCustomSnackBar(getTranslated('service_is_not_available', context)!, context);
               }else {
                 AddressModel addressModel = AddressModel(
                   addressType: locationProvider.getAllAddressType[locationProvider.selectAddressIndex],
                   contactPersonName: contactPersonNameController.text ?? '',
                   contactPersonNumber: contactPersonNumberController.text ?? '',
                   address: location ?? '',
-                  latitude: isEnableUpdate ? locationProvider.position.latitude.toString() ?? address.latitude
+                  latitude: isEnableUpdate ? locationProvider.position.latitude.toString() ?? address!.latitude
                       : locationProvider.position.latitude.toString() ?? '',
                   longitude: locationProvider.position.longitude.toString() ?? '',
                   floorNumber: floorNumberController.text ?? '',
@@ -112,8 +112,8 @@ class ButtonsView extends StatelessWidget {
                   streetNumber: streetNumberController.text ?? '',
                 );
                 if (isEnableUpdate) {
-                  addressModel.id = address.id;
-                  addressModel.userId = address.userId;
+                  addressModel.id = address!.id;
+                  addressModel.userId = address!.userId;
                   addressModel.method = 'put';
                   locationProvider.updateAddress(context, addressModel: addressModel, addressId: addressModel.id).then((value) {});
                 } else {
@@ -125,11 +125,11 @@ class ButtonsView extends StatelessWidget {
                         Provider.of<LocationProvider>(context, listen: false).initAddressList(context);
                         Provider.of<OrderProvider>(context, listen: false).setAddressIndex(-1);
                       } else {
-                        showCustomSnackBar(value.message, context, isError: false);
+                        showCustomSnackBar(value.message!, context, isError: false);
                       }
                       Navigator.pop(context);
                     } else {
-                      showCustomSnackBar(value.message, context);
+                      showCustomSnackBar(value.message!, context);
                     }
                   });
                 }

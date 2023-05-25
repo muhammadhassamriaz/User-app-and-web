@@ -24,9 +24,9 @@ class MyOrderScreen extends StatelessWidget {
     }
     return Scaffold(
       appBar: ResponsiveHelper.isMobilePhone()
-          ? null: ResponsiveHelper.isDesktop(context)
+          ? null: (ResponsiveHelper.isDesktop(context)
           ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120))
-          : AppBarBase(),
+          : AppBarBase()) as PreferredSizeWidget?,
 
       body: SafeArea(
         child: _isLoggedIn ? Scrollbar(

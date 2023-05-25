@@ -10,9 +10,9 @@ import 'package:flutter_grocery/view/base/web_product_shimmer.dart';
 import 'package:provider/provider.dart';
 
 class HomeItemView extends StatelessWidget {
-  final List<Product> productList;
+  final List<Product>? productList;
 
-  const HomeItemView({Key key, this.productList}) : super(key: key);
+  const HomeItemView({Key? key, this.productList}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Consumer<FlashDealProvider>(builder: (context, flashDealProvider, child) {
@@ -27,7 +27,7 @@ class HomeItemView extends StatelessWidget {
                 mainAxisSpacing: 13,
                 crossAxisSpacing: 13,
               ),
-              itemCount: productList.length >= 10 ? 10 : productList.length,
+              itemCount: productList!.length >= 10 ? 10 : productList!.length,
               padding: EdgeInsets.symmetric(
                 horizontal: Dimensions.PADDING_SIZE_SMALL,
                 vertical: Dimensions.PADDING_SIZE_LARGE,
@@ -37,7 +37,7 @@ class HomeItemView extends StatelessWidget {
               itemBuilder: (context,index){
                 return ProductWidget(
                   isGrid: true,
-                  product: productList[index],
+                  product: productList![index],
                   productType: ProductType.DAILY_ITEM,
                 );
                 },
@@ -46,7 +46,7 @@ class HomeItemView extends StatelessWidget {
               height: 290,
               child: ListView.builder(
                 padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                itemCount: productList.length,
+                itemCount: productList!.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return Container(
@@ -54,7 +54,7 @@ class HomeItemView extends StatelessWidget {
                     padding: EdgeInsets.all(5),
                     child: ProductWidget(
                       isGrid: true,
-                      product: productList[index],
+                      product: productList![index],
                       productType: ProductType.DAILY_ITEM,
                     ),
                   );

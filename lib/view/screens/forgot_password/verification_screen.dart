@@ -21,9 +21,9 @@ import '../../base/footer_view.dart';
 import '../../base/web_app_bar/web_app_bar.dart';
 
 class VerificationScreen extends StatelessWidget {
-  final String emailAddress;
+  final String? emailAddress;
   final bool fromSignUp;
-  VerificationScreen({@required this.emailAddress, this.fromSignUp = false});
+  VerificationScreen({required this.emailAddress, this.fromSignUp = false});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class VerificationScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: ColorResources.getCardBgColor(context),
-      appBar: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)) : CustomAppBar(title: getTranslated('verify_email', context)),
+      appBar: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)) : CustomAppBar(title: getTranslated('verify_email', context))) as PreferredSizeWidget?,
       body: SafeArea(
         child: Scrollbar(
           child: SingleChildScrollView(
@@ -49,7 +49,7 @@ class VerificationScreen extends StatelessWidget {
                               margin: EdgeInsets.only(top: _width > 700 ? 55 : 0,bottom: _width > 700 ? 55 : 0),
                               decoration: _width > 700 ? BoxDecoration(
                                 color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(10),
-                                boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)],
+                                boxShadow: [BoxShadow(color: Colors.grey[300]!, blurRadius: 5, spreadRadius: 1)],
                               ) : null,
                           child: Column(
                             children: [
@@ -60,7 +60,7 @@ class VerificationScreen extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(horizontal: 50),
                                 child: Center(
                                     child: Text(
-                                  '${getTranslated('please_enter_4_digit_code', context)}\n ${emailAddress.trim()}',
+                                  '${getTranslated('please_enter_4_digit_code', context)}\n ${emailAddress!.trim()}',
                                   textAlign: TextAlign.center,
                                   style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
                                 )),
@@ -97,7 +97,7 @@ class VerificationScreen extends StatelessWidget {
                               ),
                               Center(
                                   child: Text(
-                                getTranslated('i_didnt_receive_the_code', context),
+                                getTranslated('i_didnt_receive_the_code', context)!,
                                 style: poppinsRegular.copyWith(
                                   color: ColorResources.getHintColor(context),
                                 ),
@@ -110,7 +110,7 @@ class VerificationScreen extends StatelessWidget {
                                         if (value.isSuccess) {
                                           showCustomSnackBar('Resent code successful', context, isError: false);
                                         } else {
-                                          showCustomSnackBar(value.message, context);
+                                          showCustomSnackBar(value.message!, context);
                                         }
                                       });
                                     } else {
@@ -118,7 +118,7 @@ class VerificationScreen extends StatelessWidget {
                                         if (value.isSuccess) {
                                           showCustomSnackBar('Resent code successful', context, isError: false);
                                         } else {
-                                          showCustomSnackBar(value.message, context);
+                                          showCustomSnackBar(value.message!, context);
                                         }
                                       });
                                     }
@@ -126,7 +126,7 @@ class VerificationScreen extends StatelessWidget {
                                   child: Padding(
                                     padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                     child: Text(
-                                      getTranslated('resend_code', context),
+                                      getTranslated('resend_code', context)!,
                                       style: poppinsMedium.copyWith(
                                         color: ColorResources.getTextColor(context),
                                       ),
@@ -143,12 +143,12 @@ class VerificationScreen extends StatelessWidget {
                                             buttonText: getTranslated('verify', context),
                                             onPressed: () {
                                               if (fromSignUp) {
-                                                if(Provider.of<SplashProvider>(context, listen: false).configModel.phoneVerification) {
-                                                  Provider.of<AuthProvider>(context, listen: false).verifyPhone(emailAddress.trim()).then((value) {
+                                                if(Provider.of<SplashProvider>(context, listen: false).configModel!.phoneVerification!) {
+                                                  Provider.of<AuthProvider>(context, listen: false).verifyPhone(emailAddress!.trim()).then((value) {
                                                     if (value.isSuccess) {
                                                       Navigator.of(context).pushNamed(RouteHelper.createAccount, arguments: CreateAccountScreen());
                                                     } else {
-                                                      showCustomSnackBar(value.message, context);
+                                                      showCustomSnackBar(value.message!, context);
                                                     }
                                                   });
                                                 }else {
@@ -156,13 +156,13 @@ class VerificationScreen extends StatelessWidget {
                                                     if (value.isSuccess) {
                                                       Navigator.of(context).pushNamed(RouteHelper.createAccount, arguments: CreateAccountScreen());
                                                     } else {
-                                                      showCustomSnackBar(value.message, context);
+                                                      showCustomSnackBar(value.message!, context);
                                                     }
                                                   });
                                                 }
                                               } else {
-                                                String _mail = Provider.of<SplashProvider>(context, listen: false).configModel.phoneVerification
-                                                    ? emailAddress.trim() : emailAddress;
+                                                String? _mail = Provider.of<SplashProvider>(context, listen: false).configModel!.phoneVerification!
+                                                    ? emailAddress!.trim() : emailAddress;
                                                 Provider.of<AuthProvider>(context, listen: false).verifyToken(_mail).then((value) {
                                                   if(value.isSuccess) {
                                                     Navigator.of(context).pushNamed(
@@ -170,7 +170,7 @@ class VerificationScreen extends StatelessWidget {
                                                       arguments: CreateNewPasswordScreen(email: _mail, resetToken: authProvider.verificationCode),
                                                     );
                                                   }else {
-                                                    showCustomSnackBar(value.message, context);
+                                                    showCustomSnackBar(value.message!, context);
                                                   }
                                                 });
                                               }

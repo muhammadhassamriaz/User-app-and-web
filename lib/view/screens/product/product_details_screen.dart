@@ -30,15 +30,15 @@ import 'widget/product_review.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final Product product;
-  final bool fromSearch;
-  ProductDetailsScreen({@required this.product, this.fromSearch = false});
+  final bool? fromSearch;
+  ProductDetailsScreen({required this.product, this.fromSearch = false});
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with TickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
   int _tabIndex = 0;
 
   @override
@@ -50,7 +50,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
     Provider.of<ProductProvider>(context, listen: false).getProductDetails(
       context, '${widget.product.id}',
       Provider.of<LocalizationProvider>(context, listen: false).locale.languageCode,
-      searchQuery: widget.fromSearch,
+      searchQuery: widget.fromSearch!,
     );
     Provider.of<SplashProvider>(context, listen: false).initSharedData();
     Provider.of<CartProvider>(context, listen: false).getCartData();
@@ -61,7 +61,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
 
   @override
   Widget build(BuildContext context) {
-    Variations _variation;
+    Variations? _variation;
 
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context) ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120))  : DetailsAppBar(key: UniqueKey()),
@@ -69,15 +69,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
       body: Consumer<CartProvider>(builder: (context, cart, child) {
         return  Consumer<ProductProvider>(
           builder: (context, productProvider, child) {
-            double price = 0;
-            int _stock = 0;
-            double priceWithQuantity = 0;
-            CartModel _cartModel;
+            double? price = 0;
+            int? _stock = 0;
+            double? priceWithQuantity = 0;
+            CartModel? _cartModel;
 
             if(productProvider.product != null) {
               List<String> _variationList = [];
-              for (int index = 0; index < productProvider.product.choiceOptions.length; index++) {
-                _variationList.add(productProvider.product.choiceOptions[index].options[productProvider.variationIndex[index]].replaceAll(' ', ''));
+              for (int index = 0; index < productProvider.product!.choiceOptions!.length; index++) {
+                _variationList.add(productProvider.product!.choiceOptions![index].options![productProvider.variationIndex![index]].replaceAll(' ', ''));
               }
               String variationType = '';
               bool isFirst = true;
@@ -90,10 +90,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
                 }
               });
 
-              price = productProvider.product.price;
-              _stock = productProvider.product.totalStock;
+              price = productProvider.product!.price;
+              _stock = productProvider.product!.totalStock;
 
-              for (Variations variation in productProvider.product.variations) {
+              for (Variations variation in productProvider.product!.variations!) {
                 if (variation.type == variationType) {
                   price = variation.price;
                   _variation = variation;
@@ -101,19 +101,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
                   break;
                 }
               }
-              double priceWithDiscount = 0;
-              double categoryDiscountAmount;
+              double? priceWithDiscount = 0;
+              double? categoryDiscountAmount;
 
-              if(productProvider.product.categoryDiscount != null) {
+              if(productProvider.product!.categoryDiscount != null) {
                categoryDiscountAmount = PriceConverter.convertWithDiscount(
-                 price, productProvider.product.categoryDiscount.discountAmount, productProvider.product.categoryDiscount.discountType,
-                 maxDiscount: productProvider.product.categoryDiscount.maximumAmount,
+                 price, productProvider.product!.categoryDiscount!.discountAmount, productProvider.product!.categoryDiscount!.discountType,
+                 maxDiscount: productProvider.product!.categoryDiscount!.maximumAmount,
                );
               }
-              priceWithDiscount = PriceConverter.convertWithDiscount(price, productProvider.product.discount, productProvider.product.discountType);
+              priceWithDiscount = PriceConverter.convertWithDiscount(price, productProvider.product!.discount, productProvider.product!.discountType);
 
               if(categoryDiscountAmount != null && categoryDiscountAmount > 0
-                  && categoryDiscountAmount  < priceWithDiscount) {
+                  && categoryDiscountAmount  < priceWithDiscount!) {
                 priceWithDiscount = categoryDiscountAmount;
               }
 
@@ -124,21 +124,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
 
 
               _cartModel = CartModel(
-                productProvider.product.id, productProvider.product.image.length > 0
-                  ? productProvider.product.image[0] : '',
-                  productProvider.product.name,  price,
+                productProvider.product!.id, productProvider.product!.image!.length > 0
+                  ? productProvider.product!.image![0] : '',
+                  productProvider.product!.name,  price,
                 priceWithDiscount,
                 productProvider.quantity, _variation,
-                (price - priceWithDiscount),
-                (price- PriceConverter.convertWithDiscount(price, productProvider.product.tax, productProvider.product.taxType)),
-                  productProvider.product.capacity, productProvider.product.unit, _stock,productProvider.product
+                (price! - priceWithDiscount!),
+                (price- PriceConverter.convertWithDiscount(price, productProvider.product!.tax, productProvider.product!.taxType)!),
+                  productProvider.product!.capacity, productProvider.product!.unit, _stock,productProvider.product
               );
 
               productProvider.setExistData(Provider.of<CartProvider>(context).isExistInCart(_cartModel));
 
 
               try{
-                priceWithQuantity = priceWithDiscount * (productProvider.cartIndex != null ? cart.cartList[productProvider.cartIndex].quantity : productProvider.quantity);
+                priceWithQuantity = priceWithDiscount * (productProvider.cartIndex != null ? cart.cartList[productProvider.cartIndex!].quantity! : productProvider.quantity);
               }catch (e){
                 priceWithQuantity = priceWithDiscount;
               }
@@ -193,18 +193,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
                     width: 1170,
                     child: CustomButton(
                       margin: Dimensions.PADDING_SIZE_SMALL,
-                      buttonText: getTranslated(productProvider.cartIndex != null ? 'already_added' : _stock <= 0 ? 'out_of_stock' : 'add_to_card', context),
-                      onPressed: (productProvider.cartIndex == null && _stock > 0) ? () {
-                        if (productProvider.cartIndex == null && _stock > 0) {
-                          Provider.of<CartProvider>(context, listen: false).addToCart(_cartModel);
+                      buttonText: getTranslated(productProvider.cartIndex != null ? 'already_added' : _stock! <= 0 ? 'out_of_stock' : 'add_to_card', context),
+                      onPressed: (productProvider.cartIndex == null && _stock! > 0) ? () {
+                        if (productProvider.cartIndex == null && _stock! > 0) {
+                          Provider.of<CartProvider>(context, listen: false).addToCart(_cartModel!);
                           //   _key.currentState.shake();
 
 
-                          showCustomSnackBar(getTranslated('added_to_cart', context),context, isError: false);
+                          showCustomSnackBar(getTranslated('added_to_cart', context)!,context, isError: false);
 
                         } else {
                           // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(getTranslated('already_added', context)), backgroundColor: Colors.red,));
-                          showCustomSnackBar(getTranslated('already_added', context), context);
+                          showCustomSnackBar(getTranslated('already_added', context)!, context);
                         }
                       } : null,
                     ),
@@ -236,8 +236,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
                                         return FadeInImage.assetNetwork(
                                           placeholder: Images.placeholder(context),
                                           fit: BoxFit.cover,
-                                          image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${
-                                              productProvider.product.image.isNotEmpty ? productProvider.product.image[cartProvider.productSelect] : ''
+                                          image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${
+                                              productProvider.product!.image!.isNotEmpty ? productProvider.product!.image![cartProvider.productSelect] : ''
                                           }',
                                           imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder(context), fit: BoxFit.cover),
                                         );
@@ -246,8 +246,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
                                 ),
                                 const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                 Container(height: 100,
-                                  child: productProvider.product.image != null ? ListView.builder(
-                                      itemCount: productProvider.product.image.length,
+                                  child: productProvider.product!.image != null ? ListView.builder(
+                                      itemCount: productProvider.product!.image!.length,
                                       scrollDirection: Axis.horizontal,
                                       itemBuilder: (context,index){
                                         return Padding(
@@ -264,7 +264,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
                                               ),
                                               child: FadeInImage.assetNetwork(
                                                 placeholder: Images.placeholder(context),
-                                                image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${productProvider.product.image[index]}',
+                                                image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${productProvider.product!.image![index]}',
                                                 width: 100,
                                                 fit: BoxFit.cover,
                                                 imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder(context), width: 100,fit: BoxFit.cover),
@@ -290,15 +290,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
                                       child: Container(
                                         width: 1170,
                                         child: CustomButton(
-                                          buttonText: getTranslated(productProvider.cartIndex != null ? 'already_added' : _stock <= 0 ? 'out_of_stock' : 'add_to_card', context),
-                                          onPressed: (productProvider.cartIndex == null && _stock > 0) ? () {
-                                            if (productProvider.cartIndex == null && _stock > 0) {
-                                              Provider.of<CartProvider>(context, listen: false).addToCart(_cartModel);
+                                          buttonText: getTranslated(productProvider.cartIndex != null ? 'already_added' : _stock! <= 0 ? 'out_of_stock' : 'add_to_card', context),
+                                          onPressed: (productProvider.cartIndex == null && _stock! > 0) ? () {
+                                            if (productProvider.cartIndex == null && _stock! > 0) {
+                                              Provider.of<CartProvider>(context, listen: false).addToCart(_cartModel!);
 
-                                              showCustomSnackBar(getTranslated('added_to_cart', context),context, isError: false);
+                                              showCustomSnackBar(getTranslated('added_to_cart', context)!,context, isError: false);
 
                                             } else {
-                                              showCustomSnackBar(getTranslated('already_added', context), context);
+                                              showCustomSnackBar(getTranslated('already_added', context)!, context);
                                             }
                                           } : null,
                                         ),
@@ -365,7 +365,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
         padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
         width: Dimensions.WEB_SCREEN_WIDTH,
         child: HtmlWidget(
-          productProvider.product.description ?? '',
+          productProvider.product!.description ?? '',
           textStyle: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
         ),
       ) :
@@ -379,8 +379,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('${productProvider.product.rating.length > 0
-                      ? double.parse(productProvider.product.rating.first.average).toStringAsFixed(1) : 0.0}',
+                  Text('${productProvider.product!.rating!.length > 0
+                      ? double.parse(productProvider.product!.rating!.first.average!).toStringAsFixed(1) : 0.0}',
                       style: poppinsRegular.copyWith(
                         fontSize: Dimensions.FONT_SIZE_MAX_LARGE,
                         fontWeight: FontWeight.w700,
@@ -389,15 +389,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
                   RatingBar(
-                    rating: productProvider.product.rating.length > 0
-                        ? double.parse(productProvider.product.rating[0].average)
+                    rating: productProvider.product!.rating!.length > 0
+                        ? double.parse(productProvider.product!.rating![0].average!)
                         : 0.0, size: 25,
                   ),
 
                   SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
                   Text(
-                    '${productProvider.product.activeReviews.length} ${getTranslated('review', context)}',
+                    '${productProvider.product!.activeReviews!.length} ${getTranslated('review', context)}',
                     style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT,color: Colors.deepOrange),
                   ),
 
@@ -415,14 +415,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen>  with Ticke
             ]),
           ),
           ListView.builder(
-            itemCount: productProvider.product.activeReviews.length,
+            itemCount: productProvider.product!.activeReviews!.length,
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_DEFAULT, horizontal: Dimensions.PADDING_SIZE_DEFAULT),
             itemBuilder: (context, index) {
 
-              return productProvider.product.activeReviews != null
-                  ? ReviewWidget(reviewModel: productProvider.product.activeReviews[index])
+              return productProvider.product!.activeReviews != null
+                  ? ReviewWidget(reviewModel: productProvider.product!.activeReviews![index])
                   : ReviewShimmer();
             },
 

@@ -10,14 +10,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatRepo {
-  final DioClient dioClient;
-  final SharedPreferences sharedPreferences;
-  ChatRepo({@required this.dioClient, @required this.sharedPreferences});
+  final DioClient? dioClient;
+  final SharedPreferences? sharedPreferences;
+  ChatRepo({required this.dioClient, required this.sharedPreferences});
 
 
-  Future<ApiResponse> getDeliveryManMessage(int orderId,int offset) async {
+  Future<ApiResponse> getDeliveryManMessage(int? orderId,int offset) async {
     try {
-      final response = await dioClient.get('${AppConstants.GET_DELIVERYMAN_MESSAGE_URI}?offset=$offset&limit=100&order_id=$orderId');
+      final response = await dioClient!.get('${AppConstants.GET_DELIVERYMAN_MESSAGE_URI}?offset=$offset&limit=100&order_id=$orderId');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -26,7 +26,7 @@ class ChatRepo {
 
   Future<ApiResponse> getAdminMessage(int offset) async {
     try {
-      final response = await dioClient.get('${AppConstants.GET_ADMIN_MESSAGE_URL}?offset=$offset&limit=100');
+      final response = await dioClient!.get('${AppConstants.GET_ADMIN_MESSAGE_URL}?offset=$offset&limit=100');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -34,7 +34,7 @@ class ChatRepo {
   }
 
 
-  Future<http.StreamedResponse> sendMessageToDeliveryMan(String message, List<XFile> file, int orderId, String token) async {
+  Future<http.StreamedResponse> sendMessageToDeliveryMan(String message, List<XFile> file, int? orderId, String token) async {
     http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('${AppConstants.BASE_URL}${AppConstants.SEND_MESSAGE_TO_DELIVERY_MAN_URL}'));
     request.headers.addAll(<String,String>{'Authorization': 'Bearer $token'});
     for(int i=0; i<file.length;i++){

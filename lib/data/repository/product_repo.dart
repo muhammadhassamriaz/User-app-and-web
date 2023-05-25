@@ -7,13 +7,13 @@ import 'package:flutter_grocery/helper/product_type.dart';
 import 'package:flutter_grocery/utill/app_constants.dart';
 
 class ProductRepo {
-  final DioClient dioClient;
+  final DioClient? dioClient;
 
-  ProductRepo({@required this.dioClient});
+  ProductRepo({required this.dioClient});
 
   Future<ApiResponse> getPopularProductList(String offset, String languageCode) async {
     try {
-      final response = await dioClient.get('${AppConstants.POPULAR_PRODUCT_URI}?limit=10&&offset=$offset',
+      final response = await dioClient!.get('${AppConstants.POPULAR_PRODUCT_URI}?limit=10&&offset=$offset',
         options: Options(headers: {'X-localization': languageCode}),
       );
       return ApiResponse.withSuccess(response);
@@ -23,9 +23,9 @@ class ProductRepo {
     }
   }
 
-  Future<ApiResponse> getLatestProductList(String offset, String languageCode) async {
+  Future<ApiResponse> getLatestProductList(String offset, String? languageCode) async {
     try {
-      final response = await dioClient.get('${AppConstants.LATEST_PRODUCT_URI}?limit=10&&offset=$offset',
+      final response = await dioClient!.get('${AppConstants.LATEST_PRODUCT_URI}?limit=10&&offset=$offset',
         options: Options(headers: {'X-localization': languageCode}),
 
       );
@@ -35,9 +35,9 @@ class ProductRepo {
     }
   }
 
-  Future<ApiResponse> getItemList(String offset, String languageCode, String productType) async {
+  Future<ApiResponse> getItemList(String offset, String? languageCode, String? productType) async {
     try {
-      String _apiUrl;
+      String? _apiUrl;
       if(productType == ProductType.FEATURED_ITEM){
         _apiUrl = AppConstants.FEATURED_PRODUCT;
       }else if(productType == ProductType.DAILY_ITEM){
@@ -54,7 +54,7 @@ class ProductRepo {
       }
       //_apiUrl = AppConstants.POPULAR_PRODUCT_URI;
 
-      final response = await dioClient.get('$_apiUrl?limit=10&&offset=$offset',
+      final response = await dioClient!.get('$_apiUrl?limit=10&&offset=$offset',
         options: Options(headers: {'X-localization': languageCode}),
       );
       return ApiResponse.withSuccess(response);
@@ -69,7 +69,7 @@ class ProductRepo {
       if(searchQuery) {
         _params = '$productID?attribute=product';
       }
-      final response = await dioClient.get('${AppConstants.PRODUCT_DETAILS_URI}$_params',
+      final response = await dioClient!.get('${AppConstants.PRODUCT_DETAILS_URI}$_params',
         options: Options(headers: {'X-localization': languageCode}),
       );
       return ApiResponse.withSuccess(response);
@@ -80,7 +80,7 @@ class ProductRepo {
 
   Future<ApiResponse> searchProduct(String productId, String languageCode) async {
     try {
-      final response = await dioClient.get(
+      final response = await dioClient!.get(
         '${AppConstants.SEARCH_PRODUCT_URI}$productId',
         options: Options(headers: {'X-localization': languageCode}),
       );
@@ -94,7 +94,7 @@ class ProductRepo {
     try {
       String uri = '${AppConstants.CATEGORY_PRODUCT_URI}$id';
 
-      final response = await dioClient.get(uri, options: Options(headers: {'X-localization': languageCode}));
+      final response = await dioClient!.get(uri, options: Options(headers: {'X-localization': languageCode}));
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

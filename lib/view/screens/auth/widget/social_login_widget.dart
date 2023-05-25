@@ -33,7 +33,7 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
         Navigator.pushNamedAndRemoveUntil(context, RouteHelper.menu, (route) => false, arguments: MenuScreen());
 
       }else if(temporaryToken != null && temporaryToken.isNotEmpty){
-        if(Provider.of<SplashProvider>(context,listen: false).configModel.emailVerification){
+        if(Provider.of<SplashProvider>(context,listen: false).configModel!.emailVerification!){
           Provider.of<AuthProvider>(context, listen: false).checkEmail('your_').then((value) async {
             if (value.isSuccess) {
               Provider.of<AuthProvider>(context, listen: false).updateEmail('socialLogin.email.toString()');
@@ -64,20 +64,20 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
         return Column(children: [
 
           Center(child: Text('${getTranslated('sign_in_with', context)}', style: poppinsRegular.copyWith(
-              color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.6),
+              color: Theme.of(context).textTheme.bodyText1!.color!.withOpacity(0.6),
               fontSize: Dimensions.FONT_SIZE_SMALL))),
           SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
 
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
 
-           if(Provider.of<SplashProvider>(context,listen: false).configModel.socialLoginStatus.isGoogle)
+           if(Provider.of<SplashProvider>(context,listen: false).configModel!.socialLoginStatus!.isGoogle!)
              Row(
                children: [
                  InkWell(
                     onTap: () async {
                       try{
                         GoogleSignInAuthentication  _auth = await authProvider.googleLogin();
-                        GoogleSignInAccount _googleAccount = authProvider.googleAccount;
+                        GoogleSignInAccount _googleAccount = authProvider.googleAccount!;
 
                         Provider.of<AuthProvider>(context, listen: false).socialLogin(SocialLoginModel(
                           email: _googleAccount.email, token: _auth.idToken, uniqueId: _googleAccount.id, medium: 'google',
@@ -96,7 +96,7 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
                           ? 110 : 40,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.1),
+                        color: Theme.of(context).textTheme.bodyText1!.color!.withOpacity(0.1),
                         borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SIZE_TEN)),
                       ),
                       child:   Image.asset(
@@ -111,13 +111,13 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
                     ),
                   ),
 
-                 if(Provider.of<SplashProvider>(context,listen: false).configModel.socialLoginStatus.isFacebook)
+                 if(Provider.of<SplashProvider>(context,listen: false).configModel!.socialLoginStatus!.isFacebook!)
                    SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT,),
                ],
              ),
 
 
-            if(Provider.of<SplashProvider>(context,listen: false).configModel.socialLoginStatus.isFacebook)
+            if(Provider.of<SplashProvider>(context,listen: false).configModel!.socialLoginStatus!.isFacebook!)
               InkWell(
               onTap: () async{
                 LoginResult _result = await FacebookAuth.instance.login();
@@ -128,8 +128,8 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
                  Provider.of<AuthProvider>(context, listen: false).socialLogin(
                    SocialLoginModel(
                      email: _userData['email'],
-                     token: _result.accessToken.token,
-                     uniqueId: _result.accessToken.userId,
+                     token: _result.accessToken!.token,
+                     uniqueId: _result.accessToken!.userId,
                      medium: 'facebook',
                    ), route,
                  );
@@ -140,7 +140,7 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
                 width: ResponsiveHelper.isDesktop(context)? 130 :ResponsiveHelper.isTab(context)? 110: 40,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.1),
+                  color: Theme.of(context).textTheme.bodyText1!.color!.withOpacity(0.1),
                   borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SIZE_TEN)),
                 ),
                 child:   Image.asset(

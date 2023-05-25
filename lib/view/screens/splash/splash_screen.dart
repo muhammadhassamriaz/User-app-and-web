@@ -23,7 +23,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   GlobalKey<ScaffoldMessengerState> _globalKey = GlobalKey();
-  StreamSubscription<ConnectivityResult> _onConnectivityChanged;
+  late StreamSubscription<ConnectivityResult> _onConnectivityChanged;
 
   @override
   void dispose() {
@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
           backgroundColor: isNotConnected ? Colors.red : Colors.green,
           duration: Duration(seconds: isNotConnected ? 6000 : 3),
           content: Text(
-            isNotConnected ? getTranslated('no_connection', context) : getTranslated('connected', context),
+            isNotConnected ? getTranslated('no_connection', context)! : getTranslated('connected', context)!,
             textAlign: TextAlign.center,
           ),
         ));
@@ -66,19 +66,19 @@ class _SplashScreenState extends State<SplashScreen> {
   void _route() {
     Provider.of<SplashProvider>(context, listen: false).initConfig(context).then((bool isSuccess) {
       if (isSuccess) {
-        if(Provider.of<SplashProvider>(context, listen: false).configModel.maintenanceMode) {
+        if(Provider.of<SplashProvider>(context, listen: false).configModel!.maintenanceMode!) {
           Navigator.pushNamedAndRemoveUntil(context, RouteHelper.getMaintenanceRoute(), (route) => false);
         }else {
           Timer(Duration(seconds: 1), () async {
             double _minimumVersion = 0.0;
             if(Platform.isAndroid) {
-              if(Provider.of<SplashProvider>(context, listen: false).configModel.playStoreConfig.minVersion!=null){
-                _minimumVersion = Provider.of<SplashProvider>(context, listen: false).configModel.playStoreConfig.minVersion?? 6.0;
+              if(Provider.of<SplashProvider>(context, listen: false).configModel!.playStoreConfig!.minVersion!=null){
+                _minimumVersion = Provider.of<SplashProvider>(context, listen: false).configModel!.playStoreConfig!.minVersion?? 6.0;
 
               }
             }else if(Platform.isIOS) {
-              if(Provider.of<SplashProvider>(context, listen: false).configModel.appStoreConfig.minVersion!=null){
-                _minimumVersion = Provider.of<SplashProvider>(context, listen: false).configModel.appStoreConfig.minVersion?? 6.0;
+              if(Provider.of<SplashProvider>(context, listen: false).configModel!.appStoreConfig!.minVersion!=null){
+                _minimumVersion = Provider.of<SplashProvider>(context, listen: false).configModel!.appStoreConfig!.minVersion?? 6.0;
               }
             }
             if(AppConstants.APP_VERSION < _minimumVersion && !ResponsiveHelper.isWeb()) {

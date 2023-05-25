@@ -42,20 +42,20 @@ List<MainScreenModel> screenList = [
   MainScreenModel(CouponScreen(), 'coupon', Images.coupon),
   MainScreenModel(ChatScreen(orderModel: null,), 'live_chat', Images.chat),
   MainScreenModel(SettingsScreen(), 'settings', Images.settings),
-  if(Provider.of<SplashProvider>(Get.context, listen: false).configModel.walletStatus)
+  if(Provider.of<SplashProvider>(Get.context!, listen: false).configModel!.walletStatus!)
     MainScreenModel(WalletScreen(fromWallet: true), 'wallet', Images.wallet),
-  if(Provider.of<SplashProvider>(Get.context, listen: false).configModel.loyaltyPointStatus)
+  if(Provider.of<SplashProvider>(Get.context!, listen: false).configModel!.loyaltyPointStatus!)
     MainScreenModel(WalletScreen(fromWallet: false), 'loyalty_point', Images.loyalty_icon),
   MainScreenModel(HtmlViewerScreen(htmlType: HtmlType.TERMS_AND_CONDITION), 'terms_and_condition', Images.terms_and_conditions),
   MainScreenModel(HtmlViewerScreen(htmlType: HtmlType.PRIVACY_POLICY), 'privacy_policy', Images.privacy),
   MainScreenModel(HtmlViewerScreen(htmlType: HtmlType.ABOUT_US), 'about_us', Images.about_us),
-  if(Provider.of<SplashProvider>(Get.context, listen: false).configModel.returnPolicyStatus)
+  if(Provider.of<SplashProvider>(Get.context!, listen: false).configModel!.returnPolicyStatus!)
     MainScreenModel(HtmlViewerScreen(htmlType: HtmlType.RETURN_POLICY), 'return_policy', Images.return_policy),
 
-  if(Provider.of<SplashProvider>(Get.context, listen: false).configModel.refundPolicyStatus)
+  if(Provider.of<SplashProvider>(Get.context!, listen: false).configModel!.refundPolicyStatus!)
     MainScreenModel(HtmlViewerScreen(htmlType: HtmlType.REFUND_POLICY), 'refund_policy', Images.refund_policy),
 
-  if(Provider.of<SplashProvider>(Get.context, listen: false).configModel.cancellationPolicyStatus)
+  if(Provider.of<SplashProvider>(Get.context!, listen: false).configModel!.cancellationPolicyStatus!)
     MainScreenModel(HtmlViewerScreen(htmlType: HtmlType.CANCELLATION_POLICY), 'cancellation_policy', Images.cancellation_policy),
 
   MainScreenModel(HtmlViewerScreen(htmlType: HtmlType.FAQ), 'faq', Images.faq),
@@ -64,7 +64,7 @@ List<MainScreenModel> screenList = [
 
 class MainScreen extends StatefulWidget {
   final CustomDrawerController drawerController;
-  MainScreen({@required this.drawerController});
+  MainScreen({required this.drawerController});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -74,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    HomeScreen.loadData(true, Get.context);
+    HomeScreen.loadData(true, Get.context!);
     super.initState();
   }
 
@@ -94,9 +94,9 @@ class _MainScreenState extends State<MainScreen> {
           child: Consumer<ProfileProvider>(
               builder: (context, profileProvider, child) {
                 final _referMenu = MainScreenModel(ReferAndEarnScreen(), 'refer_and_earn', Images.referral_icon);
-                if(splash.configModel.referEarnStatus
+                if(splash.configModel!.referEarnStatus!
                     && profileProvider.userInfoModel != null
-                    && profileProvider.userInfoModel.referCode != null
+                    && profileProvider.userInfoModel!.referCode != null
                     && screenList[9].title != 'refer_and_earn'){
                   screenList.removeWhere((menu) => menu.screen == _referMenu.screen);
                   screenList.insert(9, _referMenu);
@@ -124,14 +124,14 @@ class _MainScreenState extends State<MainScreen> {
                         style: poppinsMedium.copyWith(color: Theme.of(context).primaryColor),
                       )),
                     ]) : Text(
-                      getTranslated(screenList[splash.pageIndex].title, context),
+                      getTranslated(screenList[splash.pageIndex].title, context)!,
                       style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE, color: Theme.of(context).primaryColor),
                     ),
 
                     actions: splash.pageIndex == 0 ? [
                       IconButton(
                           icon: Stack(clipBehavior: Clip.none, children: [
-                            Image.asset(Images.cart_icon, color: Theme.of(context).textTheme.bodyText1.color, width: 25),
+                            Image.asset(Images.cart_icon, color: Theme.of(context).textTheme.bodyText1!.color, width: 25),
                             Positioned(
                               top: -7,
                               right: -2,
@@ -147,7 +147,7 @@ class _MainScreenState extends State<MainScreen> {
                            ResponsiveHelper.isMobilePhone()? splash.setPageIndex(2): Navigator.pushNamed(context, RouteHelper.cart);
                           }),
                       IconButton(
-                          icon: Icon(Icons.search, size: 30, color: Theme.of(context).textTheme.bodyText1.color),
+                          icon: Icon(Icons.search, size: 30, color: Theme.of(context).textTheme.bodyText1!.color),
                           onPressed: () {
                             Navigator.pushNamed(context, RouteHelper.searchProduct);
                           }),

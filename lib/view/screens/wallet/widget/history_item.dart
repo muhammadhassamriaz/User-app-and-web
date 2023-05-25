@@ -10,8 +10,8 @@ import 'package:flutter_grocery/utill/styles.dart';
 class HistoryItem extends StatelessWidget {
   final int index;
   final bool formEarning;
-  final List<Transaction> data;
-  const HistoryItem({Key key, @required this.index, @required this.formEarning, @required this.data}) : super(key: key);
+  final List<Transaction>? data;
+  const HistoryItem({Key? key, required this.index, required this.formEarning, required this.data}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class HistoryItem extends StatelessWidget {
       margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_EXTRA_SMALL),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(0.08))
+        border: Border.all(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.08))
       ),
       padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_DEFAULT),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -32,12 +32,12 @@ class HistoryItem extends StatelessWidget {
             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL,),
 
             Text(
-              getTranslated(data[index].transactionType, context),
+              getTranslated(data![index].transactionType, context)!,
               style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT, color: Theme.of(context).disabledColor), maxLines: 1, overflow: TextOverflow.ellipsis,
             ),
             SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
-           if(data[index].createdAt != null) Text(DateConverter.formatDate(data[index].createdAt),
+           if(data![index].createdAt != null) Text(DateConverter.formatDate(data![index].createdAt!),
               style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL,color: Theme.of(context).disabledColor),
               maxLines: 1, overflow: TextOverflow.ellipsis,
             ),
@@ -47,11 +47,11 @@ class HistoryItem extends StatelessWidget {
 
           Column(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center, children: [
             Text(
-             '${formEarning ? data[index].credit : data[index].debit}',
+             '${formEarning ? data![index].credit : data![index].debit}',
               style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE,), maxLines: 1, overflow: TextOverflow.ellipsis,
             ),
             Text(
-              getTranslated('points', context),
+              getTranslated('points', context)!,
               style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT, color: Theme.of(context).disabledColor), maxLines: 1, overflow: TextOverflow.ellipsis,
             ),
             ],
@@ -63,23 +63,23 @@ class HistoryItem extends StatelessWidget {
 }
 
 class WalletHistory extends StatelessWidget {
-  final Transaction transaction;
-  const WalletHistory({Key key, this.transaction}) : super(key: key);
+  final Transaction? transaction;
+  const WalletHistory({Key? key, this.transaction}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String _id;
-    if(transaction.transactionId != null && transaction.transactionId.length > 15 ) {
-      _id = transaction.transactionId.substring(0, 15)+ '...';
+    String? _id;
+    if(transaction!.transactionId != null && transaction!.transactionId!.length > 15 ) {
+      _id = transaction!.transactionId!.substring(0, 15)+ '...';
     }
     return Column(children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
         Text( 'XID $_id' ?? '',
           style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT,
-            color: Theme.of(context).textTheme.bodyLarge.color,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
           ),
         ),
-        if(transaction.createdAt != null) Text(DateConverter.formatDate(transaction.createdAt),
+        if(transaction!.createdAt != null) Text(DateConverter.formatDate(transaction!.createdAt!),
           style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL,color: Theme.of(context).disabledColor),
           maxLines: 1, overflow: TextOverflow.ellipsis,
         ),
@@ -94,15 +94,15 @@ class WalletHistory extends StatelessWidget {
             children: [
               Container(decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_SIZE_DEFAULT),
-                  border: Border.all(color: Theme.of(context).textTheme.bodyLarge.color.withOpacity(0.08))),
+                  border: Border.all(color: Theme.of(context).textTheme.bodyLarge!.color!.withOpacity(0.08))),
 
                 padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE,vertical: Dimensions.PADDING_SIZE_DEFAULT),
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
                   Text(
-                    getTranslated(transaction.transactionType, context),
+                    getTranslated(transaction!.transactionType, context)!,
                     style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: Theme.of(context).disabledColor), maxLines: 1, overflow: TextOverflow.ellipsis,
                   ),
-                  Text(PriceConverter.convertPrice(context, transaction.debit > 0 ? transaction.debit : transaction.credit),style: poppinsBold.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE,color: Colors.green),),
+                  Text(PriceConverter.convertPrice(context, transaction!.debit! > 0 ? transaction!.debit : transaction!.credit),style: poppinsBold.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE,color: Colors.green),),
                 ]),
               ),
               SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT,),
@@ -125,7 +125,7 @@ class CustomLayoutDivider extends StatelessWidget {
   final double dashWidth;
   final Color color;
   final Axis axis;
-  const CustomLayoutDivider({Key key, this.height = 1, this.dashWidth = 5, this.color = Colors.black, this.axis = Axis.horizontal});
+  const CustomLayoutDivider({Key? key, this.height = 1, this.dashWidth = 5, this.color = Colors.black, this.axis = Axis.horizontal});
 
   @override
   Widget build(BuildContext context) {

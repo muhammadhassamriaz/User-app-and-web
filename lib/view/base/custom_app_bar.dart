@@ -7,23 +7,23 @@ import 'package:flutter_grocery/utill/styles.dart';
 import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
+  final String? title;
   final bool isBackButtonExist;
-  final Function onBackPressed;
+  final Function? onBackPressed;
   final bool isCenter;
   final bool isElevation;
   final bool fromCategoryScreen;
-  CustomAppBar({@required this.title, this.isBackButtonExist = true, this.onBackPressed,this.isCenter=true,this.isElevation=false,this.fromCategoryScreen = false});
+  CustomAppBar({required this.title, this.isBackButtonExist = true, this.onBackPressed,this.isCenter=true,this.isElevation=false,this.fromCategoryScreen = false});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(title, style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE, color: Theme.of(context).textTheme.bodyText1.color)),
+      title: Text(title!, style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE, color: Theme.of(context).textTheme.bodyText1!.color)),
       centerTitle: isCenter?true:false,
       leading: isBackButtonExist ? IconButton(
-        icon: Icon(Icons.arrow_back_ios,color: Theme.of(context).textTheme.bodyText1.color),
-        color: Theme.of(context).textTheme.bodyText1.color,
-        onPressed: () => onBackPressed != null ? onBackPressed() : Navigator.pop(context),
+        icon: Icon(Icons.arrow_back_ios,color: Theme.of(context).textTheme.bodyText1!.color),
+        color: Theme.of(context).textTheme.bodyText1!.color,
+        onPressed: () => onBackPressed != null ? onBackPressed!() : Navigator.pop(context),
       ) : SizedBox(),
       backgroundColor: Theme.of(context).cardColor,
       elevation: isElevation?2:0,
@@ -32,8 +32,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             color: ColorResources.getWhiteColor(context),
             elevation: 20,
             enabled: true,
-            icon: Icon(Icons.more_vert,color: Theme.of(context).textTheme.bodyText1.color,),
-            onSelected: (value) {
+            icon: Icon(Icons.more_vert,color: Theme.of(context).textTheme.bodyText1!.color,),
+            onSelected: (dynamic value) {
               int _index = Provider.of<ProductProvider>(context,listen: false).allSortBy.indexOf(value);
               Provider.of<ProductProvider>(context,listen: false).sortCategoryProduct(_index);
             },

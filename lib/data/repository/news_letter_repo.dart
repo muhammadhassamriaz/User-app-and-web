@@ -6,13 +6,13 @@ import '../datasource/remote/exception/api_error_handler.dart';
 import '../model/response/base/api_response.dart';
 
 class NewsLetterRepo {
-  final DioClient dioClient;
+  final DioClient? dioClient;
 
-  NewsLetterRepo({@required this.dioClient});
+  NewsLetterRepo({required this.dioClient});
 
   Future<ApiResponse> addToNewsLetter(String  email) async {
     try {
-      final response = await dioClient.post(AppConstants.EMAIL_SUBSCRIBE_URI, data: {'email':email});
+      final response = await dioClient!.post(AppConstants.EMAIL_SUBSCRIBE_URI, data: {'email':email});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

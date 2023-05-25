@@ -28,13 +28,13 @@ class _WishListScreenState extends State<WishListScreen> {
     final _height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: ResponsiveHelper.isMobilePhone()? null: ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)) : AppBarBase(),
+      appBar: ResponsiveHelper.isMobilePhone()? null: (ResponsiveHelper.isDesktop(context)? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120)) : AppBarBase()) as PreferredSizeWidget?,
       body: _isLoggedIn ? Consumer<WishListProvider>(
         builder: (context, wishlistProvider, child) {
           if(wishlistProvider.isLoading) {
            return Center(child: CircularProgressIndicator(valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)));
           }
-          return wishlistProvider.wishList != null ? wishlistProvider.wishList.length > 0 ? RefreshIndicator(
+          return wishlistProvider.wishList != null ? wishlistProvider.wishList!.length > 0 ? RefreshIndicator(
             onRefresh: () async {
               await Provider.of<WishListProvider>(context, listen: false).getWishList(context);
             },
@@ -55,15 +55,15 @@ class _WishListScreenState extends State<WishListScreen> {
                               SliverGridDelegateWithFixedCrossAxisCount(crossAxisSpacing: 5,
                                   mainAxisSpacing: 5, childAspectRatio:  4,
                                   crossAxisCount: ResponsiveHelper.isTab(context) ? 2 : 1),
-                              itemCount: wishlistProvider.wishList.length,
+                              itemCount: wishlistProvider.wishList!.length,
                               padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemBuilder: (BuildContext context, int index) {
                                 return ResponsiveHelper.isDesktop(context) ? Padding(
                                   padding: const EdgeInsets.all(5.0),
-                                  child: ProductWidget(product: wishlistProvider.wishList[index]),
-                                ) : ProductWidget(product: wishlistProvider.wishList[index]);
+                                  child: ProductWidget(product: wishlistProvider.wishList![index]),
+                                ) : ProductWidget(product: wishlistProvider.wishList![index]);
                               },
                             )
                           ),

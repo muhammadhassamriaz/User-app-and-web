@@ -14,9 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class ProfileRepo{
-  final DioClient dioClient;
-  final SharedPreferences sharedPreferences;
-  ProfileRepo({@required this.dioClient, @required this.sharedPreferences});
+  final DioClient? dioClient;
+  final SharedPreferences? sharedPreferences;
+  ProfileRepo({required this.dioClient, required this.sharedPreferences});
 
   Future<ApiResponse> getAddressTypeList() async {
     try {
@@ -35,14 +35,14 @@ class ProfileRepo{
 
   Future<ApiResponse> getUserInfo() async {
     try {
-      final response = await dioClient.get(AppConstants.CUSTOMER_INFO_URI);
+      final response = await dioClient!.get(AppConstants.CUSTOMER_INFO_URI);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-  Future<http.StreamedResponse> updateProfile(UserInfoModel userInfoModel, String pass, File file, PickedFile data, String token) async {
+  Future<http.StreamedResponse> updateProfile(UserInfoModel userInfoModel, String pass, File? file, PickedFile? data, String token) async {
     http.MultipartRequest request = http.MultipartRequest('POST', Uri.parse('${AppConstants.BASE_URL}${AppConstants.UPDATE_PROFILE_URI}'));
     request.headers.addAll(<String,String>{'Authorization': 'Bearer $token'});
     if(file != null) {
@@ -54,7 +54,7 @@ class ProfileRepo{
     }
     Map<String, String> _fields = Map();
     _fields.addAll(<String, String>{
-      '_method': 'put', 'f_name': userInfoModel.fName, 'l_name': userInfoModel.lName, 'phone': userInfoModel.phone, 'password': pass
+      '_method': 'put', 'f_name': userInfoModel.fName!, 'l_name': userInfoModel.lName!, 'phone': userInfoModel.phone!, 'password': pass
     });
     request.fields.addAll(_fields);
     http.StreamedResponse response = await request.send();

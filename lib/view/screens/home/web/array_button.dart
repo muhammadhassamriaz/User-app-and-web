@@ -7,13 +7,13 @@ class ArrayButton extends StatelessWidget {
   final bool isLarge;
   final Function onTop;
   final bool isVisible;
-  const ArrayButton({Key key, @required this.isLeft, @required this.isLarge, @required this.onTop, @required this.isVisible}) : super(key: key);
+  const ArrayButton({Key? key, required this.isLeft, required this.isLarge, required this.onTop, required this.isVisible}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       hoverColor: Colors.transparent,
-      onTap: isVisible ?  onTop : null,
+      onTap: isVisible ?  onTop as void Function()? : null,
       borderRadius: BorderRadius.circular(50),
       child: Container(
         decoration: BoxDecoration(color: isVisible ? Theme.of(context).primaryColor.withOpacity(0.7) : ColorResources.getHintColor(context), shape: BoxShape.circle,

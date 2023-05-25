@@ -12,7 +12,7 @@ import 'order_card.dart';
 
 class OrderView extends StatelessWidget {
   final bool isRunning;
-  OrderView({@required this.isRunning});
+  OrderView({required this.isRunning});
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,9 @@ class OrderView extends StatelessWidget {
 
       body: Consumer<OrderProvider>(
         builder: (context, order, index) {
-          List<OrderModel> orderList;
+          List<OrderModel>? orderList;
           if (order.runningOrderList != null) {
-            orderList = isRunning ? order.runningOrderList.reversed.toList() : order.historyOrderList.reversed.toList();
+            orderList = isRunning ? order.runningOrderList!.reversed.toList() : order.historyOrderList!.reversed.toList();
           }
 
           return orderList != null ? orderList.length > 0 ? RefreshIndicator(

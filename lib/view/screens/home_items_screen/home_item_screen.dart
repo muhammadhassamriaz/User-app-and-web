@@ -20,16 +20,16 @@ import 'package:flutter_grocery/view/base/web_app_bar/web_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class HomeItemScreen extends StatefulWidget {
-  final String productType;
+  final String? productType;
 
-   HomeItemScreen({Key key, this.productType}) : super(key: key);
+   HomeItemScreen({Key? key, this.productType}) : super(key: key);
 
   @override
   State<HomeItemScreen> createState() => _HomeItemScreenState();
 }
 
 class _HomeItemScreenState extends State<HomeItemScreen> {
-  int pageSize;
+  late int pageSize;
   final ScrollController scrollController = ScrollController();
 
 
@@ -47,7 +47,7 @@ class _HomeItemScreenState extends State<HomeItemScreen> {
        if (scrollController.position.maxScrollExtent == scrollController.position.pixels &&
            (_productProvider.popularProductList != null || _productProvider.dailyItemList != null) && !_productProvider.isLoading
        ) {
-         pageSize = (_productProvider.popularPageSize / 10).ceil();
+         pageSize = (_productProvider.popularPageSize! / 10).ceil();
          if (_productProvider.popularOffset < pageSize) {
            _productProvider.popularOffset++;
            _productProvider.showBottomLoader();
@@ -77,10 +77,10 @@ class _HomeItemScreenState extends State<HomeItemScreen> {
 
 
     return Scaffold(
-      appBar: ResponsiveHelper.isDesktop(context) ? PreferredSize(
+      appBar: (ResponsiveHelper.isDesktop(context) ? PreferredSize(
           child: WebAppBar(), preferredSize: Size.fromHeight(120))
           : CustomAppBar(title:  getTranslated(widget.productType, context),
-      ),
+      )) as PreferredSizeWidget?,
       body: SingleChildScrollView(
         controller: scrollController,
           child: Center(
@@ -107,8 +107,8 @@ class _HomeItemScreenState extends State<HomeItemScreen> {
                                       width: double.maxFinite,
                                       height: MediaQuery.of(context).size.height * 0.2,
                                       placeholder: Images.placeholder(context),
-                                      image: '${Provider.of<SplashProvider>(context,listen: false).baseUrls.flash_sale_imageUrl}'
-                                          '/${flashDealProvider.flashDeal.banner ?? ''}',
+                                      image: '${Provider.of<SplashProvider>(context,listen: false).baseUrls!.flash_sale_imageUrl}'
+                                          '/${flashDealProvider.flashDeal!.banner ?? ''}',
                                       fit: BoxFit.fitWidth,
                                       imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder(context), fit: BoxFit.cover),
                                     ),
@@ -133,7 +133,7 @@ class _HomeItemScreenState extends State<HomeItemScreen> {
                           builder: (context, flashDealProvider, child) {
                             return Consumer<ProductProvider>(
                               builder: (context, productProvider, child) {
-                                List<Product> productList;
+                                List<Product>? productList;
 
                                 switch(widget.productType) {
                                   case ProductType.POPULAR_PRODUCT :
@@ -174,7 +174,7 @@ class _HomeItemScreenState extends State<HomeItemScreen> {
                                     shrinkWrap: true,
                                     itemCount: productList.length,
                                     itemBuilder: (context ,index) {
-                                      return ProductWidget(product: productList[index], isGrid: true);
+                                      return ProductWidget(product: productList![index], isGrid: true);
                                     },
                                   ),
 

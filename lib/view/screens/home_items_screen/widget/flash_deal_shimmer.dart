@@ -7,7 +7,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 
 class MegaDealShimmer extends StatelessWidget {
   final bool isHomeScreen;
-  MegaDealShimmer({@required this.isHomeScreen});
+  MegaDealShimmer({required this.isHomeScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class MegaDealShimmer extends StatelessWidget {
               color: Colors.white,
               boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), spreadRadius: 1, blurRadius: 5)]),
           child: Shimmer(
-            color:  Colors.grey[300],
+            color:  Colors.grey[300]!,
             enabled: Provider.of<FlashDealProvider>(context).flashDealList == null,
             child: Column(children: [
               Expanded(

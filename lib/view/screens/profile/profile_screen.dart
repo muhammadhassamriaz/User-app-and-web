@@ -22,7 +22,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool _isLoggedIn;
+  late bool _isLoggedIn;
 
   @override
   void initState() {
@@ -46,10 +46,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Provider.of<SplashProvider>(context, listen: false).setPageIndex(0);
               Navigator.of(context).pop();
             }),
-        title: Text(getTranslated('profile', context),
+        title: Text(getTranslated('profile', context)!,
             style: poppinsMedium.copyWith(
               fontSize: Dimensions.FONT_SIZE_SMALL,
-              color: Theme.of(context).textTheme.bodyText1.color,
+              color: Theme.of(context).textTheme.bodyText1!.color,
             )),
       ),
       body: SafeArea(
@@ -84,8 +84,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       child: ClipOval(
                                         child: FadeInImage.assetNetwork(
                                           placeholder: Images.placeholder(context), height: 170, width: 170, fit: BoxFit.cover,
-                                          image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.customerImageUrl}/'
-                                              '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel.image : ''}',
+                                          image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/'
+                                              '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel!.image : ''}',
                                           imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder(context), height: 170, width: 170, fit: BoxFit.cover),
                                         ),
                                       ),
@@ -110,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         child: Row(
                                         children: [
                                             Icon(Icons.edit,size: 16,color: Colors.white),
-                                            Text(getTranslated('edit', context),
+                                            Text(getTranslated('edit', context)!,
                                               style: poppinsMedium.copyWith(
                                                 fontSize: Dimensions.FONT_SIZE_SMALL,
                                                 color: Colors.white
@@ -138,24 +138,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      getTranslated('mobile_number', context),
+                                      getTranslated('mobile_number', context)!,
                                       style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, color: ColorResources.getHintColor(context)),
                                     ),
                                     SizedBox(height: 6),
                                     Text(
-                                      '${profileProvider.userInfoModel.fName ?? ''} ${profileProvider.userInfoModel.lName ?? ''}',
+                                      '${profileProvider.userInfoModel!.fName ?? ''} ${profileProvider.userInfoModel!.lName ?? ''}',
                                       style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT),
                                     ),
                                     Divider(),
                                     SizedBox(height: 25),
                                     // for first name section
                                     Text(
-                                      getTranslated('mobile_number', context),
+                                      getTranslated('mobile_number', context)!,
                                       style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, color: ColorResources.getHintColor(context)),
                                     ),
                                     SizedBox(height: 6),
                                     Text(
-                                      '${profileProvider.userInfoModel.phone ?? ''}',
+                                      '${profileProvider.userInfoModel!.phone ?? ''}',
                                       style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT),
                                     ),
                                     Divider(),
@@ -163,12 +163,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                                     // for email section
                                     Text(
-                                      getTranslated('email', context),
+                                      getTranslated('email', context)!,
                                       style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, color: ColorResources.getHintColor(context)),
                                     ),
                                     SizedBox(height: 6),
                                     Text(
-                                      '${profileProvider.userInfoModel.email ?? ''}',
+                                      '${profileProvider.userInfoModel!.email ?? ''}',
                                       style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT),
                                     ),
                                     Divider(),
@@ -207,23 +207,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: profileProvider.file == null ? FadeInImage.assetNetwork(
                                       placeholder: Images.placeholder(context),
                                       width: 100, height: 100, fit: BoxFit.cover,
-                                      image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.customerImageUrl}/${profileProvider.userInfoModel.image}',
+                                      image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/${profileProvider.userInfoModel!.image}',
                                         imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder(context), height: 100, width: 100, fit: BoxFit.cover)
-                                    ) : Image.file(profileProvider.file, width: 100, height: 100, fit: BoxFit.fill),
+                                    ) : Image.file(profileProvider.file!, width: 100, height: 100, fit: BoxFit.fill),
                                   )
                             ),
                             Positioned(
                               right: -10,
                               child: TextButton(
                                 onPressed: () {
-                                  print('----------update ${profileProvider.userInfoModel.phone ?? ''}');
+                                  print('----------update ${profileProvider.userInfoModel!.phone ?? ''}');
                                   Navigator.pushNamed(
                                     context,
                                     RouteHelper.getProfileEditRoute(profileProvider.userInfoModel),
                                   );
                                 },
                                 child: Text(
-                                  getTranslated('edit', context),
+                                  getTranslated('edit', context)!,
                                   style: poppinsMedium.copyWith(
                                     fontSize: Dimensions.FONT_SIZE_SMALL,
                                   ),
@@ -236,7 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         // for name
                         Center(
                             child: Text(
-                          '${profileProvider.userInfoModel.fName ?? ''} ${profileProvider.userInfoModel.lName ?? ''}',
+                          '${profileProvider.userInfoModel!.fName ?? ''} ${profileProvider.userInfoModel!.lName ?? ''}',
                           style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE),
                         )),
 
@@ -249,12 +249,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               // for first name section
                               Text(
-                                getTranslated('mobile_number', context),
+                                getTranslated('mobile_number', context)!,
                                 style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, color: ColorResources.getHintColor(context)),
                               ),
                               SizedBox(height: 6),
                               Text(
-                                '${profileProvider.userInfoModel.phone ?? ''}',
+                                '${profileProvider.userInfoModel!.phone ?? ''}',
                                 style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT),
                               ),
                               Divider(),
@@ -262,12 +262,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                               // for email section
                               Text(
-                                getTranslated('email', context),
+                                getTranslated('email', context)!,
                                 style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, color: ColorResources.getHintColor(context)),
                               ),
                               SizedBox(height: 6),
                               Text(
-                                '${profileProvider.userInfoModel.email ?? ''}',
+                                '${profileProvider.userInfoModel!.email ?? ''}',
                                 style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT),
                               ),
                               Divider(),

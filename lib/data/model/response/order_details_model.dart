@@ -1,19 +1,19 @@
 class OrderDetailsModel {
-  int id;
-  int productId;
-  int orderId;
-  double price;
-  ProductDetails productDetails;
-  double discountOnProduct;
-  String discountType;
-  int quantity;
-  double taxAmount;
-  String createdAt;
-  String updatedAt;
-  String variant;
-  int timeSlotId;
-  String variation;
-  bool isVatInclude;
+  int? id;
+  int? productId;
+  int? orderId;
+  double? price;
+  ProductDetails? productDetails;
+  double? discountOnProduct;
+  String? discountType;
+  int? quantity;
+  double? taxAmount;
+  String? createdAt;
+  String? updatedAt;
+  String? variant;
+  int? timeSlotId;
+  String? variation;
+  bool? isVatInclude;
 
 
   OrderDetailsModel(
@@ -67,7 +67,7 @@ class OrderDetailsModel {
     data['order_id'] = this.orderId;
     data['price'] = this.price;
     if (this.productDetails != null) {
-      data['product_details'] = this.productDetails.toJson();
+      data['product_details'] = this.productDetails!.toJson();
     }
     data['discount_on_product'] = this.discountOnProduct;
     data['discount_type'] = this.discountType;
@@ -84,21 +84,21 @@ class OrderDetailsModel {
 }
 
 class ProductDetails {
-  int id;
-  String name;
-  String description;
-  List<dynamic> image;
-  double price;
-  List<CategoryIds> categoryIds;
-  double capacity;
-  String unit;
-  double tax;
-  int status;
-  String createdAt;
-  String updatedAt;
-  double discount;
-  String discountType;
-  String taxType;
+  int? id;
+  String? name;
+  String? description;
+  List<dynamic>? image;
+  double? price;
+  List<CategoryIds>? categoryIds;
+  double? capacity;
+  String? unit;
+  double? tax;
+  int? status;
+  String? createdAt;
+  String? updatedAt;
+  double? discount;
+  String? discountType;
+  String? taxType;
 
   ProductDetails(
       {this.id,
@@ -126,7 +126,7 @@ class ProductDetails {
     if (json['category_ids'] != null) {
       categoryIds = [];
       json['category_ids'].forEach((v) {
-        categoryIds.add(new CategoryIds.fromJson(v));
+        categoryIds!.add(new CategoryIds.fromJson(v));
       });
     }
     capacity = json['capacity'].toDouble();
@@ -148,7 +148,7 @@ class ProductDetails {
     data['image'] = this.image;
     data['price'] = this.price;
     if (this.categoryIds != null) {
-      data['category_ids'] = this.categoryIds.map((v) => v.toJson()).toList();
+      data['category_ids'] = this.categoryIds!.map((v) => v.toJson()).toList();
     }
     data['capacity'] = this.capacity;
     data['unit'] = this.unit;
@@ -164,7 +164,7 @@ class ProductDetails {
 }
 
 class CategoryIds {
-  String id;
+  String? id;
 
   CategoryIds({this.id});
 

@@ -11,7 +11,7 @@ enum TrimMode {
 class ReadMoreText extends StatefulWidget {
   const ReadMoreText(
       this.data, {
-        Key key,
+        Key? key,
         this.preDataText,
         this.postDataText,
         this.preDataTextStyle,
@@ -38,26 +38,26 @@ class ReadMoreText extends StatefulWidget {
   final int trimLength;
   final int trimLines;
   final TrimMode trimMode;
-  final TextStyle moreStyle;
-  final TextStyle lessStyle;
-  final String preDataText;
-  final String postDataText;
-  final TextStyle preDataTextStyle;
-  final TextStyle postDataTextStyle;
-  final Function(bool val) callback;
+  final TextStyle? moreStyle;
+  final TextStyle? lessStyle;
+  final String? preDataText;
+  final String? postDataText;
+  final TextStyle? preDataTextStyle;
+  final TextStyle? postDataTextStyle;
+  final Function(bool val)? callback;
 
   final String delimiter;
   final String data;
   final String trimExpandedText;
   final String trimCollapsedText;
-  final Color colorClickableText;
-  final TextStyle style;
-  final TextAlign textAlign;
-  final TextDirection textDirection;
-  final Locale locale;
-  final double textScaleFactor;
-  final String semanticsLabel;
-  final TextStyle delimiterStyle;
+  final Color? colorClickableText;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final double? textScaleFactor;
+  final String? semanticsLabel;
+  final TextStyle? delimiterStyle;
 
   @override
   ReadMoreTextState createState() => ReadMoreTextState();
@@ -80,7 +80,7 @@ class ReadMoreTextState extends State<ReadMoreText> {
   @override
   Widget build(BuildContext context) {
     final DefaultTextStyle defaultTextStyle = DefaultTextStyle.of(context);
-    TextStyle effectiveTextStyle = widget.style;
+    TextStyle? effectiveTextStyle = widget.style;
     if (widget.style?.inherit ?? false) {
       effectiveTextStyle = defaultTextStyle.style.merge(widget.style);
     }
@@ -122,16 +122,16 @@ class ReadMoreTextState extends State<ReadMoreText> {
         assert(constraints.hasBoundedWidth);
         final double maxWidth = constraints.maxWidth;
 
-        TextSpan preTextSpan;
-        TextSpan postTextSpan;
+        TextSpan? preTextSpan;
+        TextSpan? postTextSpan;
         if (widget.preDataText != null)
           preTextSpan = TextSpan(
-            text: widget.preDataText + " ",
+            text: widget.preDataText! + " ",
             style: widget.preDataTextStyle ?? effectiveTextStyle,
           );
         if (widget.postDataText != null)
           postTextSpan = TextSpan(
-            text: " " + widget.postDataText,
+            text: " " + widget.postDataText!,
             style: widget.postDataTextStyle ?? effectiveTextStyle,
           );
 

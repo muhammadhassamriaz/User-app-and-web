@@ -12,8 +12,8 @@ import 'package:provider/provider.dart';
 
 class OfflinePaymentDialog extends StatefulWidget {
   final PlaceOrderBody placeOrderBody;
-  final Function(PlaceOrderBody) callBack;
-  OfflinePaymentDialog({@required this.placeOrderBody, this.callBack});
+  final Function(PlaceOrderBody)? callBack;
+  OfflinePaymentDialog({required this.placeOrderBody, this.callBack});
 
   @override
   State<OfflinePaymentDialog> createState() => _OfflinePaymentDialogState();
@@ -37,7 +37,7 @@ class _OfflinePaymentDialogState extends State<OfflinePaymentDialog> {
 
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(getTranslated('offline_payment', context), style: poppinsBold.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),),
+                  Text(getTranslated('offline_payment', context)!, style: poppinsBold.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),),
 
                   InkWell(
                     onTap: ()=> Navigator.of(context).pop(),
@@ -47,7 +47,7 @@ class _OfflinePaymentDialogState extends State<OfflinePaymentDialog> {
               ),
               SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE,),
 
-              Text(getTranslated('payment_by', context), style: poppinsRegular,),
+              Text(getTranslated('payment_by', context)!, style: poppinsRegular,),
               SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
               CustomTextField(
@@ -58,7 +58,7 @@ class _OfflinePaymentDialogState extends State<OfflinePaymentDialog> {
               ),
               SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
 
-              Text(getTranslated('transaction_id', context), style: poppinsRegular,),
+              Text(getTranslated('transaction_id', context)!, style: poppinsRegular,),
               SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
               CustomTextField(
@@ -69,7 +69,7 @@ class _OfflinePaymentDialogState extends State<OfflinePaymentDialog> {
               ),
               SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
 
-              Text(getTranslated('payment_note', context), style: poppinsRegular,),
+              Text(getTranslated('payment_note', context)!, style: poppinsRegular,),
               SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
               CustomTextField(
@@ -92,11 +92,11 @@ class _OfflinePaymentDialogState extends State<OfflinePaymentDialog> {
                       buttonText: getTranslated('submit', context),
                       onPressed: (){
                         if(paymentByController.text.isEmpty){
-                          showCustomSnackBar(getTranslated('please_insert_user_name', context), context);
+                          showCustomSnackBar(getTranslated('please_insert_user_name', context)!, context);
                         }else if(transactionIdController.text.isEmpty){
-                          showCustomSnackBar(getTranslated('please_input_transaction_id', context), context);
+                          showCustomSnackBar(getTranslated('please_input_transaction_id', context)!, context);
                         }else{
-                          widget.callBack(widget.placeOrderBody.setOfflinePayment(
+                          widget.callBack!(widget.placeOrderBody.setOfflinePayment(
                             paymentBy: paymentByController.text,
                             transactionReference: transactionIdController.text,
                             paymentNote: paymentNoteController.text,

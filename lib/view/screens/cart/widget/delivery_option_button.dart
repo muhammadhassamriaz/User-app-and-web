@@ -9,10 +9,10 @@ import 'package:provider/provider.dart';
 
 class DeliveryOptionButton extends StatelessWidget {
   final String value;
-  final String title;
+  final String? title;
   final bool kmWiseFee;
   final bool freeDelivery;
-  DeliveryOptionButton({@required this.value, @required this.title, @required this.kmWiseFee, this.freeDelivery = false});
+  DeliveryOptionButton({required this.value, required this.title, required this.kmWiseFee, this.freeDelivery = false});
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +26,15 @@ class DeliveryOptionButton extends StatelessWidget {
                 value: value,
                 groupValue: order.orderType,
                 activeColor: Theme.of(context).primaryColor,
-                onChanged: (String value) => order.setOrderType(value),
+                onChanged: (String? value) => order.setOrderType(value),
               ),
               SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
-              Text(title, style: poppinsRegular),
+              Text(title!, style: poppinsRegular),
               SizedBox(width: 5),
 
               freeDelivery ? Text('(${getTranslated('free', context)})', style: poppinsMedium) :  kmWiseFee  ? SizedBox() : Text('(${value == 'delivery' && !freeDelivery
-                  ? PriceConverter.convertPrice(context, Provider.of<SplashProvider>(context, listen: false).configModel.deliveryCharge)
+                  ? PriceConverter.convertPrice(context, Provider.of<SplashProvider>(context, listen: false).configModel!.deliveryCharge)
                   : getTranslated('free', context)})', style: poppinsMedium,
               ),
 

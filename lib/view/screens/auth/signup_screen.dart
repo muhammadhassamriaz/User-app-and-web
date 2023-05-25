@@ -26,17 +26,17 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  TextEditingController _emailController;
+  TextEditingController? _emailController;
   final FocusNode _emailFocus = FocusNode();
   bool email = true;
   bool phone =false;
-  String _countryDialCode = '+880';
+  String? _countryDialCode = '+880';
   @override
   void initState() {
     super.initState();
     _emailController = TextEditingController();
     // Provider.of<AuthProvider>(context, listen: false).clearVerificationMessage();
-    _countryDialCode = CountryCode.fromCountryCode(Provider.of<SplashProvider>(context, listen: false).configModel.country).dialCode;
+    _countryDialCode = CountryCode.fromCountryCode(Provider.of<SplashProvider>(context, listen: false).configModel!.country!).dialCode;
   }
 
 
@@ -63,7 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         padding: ResponsiveHelper.isDesktop(context)? EdgeInsets.symmetric(horizontal: 100,vertical: 50) : size.width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
                         decoration: size.width > 700 ? BoxDecoration(
                           color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(10),
-                          boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)],
+                          boxShadow: [BoxShadow(color: Colors.grey[300]!, blurRadius: 5, spreadRadius: 1)],
                         ) : null,
                         child: Consumer<AuthProvider>(
                           builder: (context, authProvider, child) => Column(
@@ -83,19 +83,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               SizedBox(height: 20),
                               Center(
                                   child: Text(
-                                getTranslated('signup', context),
+                                getTranslated('signup', context)!,
                                 style: poppinsMedium.copyWith(fontSize: 24, color: ColorResources.getTextColor(context)),
                               )),
                               SizedBox(height: 35),
-                              Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification ? Text(
-                                getTranslated('email', context),
+                              Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification! ? Text(
+                                getTranslated('email', context)!,
                                 style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
                               ) : Text(
-                                getTranslated('mobile_number', context),
+                                getTranslated('mobile_number', context)!,
                                 style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
                               ),
                               SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                              Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification ? CustomTextField(
+                              Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification! ? CustomTextField(
                                 hintText: getTranslated('demo_gmail', context),
                                 isShowBorder: true,
                                 inputAction: TextInputAction.done,
@@ -112,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   showDropDownButton: true,
                                   padding: EdgeInsets.zero,
                                   showFlagMain: true,
-                                  textStyle: TextStyle(color: Theme.of(context).textTheme.headline1.color),
+                                  textStyle: TextStyle(color: Theme.of(context).textTheme.headline1!.color),
 
                                 ),
                                 Expanded(child: CustomTextField(
@@ -132,14 +132,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  authProvider.verificationMessage.length > 0
+                                  authProvider.verificationMessage!.length > 0
                                       ? CircleAvatar(backgroundColor: Theme.of(context).primaryColor, radius: 5)
                                       : SizedBox.shrink(),
                                   SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       authProvider.verificationMessage ?? "",
-                                      style: Theme.of(context).textTheme.headline2.copyWith(
+                                      style: Theme.of(context).textTheme.headline2!.copyWith(
                                             fontSize: Dimensions.FONT_SIZE_SMALL,
                                             color: Theme.of(context).primaryColor,
                                           ),
@@ -154,18 +154,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   ? CustomButton(
                                 buttonText: getTranslated('continue', context),
                                 onPressed: () {
-                                  String _email = _emailController.text.trim();
+                                  String _email = _emailController!.text.trim();
                                   if (_email.isEmpty) {
-                                    if(Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification) {
-                                      showCustomSnackBar(getTranslated('enter_email_address', context), context);
+                                    if(Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification!) {
+                                      showCustomSnackBar(getTranslated('enter_email_address', context)!, context);
                                     }else {
-                                      showCustomSnackBar(getTranslated('enter_phone_number', context), context);
+                                      showCustomSnackBar(getTranslated('enter_phone_number', context)!, context);
                                     }
-                                  }else if (Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification
+                                  }else if (Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification!
                                       && EmailChecker.isNotValid(_email)) {
-                                    showCustomSnackBar(getTranslated('enter_valid_email', context), context);
+                                    showCustomSnackBar(getTranslated('enter_valid_email', context)!, context);
                                   }else {
-                                    if(Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification){
+                                    if(Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification!){
                                       authProvider.checkEmail(_email).then((value) async {
                                         if (value.isSuccess) {
                                           authProvider.updateEmail(_email);
@@ -181,13 +181,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       });
 
                                     }else{
-                                      authProvider.checkPhone(_countryDialCode+_email).then((value) async {
+                                      authProvider.checkPhone(_countryDialCode!+_email).then((value) async {
                                         if (value.isSuccess) {
-                                          authProvider.updateEmail(_countryDialCode+_email);
+                                          authProvider.updateEmail(_countryDialCode!+_email);
                                           if (value.message == 'active') {
                                             Navigator.of(context).pushNamed(
-                                              RouteHelper.getVerifyRoute('sign-up', _countryDialCode+_email),
-                                              arguments: VerificationScreen(emailAddress: _countryDialCode+_email, fromSignUp: true),
+                                              RouteHelper.getVerifyRoute('sign-up', _countryDialCode!+_email),
+                                              arguments: VerificationScreen(emailAddress: _countryDialCode!+_email, fromSignUp: true),
                                             );
                                           } else {
                                             Navigator.of(context).pushNamed(RouteHelper.createAccount, arguments: CreateAccountScreen());
@@ -211,12 +211,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        getTranslated('already_have_account', context),
+                                        getTranslated('already_have_account', context)!,
                                         style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.getHintColor(context)),
                                       ),
                                       SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                                       Text(
-                                        getTranslated('login', context),
+                                        getTranslated('login', context)!,
                                         style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.getTextColor(context)),
                                       ),
                                     ],

@@ -32,13 +32,13 @@ class PlutoMenuBarWidget extends StatefulWidget {
   final Color borderColor;
 
   /// menu icon color. (default. 'black54')
-  final Color menuIconColor;
+  final Color? menuIconColor;
 
   /// menu icon size. (default. '20')
   final double menuIconSize;
 
   /// more icon color. (default. 'black54')
-  final Color moreIconColor;
+  final Color? moreIconColor;
 
   /// Enable gradient of BackgroundColor. (default. 'true')
   final bool gradient;
@@ -47,7 +47,7 @@ class PlutoMenuBarWidget extends StatefulWidget {
   final TextStyle textStyle;
 
   PlutoMenuBarWidget({
-    this.menus,
+    required this.menus,
     this.goBackButtonText = 'Go back',
     this.height = 45,
     this.backgroundColor = Colors.white,
@@ -126,15 +126,15 @@ class _PlutoMenuBarWidgetState extends State<PlutoMenuBarWidget> {
 
 class MenuItems {
   /// Menu title
-  final String title;
+  final String? title;
 
-  final IconData icon;
+  final IconData? icon;
 
   /// Callback executed when a menu is tapped
-  final Function() onTap;
+  final Function()? onTap;
 
   /// Passing [MenuItems] to a [List] creates a sub-menu.
-  final List<MenuItems> children;
+  final List<MenuItems>? children;
 
   MenuItems({
     this.title,
@@ -156,41 +156,41 @@ class MenuItems {
   bool _isBack = false;
 
   Offset get _position {
-    RenderBox box = _key.currentContext.findRenderObject();
+    RenderBox box = _key.currentContext!.findRenderObject() as RenderBox;
 
     return box.localToGlobal(Offset.zero);
   }
 
-  bool get _hasChildren => children != null && children.length > 0;
+  bool get _hasChildren => children != null && children!.length > 0;
 }
 
 class _MenuWidget extends StatelessWidget {
   final MenuItems menu;
 
-  final String goBackButtonText;
+  final String? goBackButtonText;
 
-  final double height;
+  final double? height;
 
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
-  final Color menuIconColor;
+  final Color? menuIconColor;
 
-  final double menuIconSize;
+  final double? menuIconSize;
 
-  final Color moreIconColor;
+  final Color? moreIconColor;
 
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   _MenuWidget(
-      this.menu, {
-        this.goBackButtonText,
-        this.height,
-        this.backgroundColor,
-        this.menuIconColor,
-        this.menuIconSize,
-        this.moreIconColor,
-        this.textStyle,
-      }) : super(key: menu._key);
+    this.menu, {
+    this.goBackButtonText,
+    this.height,
+    this.backgroundColor,
+    this.menuIconColor,
+    this.menuIconSize,
+    this.moreIconColor,
+    this.textStyle,
+  }) : super(key: menu._key);
 
   Widget _buildPopupItem(MenuItems _menu) {
     return Row(
@@ -210,7 +210,7 @@ class _MenuWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(bottom: 3),
             child: Text(
-              _menu.title,
+              _menu.title!,
               style: textStyle,
               maxLines: 1,
               overflow: TextOverflow.visible,
@@ -226,13 +226,14 @@ class _MenuWidget extends StatelessWidget {
     );
   }
 
-  Future<MenuItems> _showPopupMenu(
-      BuildContext context,
-      List<MenuItems> menuItems,
-      ) async {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject();
+  Future<MenuItems?> _showPopupMenu(
+    BuildContext context,
+    List<MenuItems> menuItems,
+  ) async {
+    final RenderBox overlay =
+        Overlay.of(context)!.context.findRenderObject() as RenderBox;
 
-    final Offset position = menu._position + Offset(0, height - 11);
+    final Offset position = menu._position + Offset(0, height! - 11);
 
     return await showMenu(
       context: context,
@@ -254,20 +255,20 @@ class _MenuWidget extends StatelessWidget {
   }
 
   Widget _getMenu(
-      BuildContext context,
-      MenuItems menu,
-      ) {
-    Future<MenuItems> _getSelectedMenu(
-        MenuItems menu, {
-          MenuItems previousMenu,
-          int stackIdx,
-          List<MenuItems> stack,
-        }) async {
+    BuildContext context,
+    MenuItems menu,
+  ) {
+    Future<MenuItems?> _getSelectedMenu(
+      MenuItems menu, {
+      MenuItems? previousMenu,
+      int stackIdx = 0,
+      List<MenuItems>? stack,
+    }) async {
       if (!menu._hasChildren) {
         return menu;
       }
 
-      final items = [...menu.children];
+      final items = [...menu.children!];
 
       if (previousMenu != null) {
         items.add(MenuItems._back(
@@ -276,7 +277,7 @@ class _MenuWidget extends StatelessWidget {
         ));
       }
 
-      MenuItems _selectedMenu = await _showPopupMenu(
+      MenuItems? _selectedMenu = await _showPopupMenu(
         context,
         items,
       );
@@ -285,7 +286,7 @@ class _MenuWidget extends StatelessWidget {
         return null;
       }
 
-      MenuItems _previousMenu = menu;
+      MenuItems? _previousMenu = menu;
 
       if (!_selectedMenu._hasChildren) {
         return _selectedMenu;
@@ -296,7 +297,7 @@ class _MenuWidget extends StatelessWidget {
         if (stackIdx < 0) {
           _previousMenu = null;
         } else {
-          _previousMenu = stack[stackIdx];
+          _previousMenu = stack![stackIdx];
         }
       } else {
         if (stackIdx == null) {
@@ -304,7 +305,7 @@ class _MenuWidget extends StatelessWidget {
           stack = [menu];
         } else {
           stackIdx += 1;
-          stack.add(menu);
+          stack!.add(menu);
         }
       }
 
@@ -319,13 +320,13 @@ class _MenuWidget extends StatelessWidget {
     return InkWell(
       onTap: () async {
         if (menu._hasChildren) {
-          MenuItems selectedMenu = await _getSelectedMenu(menu);
+          MenuItems? selectedMenu = await _getSelectedMenu(menu);
 
           if (selectedMenu?.onTap != null) {
-            selectedMenu.onTap();
+            selectedMenu!.onTap!();
           }
-        } else if (menu?.onTap != null) {
-          menu.onTap();
+        } else if (menu.onTap != null) {
+          menu.onTap!();
         }
       },
       child: Padding(
@@ -335,23 +336,38 @@ class _MenuWidget extends StatelessWidget {
           children: [
             if (menu.icon != null) ...[
               Stack(
-                clipBehavior: Clip.none, children: [
-                Icon(menu.icon, size: menuIconSize,color: menuIconColor,),
-                menu.title.isEmpty? Positioned(
-                  top: -7, right: -7,
-                  child: Container(
-                    padding: EdgeInsets.all(4),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                    child: Center(
-                      child: Text(
-                        Provider.of<CartProvider>(context).cartList.length.toString(),
-                        style: TextStyle(color: Colors.white, fontSize: 8) //poppinsMedium.copyWith(color: ColorResources.COLOR_WHITE, fontSize: 8),
-                      ),
-                    ),
+                clipBehavior: Clip.none,
+                children: [
+                  Icon(
+                    menu.icon,
+                    size: menuIconSize,
+                    color: menuIconColor,
                   ),
-                ):SizedBox()
-              ],
+                  menu.title!.isEmpty
+                      ? Positioned(
+                          top: -7,
+                          right: -7,
+                          child: Container(
+                            padding: EdgeInsets.all(4),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle, color: Colors.red),
+                            child: Center(
+                              child: Text(
+                                  Provider.of<CartProvider>(context)
+                                      .cartList
+                                      .length
+                                      .toString(),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize:
+                                          8) //poppinsMedium.copyWith(color: ColorResources.COLOR_WHITE, fontSize: 8),
+                                  ),
+                            ),
+                          ),
+                        )
+                      : SizedBox()
+                ],
               ),
               // menu.icon,
               // color: menuIconColor,
@@ -362,7 +378,7 @@ class _MenuWidget extends StatelessWidget {
               ),
             ],
             Text(
-              menu.title,
+              menu.title!,
               style: textStyle,
             ),
           ],

@@ -1,8 +1,8 @@
 class UserLogData {
-  String countryCode;
-  String phoneNumber;
-  String email;
-  String password;
+  String? countryCode;
+  String? phoneNumber;
+  String? email;
+  String? password;
 
   UserLogData({this.countryCode, this.phoneNumber,this.email, this.password});
 

@@ -27,16 +27,16 @@ class FlashDealsView extends StatelessWidget {
     Consumer<FlashDealProvider>(
       builder: (context, flashDealProvider, child) {
         double _width = MediaQuery.of(context).size.width;
-        return flashDealProvider.flashDealList != null && flashDealProvider.flashDealList.length >  0 ?
+        return flashDealProvider.flashDealList != null && flashDealProvider.flashDealList!.length >  0 ?
         ListView.builder(
           padding: EdgeInsets.all(0),
           scrollDirection: isHomeScreen ? Axis.horizontal : Axis.vertical,
-          itemCount: flashDealProvider.flashDealList.length == 0 ? 2 : flashDealProvider.flashDealList.length,
+          itemCount: flashDealProvider.flashDealList!.length == 0 ? 2 : flashDealProvider.flashDealList!.length,
           itemBuilder: (context, index) {
 
             return Container(
               width: _width,
-              child: flashDealProvider.flashDealList != null ? flashDealProvider.flashDealList.length != 0 ?
+              child: flashDealProvider.flashDealList != null ? flashDealProvider.flashDealList!.length != 0 ?
               Stack(
                 fit: StackFit.expand,
                 children: [
@@ -50,12 +50,12 @@ class FlashDealsView extends StatelessWidget {
                         Provider.of<FlashDealProvider>(context, listen: false).setCurrentIndex(index);
                       },
                     ),
-                    itemCount: flashDealProvider.flashDealList.length == 0 ?
-                    1 : flashDealProvider.flashDealList.length,
+                    itemCount: flashDealProvider.flashDealList!.length == 0 ?
+                    1 : flashDealProvider.flashDealList!.length,
                     itemBuilder: (context, index, _) {
 
                       return InkWell(
-                        onTap: () => Navigator.of(context).pushNamed(RouteHelper.getProductDetailsRoute(product: flashDealProvider.flashDealList[index])),
+                        onTap: () => Navigator.of(context).pushNamed(RouteHelper.getProductDetailsRoute(product: flashDealProvider.flashDealList![index])),
                         child: Container(
                           margin: EdgeInsets.all(5),
                           decoration: BoxDecoration(
@@ -77,8 +77,8 @@ class FlashDealsView extends StatelessWidget {
                                     borderRadius: BorderRadius.all( Radius.circular(10)),
                                     child: FadeInImage.assetNetwork(
                                       placeholder: Images.placeholder_light, fit: BoxFit.cover,
-                                      image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}'
-                                          '/${flashDealProvider.flashDealList[index].image}',
+                                      image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}'
+                                          '/${flashDealProvider.flashDealList![index].image}',
                                       imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_light,
                                         fit: BoxFit.cover,height: _width*.50,),
                                     ),
@@ -91,7 +91,7 @@ class FlashDealsView extends StatelessWidget {
                                 child: Column(mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(flashDealProvider.flashDealList[index].name,
+                                    Text(flashDealProvider.flashDealList![index].name!,
                                       style: poppinsRegular, maxLines: 2,
                                       overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                                     ),
@@ -99,11 +99,11 @@ class FlashDealsView extends StatelessWidget {
 
 
                                     Row(children: [
-                                      flashDealProvider.flashDealList[index].rating != null ? Padding(
+                                      flashDealProvider.flashDealList![index].rating != null ? Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 4),
                                         child: RatingBar(
-                                          rating: flashDealProvider.flashDealList[index].rating.length > 0
-                                              ? double.parse(flashDealProvider.flashDealList[index].rating[0].average)
+                                          rating: flashDealProvider.flashDealList![index].rating!.length > 0
+                                              ? double.parse(flashDealProvider.flashDealList![index].rating![0].average!)
                                               : 0.0, size: 10,
                                         ),
                                       ) : SizedBox(),
@@ -111,8 +111,8 @@ class FlashDealsView extends StatelessWidget {
                                       Spacer(),
 
 
-                                      Text(flashDealProvider.flashDealList[index].discount > 0 ?
-                                        PriceConverter.convertPrice(context, flashDealProvider.flashDealList[index].price) : '',
+                                      Text(flashDealProvider.flashDealList![index].discount! > 0 ?
+                                        PriceConverter.convertPrice(context, flashDealProvider.flashDealList![index].price) : '',
                                         style: poppinsBold.copyWith(
                                           color: Theme.of(context).hintColor,
                                           decoration: TextDecoration.lineThrough,
@@ -121,9 +121,9 @@ class FlashDealsView extends StatelessWidget {
                                       ),
                                       SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
 
-                                      Text(PriceConverter.convertPrice(context, flashDealProvider.flashDealList[index].price,
-                                          discountType: flashDealProvider.flashDealList[index].discountType,
-                                          discount: flashDealProvider.flashDealList[index].discount),
+                                      Text(PriceConverter.convertPrice(context, flashDealProvider.flashDealList![index].price,
+                                          discountType: flashDealProvider.flashDealList![index].discountType,
+                                          discount: flashDealProvider.flashDealList![index].discount),
                                         style: poppinsBold.copyWith(color: Theme.of(context).primaryColor),
                                       ),
                                     ]),
@@ -135,7 +135,7 @@ class FlashDealsView extends StatelessWidget {
                             ]),
 
 
-                            flashDealProvider.flashDealList[index].discount >= 1 ?
+                            flashDealProvider.flashDealList![index].discount! >= 1 ?
                             Positioned(top: 0, left: 0,
                               child: Container(
                                 padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
@@ -148,9 +148,9 @@ class FlashDealsView extends StatelessWidget {
                                 ),
                                 child: Text(PriceConverter.percentageCalculation(
                                   context,
-                                  '${flashDealProvider.flashDealList[index].price}',
-                                  flashDealProvider.flashDealList[index].discount,
-                                  flashDealProvider.flashDealList[index].discountType,),
+                                  '${flashDealProvider.flashDealList![index].price}',
+                                  flashDealProvider.flashDealList![index].discount,
+                                  flashDealProvider.flashDealList![index].discountType,),
                                   style: poppinsRegular.copyWith(
                                     color: Colors.white,
                                     fontSize: Dimensions.FONT_SIZE_SMALL,
@@ -168,7 +168,7 @@ class FlashDealsView extends StatelessWidget {
 
                 ],
               ) : SizedBox() : Shimmer(
-                color: Colors.grey[300],
+                color: Colors.grey[300]!,
                 // highlightColor: Colors.grey[100],
                 enabled: flashDealProvider.flashDealList == null,
                 child: Container(margin: EdgeInsets.symmetric(horizontal: 10), decoration: BoxDecoration(
@@ -184,20 +184,20 @@ class FlashDealsView extends StatelessWidget {
     ):
     Consumer<FlashDealProvider>(
       builder: (context, flashDealProvider, child) {
-        return flashDealProvider.flashDealList.length != 0 ?
+        return flashDealProvider.flashDealList!.length != 0 ?
         GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisSpacing: ResponsiveHelper.isDesktop(context) ? 13 : 5,
               mainAxisSpacing: ResponsiveHelper.isDesktop(context) ? 13 : 5,
               childAspectRatio:ResponsiveHelper.isDesktop(context) ? (1 / 1.1) : 3.0,
               crossAxisCount: ResponsiveHelper.isDesktop(context) ? 5 : ResponsiveHelper.isTab(context) ? 2 : 1),
-          itemCount: flashDealProvider.flashDealList.length,
+          itemCount: flashDealProvider.flashDealList!.length,
           padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL,vertical: Dimensions.PADDING_SIZE_LARGE),
           // padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT,vertical: Dimensions.PADDING_SIZE_DEFAULT),
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
-            return ProductWidget(product: flashDealProvider.flashDealList[index],);
+            return ProductWidget(product: flashDealProvider.flashDealList![index],);
           },
         ) : GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

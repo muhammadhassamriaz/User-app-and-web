@@ -9,14 +9,14 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 class DigitalPaymentView extends StatefulWidget {
   final List<String> paymentList;
-  const DigitalPaymentView({Key key,@required this.paymentList}) : super(key: key);
+  const DigitalPaymentView({Key? key,required this.paymentList}) : super(key: key);
 
   @override
   State<DigitalPaymentView> createState() => _DigitalPaymentViewState();
 }
 
 class _DigitalPaymentViewState extends State<DigitalPaymentView> {
-  AutoScrollController scrollController;
+  AutoScrollController? scrollController;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _DigitalPaymentViewState extends State<DigitalPaymentView> {
       child: Row(
         children: widget.paymentList.map((_method) {
            return AutoScrollTag(
-             controller: scrollController,
+             controller: scrollController!,
              key: ValueKey(widget.paymentList.indexOf(_method)),
              index: widget.paymentList.indexOf(_method),
              child: Consumer<OrderProvider>(
@@ -47,7 +47,7 @@ class _DigitalPaymentViewState extends State<DigitalPaymentView> {
                     hoverColor: Colors.transparent,
                     onTap: () async {
                       orderProvider.setPaymentMethod( orderProvider.paymentMethod == _method ? '' : _method);
-                      await scrollController.scrollToIndex(widget.paymentList.indexOf(_method), preferPosition: AutoScrollPosition.middle);
+                      await scrollController!.scrollToIndex(widget.paymentList.indexOf(_method), preferPosition: AutoScrollPosition.middle);
                     },
                     child: Card(
                       child: Container(

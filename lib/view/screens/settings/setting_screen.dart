@@ -22,8 +22,8 @@ class SettingsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: ResponsiveHelper.isMobilePhone()
-          ? null : ResponsiveHelper.isDesktop(context)
-          ? MainAppBar(): AppBarBase(),
+          ? null : (ResponsiveHelper.isDesktop(context)
+          ? MainAppBar(): AppBarBase()) as PreferredSizeWidget?,
 
       body: Center(
         child: Container(
@@ -35,7 +35,7 @@ class SettingsScreen extends StatelessWidget {
               SwitchListTile(
                 value: Provider.of<ThemeProvider>(context).darkTheme,
                 onChanged: (bool isActive) =>Provider.of<ThemeProvider>(context, listen: false).toggleTheme(),
-                title: Text(getTranslated('dark_theme', context), style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
+                title: Text(getTranslated('dark_theme', context)!, style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
               ),
 
               TitleButton(
@@ -62,7 +62,7 @@ class SettingsScreen extends StatelessWidget {
                 },
                 leading: Icon(Icons.delete, size: 25, color: Theme.of(context).errorColor),
                 title: Text(
-                  getTranslated('delete_account', context),
+                  getTranslated('delete_account', context)!,
                   style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE,
                   ),
                 ),
@@ -78,16 +78,16 @@ class SettingsScreen extends StatelessWidget {
 
 class TitleButton extends StatelessWidget {
   final IconData icon;
-  final String title;
+  final String? title;
   final Function onTap;
-  TitleButton({@required this.icon, @required this.title, @required this.onTap});
+  TitleButton({required this.icon, required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(icon, color: Theme.of(context).primaryColor),
-      title: Text(title, style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
-      onTap: onTap,
+      title: Text(title!, style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
+      onTap: onTap as void Function()?,
     );
   }
 }

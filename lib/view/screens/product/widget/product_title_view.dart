@@ -14,54 +14,54 @@ import 'package:flutter_grocery/view/base/wish_button.dart';
 import 'package:provider/provider.dart';
 
 class ProductTitleView extends StatelessWidget {
-  final Product product;
-  final int stock;
-  final int cartIndex;
-  ProductTitleView({@required this.product, @required this.stock,@required this.cartIndex});
+  final Product? product;
+  final int? stock;
+  final int? cartIndex;
+  ProductTitleView({required this.product, required this.stock,required this.cartIndex});
 
   @override
   Widget build(BuildContext context) {
-    double _startingPrice;
-    double _startingPriceWithDiscount;
-    double _startingPriceWithCategoryDiscount;
-    double _endingPrice;
-    double _endingPriceWithDiscount;
-    double _endingPriceWithCategoryDiscount;
-    if(product.variations.length != 0) {
-      List<double> _priceList = [];
-      product.variations.forEach((variation) => _priceList.add(variation.price));
-      _priceList.sort((a, b) => a.compareTo(b));
+    double? _startingPrice;
+    double? _startingPriceWithDiscount;
+    double? _startingPriceWithCategoryDiscount;
+    double? _endingPrice;
+    double? _endingPriceWithDiscount;
+    double? _endingPriceWithCategoryDiscount;
+    if(product!.variations!.length != 0) {
+      List<double?> _priceList = [];
+      product!.variations!.forEach((variation) => _priceList.add(variation.price));
+      _priceList.sort((a, b) => a!.compareTo(b!));
       _startingPrice = _priceList[0];
-      if(_priceList[0] < _priceList[_priceList.length-1]) {
+      if(_priceList[0]! < _priceList[_priceList.length-1]!) {
         _endingPrice = _priceList[_priceList.length-1];
       }
     }else {
-      _startingPrice = product.price;
+      _startingPrice = product!.price;
     }
 
 
-    if(product.categoryDiscount != null) {
+    if(product!.categoryDiscount != null) {
       _startingPriceWithCategoryDiscount = PriceConverter.convertWithDiscount(
-        _startingPrice, product.categoryDiscount.discountAmount, product.categoryDiscount.discountType,
-        maxDiscount: product.categoryDiscount.maximumAmount,
+        _startingPrice, product!.categoryDiscount!.discountAmount, product!.categoryDiscount!.discountType,
+        maxDiscount: product!.categoryDiscount!.maximumAmount,
       );
 
       if(_endingPrice != null){
         _endingPriceWithCategoryDiscount = PriceConverter.convertWithDiscount(
-          _endingPrice, product.categoryDiscount.discountAmount, product.categoryDiscount.discountType,
-          maxDiscount: product.categoryDiscount.maximumAmount,
+          _endingPrice, product!.categoryDiscount!.discountAmount, product!.categoryDiscount!.discountType,
+          maxDiscount: product!.categoryDiscount!.maximumAmount,
         );
       }
     }
-    _startingPriceWithDiscount = PriceConverter.convertWithDiscount(_startingPrice, product.discount, product.discountType);
+    _startingPriceWithDiscount = PriceConverter.convertWithDiscount(_startingPrice, product!.discount, product!.discountType);
 
     if(_endingPrice != null) {
-      _endingPriceWithDiscount = PriceConverter.convertWithDiscount(_endingPrice, product.discount, product.discountType);
+      _endingPriceWithDiscount = PriceConverter.convertWithDiscount(_endingPrice, product!.discount, product!.discountType);
     }
 
     if(_startingPriceWithCategoryDiscount != null &&
         _startingPriceWithCategoryDiscount > 0 &&
-        _startingPriceWithCategoryDiscount < _startingPriceWithDiscount) {
+        _startingPriceWithCategoryDiscount < _startingPriceWithDiscount!) {
       _startingPriceWithDiscount = _startingPriceWithCategoryDiscount;
       _endingPriceWithDiscount = _endingPriceWithCategoryDiscount;
     }
@@ -94,7 +94,7 @@ class ProductTitleView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Flexible(child: Text(
-                    product.name ?? '',
+                    product!.name ?? '',
                       style: poppinsMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE, color: ColorResources.getTextColor(context)),
                       maxLines: 1, overflow: TextOverflow.ellipsis,
                     ),
@@ -106,10 +106,10 @@ class ProductTitleView extends StatelessWidget {
               ),
             ),
 
-            product.rating != null ? Padding(
+            product!.rating != null ? Padding(
               padding: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
               child: RatingBar(
-                rating: product.rating.length > 0 ? double.parse(product.rating[0].average) : 0.0, size: Dimensions.PADDING_SIZE_DEFAULT,
+                rating: product!.rating!.length > 0 ? double.parse(product!.rating![0].average!) : 0.0, size: Dimensions.PADDING_SIZE_DEFAULT,
               ),
             ) : SizedBox(),
 
@@ -125,12 +125,12 @@ class ProductTitleView extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: 2),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(Dimensions.RADIUS_SIZE_LARGE),
-                  color: product.totalStock > 0
+                  color: product!.totalStock! > 0
                       ?  Theme.of(context).primaryColor
                       : Theme.of(context).primaryColor.withOpacity(0.3),
                 ),
                 child: Text(
-                  '${ getTranslated(product.totalStock > 0
+                  '${ getTranslated(product!.totalStock! > 0
                       ? 'in_stock' : 'stock_out', context)}',
                   style: poppinsMedium.copyWith(color: Colors.white),
                 ),
@@ -140,7 +140,7 @@ class ProductTitleView extends StatelessWidget {
 
 
 
-            _startingPriceWithDiscount < _startingPrice  ? Text(
+            _startingPriceWithDiscount! < _startingPrice!  ? Text(
               '${PriceConverter.convertPrice(context, _startingPrice)}'
                   '${_endingPrice != null ? ' - ${PriceConverter.convertPrice(context, _endingPrice)}' : ''}',
               style: poppinsBold.copyWith(
@@ -152,7 +152,7 @@ class ProductTitleView extends StatelessWidget {
             Row(children: [
 
               Text(
-                '${product.capacity} ${product.unit}',
+                '${product!.capacity} ${product!.unit}',
                 style: poppinsRegular.copyWith(color: Theme.of(context).hintColor, fontSize: Dimensions.FONT_SIZE_SMALL),
               ),
 
@@ -164,12 +164,12 @@ class ProductTitleView extends StatelessWidget {
                     QuantityButton(
                       isIncrement: false, quantity: productProvider.quantity,
                       stock: stock,cartIndex: cartIndex,
-                      maxOrderQuantity: product.maximumOrderQuantity,
+                      maxOrderQuantity: product!.maximumOrderQuantity,
                     ),
                     SizedBox(width: 15),
 
                     Consumer<CartProvider>(builder: (context, cart, child) {
-                      return Text(cartIndex != null ? cart.cartList[cartIndex].quantity.toString()
+                      return Text(cartIndex != null ? cart.cartList[cartIndex!].quantity.toString()
                           : productProvider.quantity.toString(), style: poppinsSemiBold,
                       );
                     }),
@@ -178,7 +178,7 @@ class ProductTitleView extends StatelessWidget {
                     QuantityButton(
                       isIncrement: true, quantity: productProvider.quantity,
                       stock: stock, cartIndex: cartIndex,
-                      maxOrderQuantity: product.maximumOrderQuantity,
+                      maxOrderQuantity: product!.maximumOrderQuantity,
                     ),
                   ]);
                 }
@@ -195,17 +195,17 @@ class QuantityButton extends StatelessWidget {
   final bool isIncrement;
   final int quantity;
   final bool isCartWidget;
-  final int stock;
-  final int maxOrderQuantity;
-  final int cartIndex;
+  final int? stock;
+  final int? maxOrderQuantity;
+  final int? cartIndex;
 
   QuantityButton({
-    @required this.isIncrement,
-    @required this.quantity,
-    @required this.stock,
-    @required this.maxOrderQuantity,
+    required this.isIncrement,
+    required this.quantity,
+    required this.stock,
+    required this.maxOrderQuantity,
     this.isCartWidget = false,
-    @required this.cartIndex,
+    required this.cartIndex,
   });
 
   @override
@@ -215,38 +215,38 @@ class QuantityButton extends StatelessWidget {
       onTap: () {
         if(cartIndex != null) {
           if(isIncrement) {
-            if(maxOrderQuantity == null || _cartProvider.cartList[cartIndex].quantity < maxOrderQuantity){
-              if (_cartProvider.cartList[cartIndex].quantity < _cartProvider.cartList[cartIndex].stock) {
+            if(maxOrderQuantity == null || _cartProvider.cartList[cartIndex!].quantity! < maxOrderQuantity!){
+              if (_cartProvider.cartList[cartIndex!].quantity! < _cartProvider.cartList[cartIndex!].stock!) {
                 _cartProvider.setQuantity(true, cartIndex, showMessage: true, context: context);
               } else {
-                showCustomSnackBar(getTranslated('out_of_stock', context), context);
+                showCustomSnackBar(getTranslated('out_of_stock', context)!, context);
               }
             }else{
               showCustomSnackBar('${getTranslated('you_can_add_max', context)} $maxOrderQuantity ${
-                  getTranslated(maxOrderQuantity > 1 ? 'items' : 'item', context)} ${getTranslated('only', context)}', context);
+                  getTranslated(maxOrderQuantity! > 1 ? 'items' : 'item', context)} ${getTranslated('only', context)}', context);
             }
 
           }else {
-            if (Provider.of<CartProvider>(context, listen: false).cartList[cartIndex].quantity > 1) {
+            if (Provider.of<CartProvider>(context, listen: false).cartList[cartIndex!].quantity! > 1) {
               Provider.of<CartProvider>(context, listen: false).setQuantity(false, cartIndex, showMessage: true, context: context);
             } else {
               Provider.of<ProductProvider>(context, listen: false).setExistData(null);
-              _cartProvider.removeFromCart(cartIndex, context);
+              _cartProvider.removeFromCart(cartIndex!, context);
             }
           }
         }else {
           if (!isIncrement && quantity > 1) {
             Provider.of<ProductProvider>(context, listen: false).setQuantity(false);
           } else if (isIncrement) {
-            if(maxOrderQuantity == null || quantity < maxOrderQuantity) {
-              if(quantity < stock) {
+            if(maxOrderQuantity == null || quantity < maxOrderQuantity!) {
+              if(quantity < stock!) {
                 Provider.of<ProductProvider>(context, listen: false).setQuantity(true);
               }else {
-                showCustomSnackBar(getTranslated('out_of_stock', context), context);
+                showCustomSnackBar(getTranslated('out_of_stock', context)!, context);
               }
             }else{
               showCustomSnackBar('${getTranslated('you_can_add_max', context)} $maxOrderQuantity ${
-                  getTranslated(maxOrderQuantity > 1 ? 'items' : 'item', context)} ${getTranslated('only', context)}', context);
+                  getTranslated(maxOrderQuantity! > 1 ? 'items' : 'item', context)} ${getTranslated('only', context)}', context);
             }
           }
         }

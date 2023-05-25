@@ -12,12 +12,12 @@ import 'package:image_picker/image_picker.dart';
 import '../data/repository/notification_repo.dart';
 
 class ChatProvider extends ChangeNotifier {
-  final ChatRepo chatRepo;
-  final NotificationRepo notificationRepo;
-  ChatProvider({@required this.chatRepo, @required this.notificationRepo});
+  final ChatRepo? chatRepo;
+  final NotificationRepo? notificationRepo;
+  ChatProvider({required this.chatRepo, required this.notificationRepo});
 
-  List<bool> _showDate;
-  List<XFile> _imageFiles;
+  List<bool>? _showDate;
+  List<XFile>? _imageFiles;
   // XFile _imageFile;
   bool _isSendButtonActive = false;
   bool _isSeen = false;
@@ -26,8 +26,8 @@ class ChatProvider extends ChangeNotifier {
   bool _isLoading= false;
   bool get isLoading => _isLoading;
 
-  List<bool> get showDate => _showDate;
-  List<XFile> get imageFiles => _imageFiles;
+  List<bool>? get showDate => _showDate;
+  List<XFile>? get imageFiles => _imageFiles;
   // XFile get imageFile => _imageFile;
   bool get isSendButtonActive => _isSendButtonActive;
   bool get isSeen => _isSeen;
@@ -39,34 +39,34 @@ class ChatProvider extends ChangeNotifier {
   List<Messages> get deliveryManMessage => _deliveryManMessage;
   List<Messages>  _adminManMessage = [];
   List<Messages> get adminManMessages => _adminManMessage;
-  List <XFile>_chatImage = [];
-  List<XFile> get chatImage => _chatImage;
+  List <XFile>?_chatImage = [];
+  List<XFile>? get chatImage => _chatImage;
 
   Future<void> getDeliveryManMessages (BuildContext context, int orderId) async {
-    ApiResponse apiResponse = await chatRepo.getDeliveryManMessage(orderId,1);
+    ApiResponse apiResponse = await chatRepo!.getDeliveryManMessage(orderId,1);
     // _deliveryManMessages = [];
-    if (apiResponse.response != null&& apiResponse.response.data['messages']!= {} && apiResponse.response.statusCode == 200) {
-      _messageList.addAll(ChatModel.fromJson(apiResponse.response.data).messages);
+    if (apiResponse.response != null&& apiResponse.response!.data['messages']!= {} && apiResponse.response!.statusCode == 200) {
+      _messageList.addAll(ChatModel.fromJson(apiResponse.response!.data).messages!);
     } else {
       ApiChecker.checkApi(apiResponse);
     }
     notifyListeners();
   }
 
-  Future<void> getMessages (BuildContext context, int offset, OrderModel orderModel, bool isFirst) async {
+  Future<void> getMessages (BuildContext context, int offset, OrderModel? orderModel, bool isFirst) async {
     ApiResponse _apiResponse;
     if(isFirst) {
       _messageList = [];
     }
     //
     if(orderModel == null) {
-      _apiResponse = await chatRepo.getAdminMessage(1);
+      _apiResponse = await chatRepo!.getAdminMessage(1);
     }else {
-     _apiResponse = await chatRepo.getDeliveryManMessage(orderModel.id, 1);;
+     _apiResponse = await chatRepo!.getDeliveryManMessage(orderModel.id, 1);;
     }
-    if (_apiResponse.response != null&& _apiResponse.response.data['messages'] != {} && _apiResponse.response.statusCode == 200) {
+    if (_apiResponse.response != null&& _apiResponse.response!.data['messages'] != {} && _apiResponse.response!.statusCode == 200) {
       _messageList = [];
-      _messageList.addAll(ChatModel.fromJson(_apiResponse.response.data).messages);
+      _messageList.addAll(ChatModel.fromJson(_apiResponse.response!.data).messages!);
     } else {
       ApiChecker.checkApi(_apiResponse);
     }
@@ -88,14 +88,14 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
   void removeImage(int index){
-    chatImage.removeAt(index);
+    chatImage!.removeAt(index);
     notifyListeners();
   }
 
   Future<http.StreamedResponse> sendMessageToDeliveryMan(String message, List<XFile> file, int orderId, BuildContext context, String token) async {
     _isLoading = true;
     // notifyListeners();
-    http.StreamedResponse response = await chatRepo.sendMessageToDeliveryMan(message, file, orderId, token);
+    http.StreamedResponse response = await chatRepo!.sendMessageToDeliveryMan(message, file, orderId, token);
     if (response.statusCode == 200) {
       // _imageFiles = [];
       // _chatImage = [];
@@ -113,14 +113,14 @@ class ChatProvider extends ChangeNotifier {
     return response;
   }
 
-  Future<http.StreamedResponse> sendMessage(String message, BuildContext context, String token, OrderModel order) async {
+  Future<http.StreamedResponse> sendMessage(String message, BuildContext context, String token, OrderModel? order) async {
     http.StreamedResponse _response;
     _isLoading = true;
     // notifyListeners();
     if(order == null) {
-      _response = await chatRepo.sendMessageToAdmin(message, _chatImage, token);
+      _response = await chatRepo!.sendMessageToAdmin(message, _chatImage!, token);
     }else {
-      _response = await chatRepo.sendMessageToDeliveryMan(message, _chatImage, order.id, token);
+      _response = await chatRepo!.sendMessageToDeliveryMan(message, _chatImage!, order.id, token);
     }
     if (_response.statusCode == 200) {
       // _imageFiles = [];
